@@ -1,0 +1,2187 @@
+%\documentclass[runningheads,a4paper]{llncs}
+\documentclass[a4paper]{llncs}
+\usepackage[utf8x]{inputenc}
+\usepackage{mls}
+\usepackage{dl}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{color}
+\usepackage{setspace}
+
+%\newcommand{\Lang}{\ensuremath{\mathcal{L}\xspace}}
+\newcommand{\DisjDatalog}{\ensuremath{\mathsf{DATALOG}^{\vee,\neg}}\xspace}
+\newcommand{\ForallpizeroDisjDatalog}{\ensuremath{\mathbf{\forall_{0,D\vee}^{\pi}}}\xspace}
+\newcommand{\Elpizero}{\ensuremath{\mathcal{L}_{0}^{\pi}}\xspace}
+
+%FIRST ORDER LOGIC
+\newcommand{\Lang}{\ensuremath{\mathcal{L}\xspace}} %a generic first order language
+\newcommand{\LangPreds}{\Preds_{\Lang}}
+\newcommand{\LangFuncts}{\Functs_{\Lang}}
+\newcommand{\LangConsts}{\Consts_{\Lang}}
+\newcommand{\LangTerms}{\Terms_{\Lang}}
+\newcommand{\LangClTerms}{\ClTerms_{\Lang}}
+\newcommand{\LangForms}{\Forms_{\Lang}}
+% \newcommand{\corr}[1]{\textcolor{red}{#1}}
+\newcommand{\corr}[1]{#1}
+
+\newcommand{\Univ}{\mathtt{U}}
+\newcommand{\HExp}{Exp}
+\newcommand{\SExp}[2]{\mathsf{Exp}_{#2}(#1)}
+
+%set theoretic syntax
+
+%terms
+\newcommand{\pair}[2]{[#1,#2]}
+\newcommand{\pairs}[1]{\pi(#1)}
+\newcommand{\nonpairssym}{\bar{\pi}}
+\newcommand{\nonpairs}[1]{\nonpairssym(#1)}
+
+%predicates
+\newcommand{\memclosure}[1]{\in_{#1}^{+}}
+
+\newcommand{\inP}{\in}
+\newcommand{\pairin}[3]{\left[#1,#2\right] \in #3}
+\newcommand{\nonpairin}[2]{#1 \in \bar{\pi}(#2)}
+\newcommand{\seteq}[2]{#1=#2}
+\newcommand{\seteqP}{=}
+
+%set theoretic semantics
+\newcommand{\assignment}[1]{\ensuremath{M_{#1}}}
+\newcommand{\pairf}[1]{\ensuremath{\pi_{#1}}}
+
+\newcommand{\inter}{\ensuremath{\mathbf{I}}\xspace}
+\newcommand{\interf}{if^{\inter}}
+\newcommand{\hinterf}{if^{\hinter}}
+
+
+\newcommand{\iassignment}{\assignment{\inter}}
+\newcommand{\ipairf}{\pairf{\inter}}
+\newcommand{\interp}{\ensuremath{\mathbf{I'}}\xspace}
+\newcommand{\iassignmentp}{\assignment{\interp}}
+\newcommand{\ipairfp}{\pairf{\interp}}
+
+
+\newcommand{\atset}{\mathcal{S}}
+%\renewcommand{\Realization}{\mathcal{R^S}}
+
+
+\newcommand{\DomConsts}{\Consts_D}
+%variables and constants
+\newcommand{\consta}{a}
+\newcommand{\constb}{b}
+\newcommand{\constc}{c}
+\newcommand{\constd}{d}
+%additional axioms
+\newcommand{\Ax}{\mathcal{A}}
+\newcommand{\Axr}{\mathcal{A}_r}
+\newcommand{\Axeq}{\mathcal{A}_{=}}
+\newcommand{\Axex}[1]{\mathcal{A}_{e}^{(#1)}}
+
+%FOL
+\newcommand{\subst}[3]{#1[#2\rightarrow#3]}
+\newcommand{\ar}{\mathit{ar}}
+\newcommand{\nat}{\mathbb{N}}
+%\newcommand{\nat}{\bbbn}
+\newcommand{\hinter}{\ensuremath{\mathcal{H}}}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+\newcommand{\fomodels}[2]{#1 \models_{\mathsf{FO}} #2}
+\newcommand{\notfomodels}[2]{#1 \not\models_{\mathsf{FO}} #2}
+\newcommand{\vmodels}[2]{#1 \models_{\mathcal{V}} #2}
+\newcommand{\fosat}[1]{\fomodels{*}{#1}}
+\newcommand{\vsat}[1]{\vmodels{*}{#1}}
+
+% Title Page
+\title{Herbrand-satisfiability of a quantified set-theoretic 
+fragment\thanks{This work has been partly supported by the project
+PON04a2\_A ``PRISMA - Piat\-tafoRme cloud Interoperabili per 
+SMArt-government.''}}
+\author{Domenico Cantone \and Cristiano Longo \and Marianna Nicolosi Asmundo}
+
+\institute{Dipartimento di Matematica e Informatica, Universit\`a di 
+Catania, Italy\\
+\email{\{cantone, longo, nicolosi\}@dmi.unict.it}}
+
+\begin{document}
+
+%\doublespace
+
+\maketitle
+
+\begin{abstract}
+In the last decades, several fragments of set theory have been
+studied  in the context of \emph{Computable
+Set Theory}.
+%
+In general, the semantics of set-theoretic languages
+differs from the canonical first-order semantics in that
+the interpretation domain of set-theoretic terms is
+fixed to a given universe of sets, as for instance
+the von Neumann standard cumulative hierarchy of
+sets, i.e., the class consisting of all the pure sets.
+Because of this, theoretical results and various
+machinery developed in the context of first-order logic
+cannot be easily adapted to work also in the set-theoretic
+realm.
+%
+Recently, quantified fragments of set theory
+which allow one to explicitly handle ordered pairs have been
+studied for decidability purposes, in view of applications in the 
+field of knowledge
+representation. Among other results, a \textsc{NexpTime}
+decision procedure for satisfiability of formulae
+in one of these fragments, $\Forallpizero$, has been provided.
+%
+In this paper we exploit the main features of such a decision
+procedure to reduce the satisfiability problem for the fragment
+$\Forallpizero$ to the problem of Herbrand satisfiability for a
+first-order language extending it.  In addition, it turns out that
+such a reduction maps formulae of the \emph{Disjunctive Datalog} subset
+of $\Forallpizero$ into Disjunctive Datalog programs.
+\end{abstract}
+
+\section{Introduction}\label{INTRO}
+
+The quantified fragment of set theory \Forallpizero (see
+\cite{CanLonNic2011}) allows the explicit manipulation of ordered
+pairs.  It is expressive enough to include a relevant amount of
+set-theoretic constructs, in particular map-related ones: in fact, it
+is characterized by the presence of terms of the form $[\cdot,\cdot]$
+(ordered pair) and $\nonpairs{\cdot}$ (collection of the non-pair
+members of its argument).
+%
+This language has applications in the field of \emph{knowledge representation}.
+In fact, a large amount of \emph{description logic} constructs
+are expressible in it. In particular, the very expressive
+description logic $\dlForallpizero$ can be expressed
+in a fragment of \Forallpizero that has an \textsc{NP}-complete
+decision problem, in contrast with the description logic
+\sroiq (cf. \cite{HorKutSat2006}),  which underpins the current 
+standard  language for
+Semantic Web OWL2\footnote{\url{http://www.w3.org/TR/owl2-primer/}} 
+and whose decision problem is
+\textsc{N2ExpTime}-complete (see \cite{Kaz2008}).
+%
+Despite of these desirable properties of the language \Forallpizero,
+no decision procedure for it has been implemented yet.
+
+The semantics of set-theoretic languages (see
+\cite{Mos2005} for an introduction to set theory, and
+\cite{CanFerOmo89a,CanOmoPol01,SchCanOmo11} for an overview on 
+decidable fragments of set theory) differs from the \emph{canonical} 
+first-order logic semantics (see \cite{Fitting96}) in that, in 
+general, the interpretation domain of set-theoretic terms is based on 
+the \emph{von Neumann standard
+cumulative hierarchy of (pure) sets} $\VNU = \bigcup_{\gamma \in 
+\mathit{On}} \VNU_{\gamma}$, where
+\[
+\begin{array}{rcll}
+   \VNU_{\gamma+1} & = & \mathcal{P}(\VNU_\gamma) \,,
+   & \textrm{for each ordinal $\gamma$}
+\\
+   \VNU_\lambda    & = & \bigcup_{\mu < \lambda} \VNU_\mu
+   \,,& \textrm{for each limit ordinal $\lambda$~~(thus, $\VNU_0 = \emptyset$)}
+\end{array}
+\]
+(with $\mathcal{P}(\cdot)$ the powerset operator and $\mathit{On}$
+the class of all ordinals). Because of this, results
+and techniques developed in the context of first-order logic are not 
+easily reusable in a set-theoretic domain.
+
+In this paper we show that these difficulties can be circumvented for
+the fragment \Forallpizero by \emph{encoding} some axioms of set
+theory (namely regularity and a weak form of extensionality) as
+sentences in a first-order language extending \Forallpizero.
+More specifically, we will prove that, for
+every \Forallpizero-sentence $\varphi$, one can construct in polynomial
+time a corresponding formula $\chi_{\varphi}$ such that
+$\varphi$ admits a set-theoretic model if and only if
+$\chi_{\varphi} \wedge \varphi$ admits a Herbrand model (cf.
+\cite{Her2002}), when set-theoretic predicates in $\chi_{\varphi}
+\wedge \varphi$ are regarded as uninterpreted predicates.
+%
+It turns out that these formulae $\chi_{\varphi}$ can be considered
+as \DisjDatalog-programs. As a consequence, the reduction we
+are going to discuss can be seen as a reduction from
+\ForallpizeroDisjDatalog to \DisjDatalog, where
+$\ForallpizeroDisjDatalog$
+consists of the formulae in \Forallpizero which satisfy
+the syntactic constraints required to be regarded also as 
+\DisjDatalog-programs.
+
+We recall that \DisjDatalog (read \emph{Disjunctive Datalog})
+extends Datalog by allowing disjunctions in the
+head of program rules. Such additional feature considerably increments the expressive power of the basic language and makes \DisjDatalog suitable to be used in several applications such as reasoning for ontologies of the semantic web \cite{hustadt2007reasoning} and planning problems \cite{Eiter:2004}. 
+\DisjDatalog has been introduced in \cite{EitGotMan1997}, where its formal semantics, its expressive power, and the complexity of its reasoning problems have been treated in depth. Decidability and complexity of Datalog
+extensions with various combinations of disjunction and negation have
+been studied in \cite{AlvianoFLM12,GottlobMMP12}.
+Also, optimization strategies have been provided for
+algorithms devised in this context, and a considerable amount of
+academic and commercial software implementing these algorithms is
+available (see for example \cite{AlvFabLeoPerPfeTer2011}).  Thus, the
+reduction we present in this paper allows one to reuse the machinery
+available for \DisjDatalog in the implementation of an optimized
+reasoning engine for the language \ForallpizeroDisjDatalog and,
+consequently, for the description logic \dlForallpizero mentioned
+above, as all the constructs in \dlForallpizero are expressible in
+\ForallpizeroDisjDatalog.
+
+The link between set-theoretic languages and logic programming
+we start to investigate here is of a certain interest to projects related
+with the production and usage of \emph{open data} such as PRISMA$^{*}$:
+on one hand, it provides a way to implement with small efforts a solid
+and efficient reasoning and query engine for
+the very expressive representation language \dlForallpizero; on the
+other hand, it allows one to implement typical logic-programming tasks
+for \dlForallpizero knowledge bases such as, for example,
+answer-set programming and non-monotonic reasoning,
+which may be of some interest for public utility applications.
+
+The rest of the paper is organized as follows.  In Section
+\ref{PRELIMINARIES} we review some notions and definitions from
+first-order logic, including some results by
+Herbrand and the definition of the Disjunctive Datalog
+fragment of first-order logic.  Then, in Section \ref{FORALLPIZERO},
+after recalling the syntax and semantics of the fragment of set theory
+\Forallpizero, we briefly review a decision procedure for
+$\Forallpizero$-formulae, together with some useful properties.  A 
+polynomial-time reduction of the satisfiability problem for
+$\Forallpizero$-formulae to the Herbrand satisfiability problem for
+first-order formulae is described in Section \ref{REDUCTION}.
+Finally, we draw our conclusions and provide some hints for future
+research in Section \ref{CONCLUSIONS}.
+
+
+% The reader has to be adviced that, for sake of clarity, we
+% adopted an \emph{hybrid} terminology and notation, using same
+% terms and symbols for corresponding notions from set theory
+% and disjunctive datalog.
+
+\section{First-order logic}\label{PRELIMINARIES}
+
+
+We briefly review some notations and definitions
+from first-order logic which will be used throughout the
+paper.
+
+We shall denote with
+$\Vars=\{x, y, z, \ldots \}$, $\Consts=\{a, b, c, \ldots \}$,
+$\Functs=\{f, g, h, \ldots \}$, and $\Preds=\{P, Q, R, \ldots\}$
+four denumerably infinite and pairwise disjoint collections
+of \emph{variable}, \emph{constant}, \emph{function}, and \emph{predicate}
+symbols, respectively.
+In addition, a positive \emph{arity} $\ar(\nu) \in \nat^+$ is 
+associated to each
+function and predicate symbol $\nu \in \Functs \cup \Preds$.
+% In our context, variables
+% must be intended as \emph{quantified} variables, while
+% constants may be regarded as free variables of a formula.
+% Note that this do not cause any issue as we will deal just
+% with satisfiability problems.
+%
+%
+% Notice that \emph{function symbols} are not mentioned
+% here, as we are going to consider function-free languages
+% only. Analogously, first-order logic definitions
+% and results will be reported in the rest of the paper
+% by omitting any reference to functions.
+
+A \emph{first-order language} $\Lang$ is characterized by
+a triple $(\LangPreds, \LangFuncts, \LangConsts)$, where
+$\LangPreds \subseteq \Preds$, $\LangFuncts \subseteq \Functs$ and
+$\LangConsts \subseteq \Consts$.
+
+The collection $\LangTerms$ of the \emph{terms} of $\Lang$ is
+defined as the smallest set of expressions such that:
+\begin{itemize}
+\item $\Vars \cup \Consts \subseteq \LangTerms$;
+
+\item $f(t_1, \ldots, t_n) \in \LangTerms$, for all $f \in 
+\LangFuncts$ and $t_1, \ldots, t_n \in \LangTerms$ (where $n = \ar(f)$).
+\end{itemize}
+%\[
+%\begin{array}{ll}
+%x \in \LangTerms & \mbox{ for all }x \in \Vars\\
+%a \in \LangTerms & \mbox{ for all }a \in \LangConsts\\
+%f(t_1, \ldots, t_n) \in \LangTerms & \mbox{ for all }f \in 
+%\LangFuncts, n=\ar(f), \{t_1, \ldots, t_n\} \subseteq \LangTerms \, .
+%\end{array}
+%\]
+A term of $\Lang$ is \emph{closed} if it involves no variable. We 
+denote by $\LangClTerms$ the set of the closed terms of $\Lang$.
+
+The collection $\LangForms$ of the \emph{formulae} of
+$\Lang$ is the smallest set of expressions of the following forms:
+\begin{itemize}
+  \item \emph{atomic formulae}: $P(t_1, \ldots, t_n) \in \LangForms$, 
+for all $P \in \LangPreds$ and $t_1, \ldots, t_n \in \LangTerms$ 
+(where $n = \ar(P)$);
+%
+% Let $P \in \LangPreds$, with $\ar(P)=n$ for some $n \in \nat$,
+%  and let $\{\nu_1, \ldots, \nu_n\} \subseteq \LangTerms$.
+%  Then $P(\nu_1, \ldots, \nu_n)$ is a formula of $\Lang$.
+%  In particular, $P(\nu_1, \ldots, \nu_n)$ is said to be an
+%  \emph{atomic formula} of $\Lang$.
+
+  \item \emph{universally and existentially quantified formulae}:
+  $(\forall x)\varphi, (\exists x)\varphi \in \LangForms$, for every 
+$\varphi \in \LangForms$ (where $x \in \Vars$);
+
+  \item \emph{propositional formulae}: $\neg \varphi, \varphi \wedge 
+\psi,   \varphi \vee \psi \in \LangForms$, for all $\varphi, \psi \in 
+\LangForms$.\footnote{To simplify the notation, we shall also make 
+use as abbreviations of the propositional connectives $\rightarrow$ 
+and $\leftrightarrow$. In particular, $\varphi \rightarrow \psi$ will 
+stand for $\neg \varphi \vee \psi$, whereas $\varphi \leftrightarrow 
+\psi$ will stand for $(\varphi \wedge \psi) \vee (\neg \varphi \wedge 
+\neg\psi)$. Therefore we shall refer to $\neg$, $\wedge$, and $\vee$ 
+as \emph{primitive propositional connectives}.}
+%
+% All the combinations of formulae in $\Lang$ by means of
+%  the Boolean connectives of propositional logic
+%  $\wedge$, $\vee$, $\neg$, $\rightarrow$, $\leftrightarrow$ are
+%  formulae of $\Lang$ as well.
+\end{itemize}
+
+Next we recall some further definitions which are particularly useful 
+to our purposes:
+\begin{itemize}
+\item a \emph{literal} of $\Lang$ is an atomic formula
+   $P(t_1, \ldots, t_n)$ or its negation
+   $\neg P(t_1, \ldots, t_n)$;
+
+\item a \emph{quantifier-free formula} of $\Lang$ is a propositional 
+combination of atomic formulae of $\Lang$;
+
+\item a \emph{prenex formula} of $\Lang$ is a formula of the form
+  $(\mathcal{Q}_1 x_1)\ldots(\mathcal{Q}_n x_n)\psi$, where $\psi$ is 
+a quantifier-free formula of $\Lang$ and $\mathcal{Q}_i \in 
+\{\forall,\exists\}$, for $i = 1,\ldots,n$;
+
+\item a \emph{universally quantified prenex formula} of $\Lang$ is a 
+prenex formula whose quantifiers are all universal (i.e., a formula 
+of the form $(\forall x_1) \ldots (\forall x_n)\psi$, with $\psi$ 
+quantifier-free);
+
+\item a quantifier occurrence $(\mathcal{Q}x)$ in a formula $\varphi$ 
+(involving only primitive propositional connectives) is 
+\emph{essentially existential} if either it has the form $(\exists 
+x)$ and it occurs within the scope of an even number of the negation 
+connective $\neg$, or it has the form $(\forall x)$ and it occurs in 
+the scope of an odd number of the negation connective $\neg$. 
+Otherwise it is \emph{essentially universal}. For instance, all four 
+quantifier occurrences in
+$\neg (\exists x)(\exists y)P(x,y) \vee (\forall x)(\forall y)P(x,y)$ 
+are essentially universal, whereas all four quantifier occurrences in 
+$\neg (\forall x)(\forall y)P(x,y) \vee (\exists x)(\exists y)P(x,y)$ 
+are essentially existential;
+
+\item an occurrence of a variable $x$ in a formula $\varphi$ is 
+\emph{free} if it is not contained in any quantified subformula of 
+$\varphi$ of the form $(\forall x)\psi$ or $(\exists x)\psi$;
+
+\item we denote with $\subst{\varphi}{x}{y}$ the formula obtained 
+from $\varphi$ by replacing every free occurrence of $x$ with $y$;
+
+\item a formula is \emph{closed} (\emph{sentence}) if it contains no 
+free variable;
+
+\item a formula is \emph{ground} if it contains no 
+variable.\footnote{Plainly, any ground formula is closed.}
+
+\end{itemize}
+
+%
+% Finally, given any set $\Sigma$ of atomic formulae and any
+% atomic formula $\gamma$, with a slight abuse of notation we
+% write $\Sigma \models \gamma$ to express that $\gamma$ is
+% a member of $\Sigma$, i.e., $\gamma \in \Sigma$. Likewise,
+% we write $\Sigma \not\models \gamma$ when $\gamma \not\in \Sigma$.
+
+In the rest of the paper we shall sometimes abbreviate
+quantifier prefixes as $(\forall x_1)\ldots(\forall x_n)$
+by $(\forall x_1, \ldots, x_n)$.
+%
+Notice that quantifier-free formulae can be considered as
+universally quantified prenex formulae with an empty
+quantifier prefix.
+%
+Given a formula $\varphi$, we denote with $\Preds(\varphi)$,
+$\Functs(\varphi)$, $\Consts(\varphi)$, and $\Vars(\varphi)$ the sets of the
+predicate, function, constant, and variable symbols occurring in $\varphi$,
+respectively. Similar notations will also be used with sets of formulae.
+
+%Analogously,\marginpar{probabilmente si pu\`o omettere} for a set $\Sigma$ of formulae, we denote
+%with $\Preds(\Sigma)$, $\Functs(\Sigma)$, $\Consts(\Sigma)$, and $\Vars(\Sigma)$ the sets of all the predicate, function, constant, and variable symbols occurring in any formula $\varphi \in \Sigma$, respectively.
+
+First-order \emph{semantics} is given in terms of
+\emph{interpretations}. Let $\Lang=(\LangPreds,$ $\LangFuncts, \LangConsts)$ be
+a first-order language $\Lang$. An \emph{interpretation} $\inter$ for $\Lang$
+is a pair $(D^{\inter},\cdot^\inter)$ where $D^{\inter}$, the 
+\emph{interpretation domain},
+is a generic nonempty set  (i.e., a set not necessarily in the von 
+Neumann hierarchy), and $\cdot^\inter$ is
+a map which associates
+\begin{itemize}
+  \item an element $a^{\inter}$ in $D^{\inter}$ to each constant $a$ 
+of $\LangConsts$,
+  \item an $n$-ary \emph{relation} $P^{\inter}$ over $D^{\inter}$ 
+(i.e., a set of $n$-tuples of elements of $D^{\inter}$) to each 
+$n$-ary predicate symbol $P$ in $\LangPreds$, with $n \in \nat$, and
+  \item an $n$-ary \emph{function} $f^{\inter}$ over $D^{\inter}$ 
+(i.e., a map associating an $n$-tuple of elements of $D^{\inter}$ to 
+each element in $D^{\inter}$) to each $n$-ary function symbol $f$ in 
+$\LangFuncts$, with $n \in \nat$.
+\end{itemize}
+
+In addition, given an interpretation $\inter=(D^{\inter}, \cdot^\inter)$ for
+$\Lang$, an \emph{assignment} $A$ in $\inter$
+is a map associating an element $x^A$ in $D^{\inter}$ to each
+variable $x \in \Vars$. Given two assignments $A$, $A'$ in $\inter$ 
+and a variable $x \in \Vars$, $A'$ is said to be an 
+$x$\emph{-variant} of $A$ iff  $A$ and $A'$ coincide on all variables 
+but $x$, i.e., iff $y^A = y^{A'}$ for all $y \in \Vars$ such that 
+$y\neq x$.
+
+A pair $(\inter, A)$, where $\inter$ is an interpretation for
+$\Lang$ and $A$ is an assignment in $\inter$, associates to each
+term of $\Lang$ a \emph{value} in $D^{\inter}$ as follows:
+\begin{itemize}
+\item $x^{\inter,A} \defAs x^A$, for all $x \in \Vars$;
+
+\item $a^{\inter,A} \defAs a^{\inter}$, for all $a \in \LangConsts$;
+
+\item $f(t_1, \ldots, t_n)^{\inter,A} \defAs 
+f^{\inter}(t_1^{\inter,A}, \ldots, t_n^{\inter,A})$, for all $f \in 
+\LangFuncts$ and
+  $t_1, \ldots, t_n \in \LangTerms$, where $n = \ar(f)$.
+\end{itemize}
+%\[
+% \begin{array}{ll}
+% x^{\inter,A} \defAs A x & \mbox{ for all }x \in \Vars\\
+% a^{\inter,A} \defAs a^{\inter} & \mbox{ for all }a \in \LangConsts\\
+% f(t_1, \ldots, t_n)^{\inter,A} \defAs f^{\inter}(t_1^{\inter}, 
+%\ldots, t_n^{\inter})& \mbox{ for all }f \in \LangFuncts,
+% \ar(f)=n, \\
+% &\quad\quad\{t_1, \ldots, t_n\} \subseteq \LangTerms .
+% \end{array}
+%\]
+%
+Moreover, the pair $(\inter, A)$ \emph{evaluates} each
+formula $\varphi$ of $\Lang$ to a truth value $\true$ or $\false$ 
+according to the following rules:
+%We write $\varphi^{\inter, A}=\true$, or simply $\varphi^{\inter, A}$,
+%if $(\inter, A)$  evaluates $\varphi$ to $\true$,
+%$\varphi^{\inter, A}=\false$, or, more concisely, $\neg \varphi^{\inter, A}$,
+%otherwise. Evaluation of first-order formulae proceeds as follows:
+%first,
+\begin{itemize}
+\item $P(t_1, \ldots, t_n)^{\inter,A} = \true$ \quad iff \quad
+$\big[t_1^{\inter,A}, \ldots, t_n^{\inter,A}\big] \in P^{\inter}$, \\
+for every atomic formula $P(t_1, \ldots, t_n)$ of $\Lang$;
+
+\item $((\forall x)\varphi)^{\inter,A} = \true$ \quad iff \quad 
+$\varphi^{\inter,A'} = \true$, \quad for \emph{every} $x$-variant 
+$A'$ of $A$,\\
+for every formula $\varphi$ of $\Lang$ and variable $x \in \Vars$;
+
+\item $((\exists x)\varphi)^{\inter,A} = \true$ \quad iff \quad 
+$\varphi^{\inter,A'} = \true$, \quad for \emph{some} $x$-variant $A'$ 
+of $A$,\\
+for every formula $\varphi$ of $\Lang$ and variable $x \in \Vars$;
+
+\item propositional combinations of formulae of $\Lang$ are 
+recursively evaluated according to the usual semantics of 
+propositional logic.
+\end{itemize}
+%\[
+% P(\nu_1, \ldots, \nu_n) \iff [\nu_1^{\inter,A}, \ldots, 
+%\nu_n^{\inter,A}] \in P^{\inter}
+%\]
+%for every atomic formula $P(\nu_1, \ldots, \nu_n)$ of $\Lang$; then,
+%\[
+%\begin{array}{rcll}
+% ((\forall x)\varphi)^{\inter,A} & \iff & \varphi^{\inter,A'} & 
+%\mbox{ for \emph{every} }x\mbox{-variant }A'\mbox{ of }A\\
+% ((\exists x)\varphi)^{\inter,A} & \iff & \varphi^{\inter,A'} & 
+%\mbox{ for \emph{some} }x\mbox{-variant }A'\mbox{ of }A\\
+%\end{array}
+%\]
+%for all $x \in \Vars$ and for every formula $\varphi$ of $\Lang$;
+%finally, evaluation of a propositional combination $\varphi$ of 
+%formulae of $\Lang$
+%proceeds as usual for formulae in propositional logic, but recursively
+%evaluating first quantified and atomic sub-formulae of $\varphi$.
+
+\corr{We shall use the notation $\fomodels{(\inter, A)}{\varphi}$ to indicate
+that the pair $(\inter, A)$ evaluates the formula $\varphi$ to $\true$,
+whereas we shall write $\notfomodels{(\inter, A)}{\varphi}$ to indicate
+that $(\inter, A)$ evaluates $\varphi$ to $\false$.}
+
+Notice that, when evaluating a closed formula $\varphi$, the 
+assignment plays no role and may be omitted, since $\varphi^{\inter, 
+A} = \varphi^{\inter, B}$, for every interpretation $\inter$ and 
+assignments $A,B$ in $\inter$. In such a case, we shall simply write 
+$\varphi^{\inter}$
+and $\fomodels{\inter}{\varphi}$ in place of $\varphi^{\inter, A}$ 
+and $\fomodels{(\inter, A)}{\varphi}$, respectively, for any 
+assignment $A$.
+
+%becomes ininfluent
+%for the evaluation. In other words, $\varphi^{\inter, A}$ is
+%evaluated to $\true$ if and only if $\varphi^{\inter, B}$
+%is true for all the assignments $B$ in $\inter$, provided that $\varphi$
+%is closed. Thus, in such cases one can omit to indicate the
+%assignment. In such a case, we shall simply write $\varphi^{\inter}$
+
+A formula $\varphi$ of $\Lang$ is said to be \emph{satisfiable}
+%(write $\fosat{\varphi}$)
+if and only if $\fomodels{(\inter,A)}{\varphi}$ for \emph{some} interpretation
+$\inter$ for $\Lang$ and assignment $A$ in $\inter$.
+In addition, $\varphi$ is said to be \emph{valid} 
+%(and we write $\fomodels{} {\varphi}$) 
+if and only if
+$\fomodels{(\inter,A)}{\varphi}$ for \emph{all} the interpretations $\inter$
+for $\Lang$ and assignments $A$ in $\inter$.
+Two formulae $\varphi$ and $\psi$ of $\Lang$ are said to be
+\emph{equivalent} (and we write $\varphi \equiv \psi$) iff 
+$\varphi^{\inter,A} = \psi^{\inter,A}$,
+%\[
+% \varphi^{\inter,A} \iff \psi^{\inter,A}
+%\]
+for all interpretations $\inter$
+for $\Lang$ and assignments $A$ in $\inter$.
+
+We conclude this section by recalling the notion of \emph{restricted 
+universal quantifiers}. These are quantifiers of the form
+\[
+  (\forall x_1, \ldots, x_n | P(y_1, \ldots, y_m)) \qquad \text{and} 
+\qquad (\exists x_1, \ldots, x_n | P(y_1, \ldots, y_m))\,,
+\]
+with $x_1, \ldots, x_n, y_1, \ldots, y_m \in \Vars$ such that
+$\{y_1, \ldots, y_m\}\subseteq\{x_1, \ldots, x_n\}$,
+and where $P$ is a predicate symbol in $\LangPreds$ of arity $m$.
+%
+The intended meaning of such quantifiers is that
+quantification is restricted to all the $x_1, \ldots, x_n$ such that 
+the predicate $P(y_1, \ldots, y_m)$ holds.
+Plainly, restricted universal quantifiers can be expressed by 
+standard quantifiers since we have:
+\begin{align*}
+(\forall x_1, \ldots, x_n | P(y_1, \ldots, y_m))\psi &~~\equiv~~
+  (\forall x_1, \ldots, x_n)(P(y_1, \ldots, y_m)  \rightarrow \psi) \\
+%
+(\exists x_1, \ldots, x_n | P(y_1, \ldots, y_m))\psi &~~\equiv~~
+  (\exists x_1, \ldots, x_n)(P(y_1, \ldots, y_m)  \wedge \psi)
+\end{align*}
+for any formula $\psi$ of $\Lang$.
+%\[
+%% \begin{equation}\label{RESTRICTED}
+% (\forall x_1, \ldots, x_n | P(y_1, \ldots, y_m))\psi ~~\equiv~~
+% (\forall x_1, \ldots, x_n)(P(y_1, \ldots, y_m)  \rightarrow \psi) .
+%% \end{equation}
+%\]
+
+\subsection{Herbrand logic}
+
+A first-order interpretation $\hinter=(D^{\hinter},\cdot^\hinter)$
+for a language $\Lang$
+is said to be a \emph{Herbrand interpretation} for $\Lang$ if
+\begin{itemize}
+\item $D^{\hinter} = \LangClTerms$, and
+
+\item $t^{\hinter} = t$,  for all $t \in \LangClTerms$.
+\end{itemize}
+%\[
+% \begin{array}{lcll}
+% D^{\hinter} & = & \LangClTerms & \mbox{ and}\\
+% t^{\hinter} & = & t & \mbox{ for all }t \in \LangClTerms .
+% \end{array}
+%\]
+%
+%In other words, Herbrand interpretations map each closed term into itself.
+%Thus,
+% a Herbrand interpretation is characterized by the set of ground
+% atomic formulae which are evaluated to \true by 
+%it.
+%\marginpar{considera di omettere}
+%
+
+A formula $\varphi$ of $\Lang$ is said to be
+\emph{Herbrand-satisfiable} iff
+$\fomodels{(\hinter,A)}{\varphi}$, for some Herbrand interpretation 
+$\hinter$ for $\Lang$ and assignment $A$ in $\hinter$.
+
+The following theorem is a fundamental result of first-order
+logic, reported here from \cite[Theorem 5.9.4]{Fitting96}
+in a simplified form:
+
+\begin{theorem}\label{HERSENT}
+Let $\Lang$ be a first-order
+language, and let $\varphi$ be a sentence of $\Lang$. Then
+$\varphi$ is satisfiable if and only if it is Herbrand-satisfiable.
+\qed
+\end{theorem}
+%
+This result can be further refined for specific classes of formulae.
+We shall focus our attention on function-free
+universally quantified prenex formulae.
+
+We begin by recalling some useful
+definitions. Let $c$ be a fixed constant symbol. Given a sentence 
+$\varphi$ in a first-order language $\Lang$, the \emph{extended set 
+of constant symbols} occurring in $\varphi$ is defined as:
+\[
+\Consts^*(\varphi) \defAs
+\begin{cases}
+\Consts(\varphi) & \text{if } \Consts(\varphi) \neq \emptyset\\
+\{c\} & \text{otherwise.}
+\end{cases}
+\]
+Then the \emph{Herbrand universe} of $\varphi$ is the set of terms which can
+be constructed from the extended set of constant symbols and the 
+function symbols occurring in $\varphi$.
+More precisely, it is the minimal set $\Univ$ such that
+\begin{itemize}
+\item $\Consts^*(\varphi) \subseteq \Univ$;
+%, ~~if $\Consts(\varphi)\neq\emptyset$;
+%
+%\item $c \in \Univ$, ~~if $\Consts(\varphi) = \emptyset$;
+
+\item $f(t_1, \ldots, t_n) \in \Univ$, ~~for all $f \in 
+\Functs(\varphi)$ and $t_1, \ldots, t_n \in \Univ$, where $\ar(f)=n$.
+\end{itemize}
+%\[
+%\begin{array}{ll}
+% \Consts(\varphi) \subseteq \Univ & \mbox{ if 
+%}\Consts(\varphi)\neq\emptyset,\\
+% c \in \Univ& \mbox{ if }\Consts(\varphi)=\emptyset\mbox{, and}\\
+% f(t_1, \ldots, t_n) \in \Univ&\mbox{ for all }f \in 
+%\Functs(\varphi), \ar(f)=n, t_1, \ldots, t_n \in \Univ.
+%\end{array}
+%\]
+%
+Observe that if no function symbol occurs in $\varphi$, then $\Univ$ 
+is finite and coincides with the extended set of constant symbols of 
+$\varphi$.
+
+Every nonempty finite subset of $\Univ$ is said to be a
+\emph{Herbrand domain} of $\varphi$.
+
+\begin{definition}\label{EXP}
+Let $\Lang$ be a first-order language, and let $D=\{t_1, \ldots, 
+t_n\}$ be a nonempty finite set of closed terms of $\Lang$. For any 
+formula $\chi$ of $\Lang$, the \emph{Herbrand expansion  $\HExp(\chi, 
+D)$ of $\chi$ over $D$} is the formula of $\Lang$ recursively defined 
+as follows:
+%
+%of formulae of $\Lang$ over $D$ is the map recursively defined as follows
+\[
+  \begin{array}{rcll}
+  \HExp(\mathcal{A}, D) & \defAs & 
+\mathcal{A}\qquad\qquad\qquad\qquad~\qquad\text{(if $\mathcal{A}$ is 
+atomic)}  \\
+% \HExp(P(r_1, \ldots, r_m), D) & \defAs & P(r_1, \ldots, r_m)  \\
+  \HExp(\neg \varphi, D) & \defAs & \neg\HExp(\varphi, D) \\
+  \HExp(\varphi \oplus \psi, D) & \defAs & \HExp(\varphi, D) \oplus 
+\HExp(\psi, D)\\
+  \HExp((\forall x)\varphi, D) & \defAs & 
+\HExp(\subst{\varphi}{x}{t_1}) \wedge \ldots \wedge 
+\HExp(\subst{\varphi}{x}{t_n}, D)\\
+  \HExp((\exists x)\varphi, D) & \defAs & \HExp(\subst{\varphi}{x}{t_1}) \vee 
+\ldots \vee \HExp(\subst{\varphi}{x}{t_n}, D),\\
+  \end{array}
+\]
+where $\oplus \in \{\wedge, \vee\}$.\qed
+%
+%for all $P \in \LangPreds$, $r_1, \ldots, r_m \in \LangTerms$, $x \in \Vars$,
+%for every binary connective of propositional logic $\oplus$, and
+%for every two formulae $\varphi$, $\psi$ of $\Lang$.  \qed
+\end{definition}
+
+Herbrand expansions enjoy some interesting properties. Indeed, if $D$ 
+is a Herbrand domain for a sentence $\varphi$, then all the terms 
+occurring in the expansion $\HExp(\varphi, D)$ of
+$\varphi$ over $D$ are in the Herbrand universe of $\varphi$ and, more
+important, $\HExp(\varphi, D)$ is a
+quantifier-free sentence.
+Thus, in such a case, $\HExp(\varphi, D)$ can be regarded as a propositional
+formula, whose propositional variables are the atomic formulae occurring in it.
+
+The following useful technical result on Herbrand expansions can be 
+proved by structural induction.
+\begin{lemma}\label{le:Exp}
+Let $\varphi$ be a sentence of $\Lang$ and let $D, D'$ be Herbrand 
+domains of $\varphi$ such that $D \subseteq D'$. Then
+\begin{enumerate}[label=(\alph*)]
+\item\label{le:Expa} if all quantifiers in $\varphi$ are essentially 
+existential, then $\HExp(\varphi, D) \rightarrow \HExp(\varphi, D')$ 
+is valid;
+
+\item\label{le:Expb} if all quantifiers in $\varphi$ are essentially 
+universal, then $\HExp(\varphi, D') \rightarrow \HExp(\varphi, D)$ is 
+valid.\qed
+\end{enumerate}
+\end{lemma}
+
+Herbrand expansions are a useful tool to reduce the validity
+problem of first-order sentences to a (potentially infinite) set of
+propositional problems, as shown in the \emph{Herbrand's Theorem}
+(Theorem 8.7.1 in \cite{Fitting96}) reported below.
+In the theorem statement, the notion of \emph{Skolemization} is
+used. The interested readers can refer to \cite{NonWei2001}
+for a complete discussion about such technique.
+For our purposes, it is enough to recall that Skolemization is
+a process which allows one to eliminate existential quantifiers from 
+a prenex sentence by means of terms involving \emph{fresh} function 
+symbols, in such a way that the resulting sentence is satisfiable if 
+and only if so is the
+original one. When no existential quantifier occurs in a prenex 
+sentence $\varphi$, the only \emph{Skolemized version} of $\varphi$ is
+$\varphi$ itself. Skolemization can be easily generalized also to 
+sentences $\varphi$ which are not in prenex form. In such a case, it 
+allows one to eliminate from $\varphi$ all quantifiers that are 
+\emph{essentially} existential, by means of suitable terms involving 
+newly introduced function symbols. As in the case of prenex 
+sentences, it turns out that
+when no essentially existential quantifier occurs in a sentence 
+$\varphi$, the only Skolemized version of $\varphi$ is $\varphi$ 
+itself. In addition, every Skolemized version of a sentence of the 
+form $\neg \varphi$ has the form $\neg \psi$, for some sentence 
+$\psi$.
+
+
+\begin{theorem}[Herbrand's Theorem]\label{HERVAL}
+A sentence $\varphi$ is valid if and only if for each Skolemized 
+version $\neg \psi$ of $\neg \varphi$ there exists a Herbrand domain 
+$D$ of $\psi$ such that $\HExp(\psi, D)$ is a tautology. \qed
+%
+%there is some sentence
+%$\psi$ such that
+%\begin{itemize}
+% \item $\neg \psi$ is a Skolemized version of $\neg \varphi$, and
+% \item $\HExp(\psi, D)$ is a tautology
+%\end{itemize}
+%for some Herbrand domain $D$ of $\psi$. \qed
+\end{theorem}
+
+The decidability of the satisfiability problem for finite conjunctions
+of function-free universally quantified prenex sentences, and more in 
+general for function-free sentences involving no essentially 
+existential quantifier,
+follows easily from Herbrand's Theorem, as clarified in the following lemma.
+%
+\begin{lemma}\label{HERSAT}
+Let $\varphi$ be a sentence of $\Lang$ involving no essentially 
+existential quantifier and no function symbol, and let $\Univ$ be the 
+(finite) Herbrand universe of $\varphi$. Then $\varphi$ is 
+satisfiable if and only if $\HExp(\varphi, \Univ)$ is 
+(propositionally) satisfiable. Hence, the satisfiability problem for 
+function-free sentences of $\Lang$ involving no essentially 
+existential quantifier is decidable.
+\end{lemma}
+%\begin{corollary}\label{HERSAT}
+%  Let $\varphi$ be a conjunction of universally quantified prenex
+%  sentences in a function-free first-order language $\Lang$, and let
+%  $\Univ$ be the Herbrand universe of $\varphi$. Then $\varphi$ is
+%  satisfiable if and only if so is $\HExp(\varphi, \Univ)$.
+%\end{corollary}
+\begin{proof}
+Let $\varphi$ be a sentence of $\Lang$ as in the hypotheses. Plainly, 
+$\varphi$ if satisfiable if and only if $\neg \varphi$ is not valid. 
+Thus, from Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and only 
+if for every Skolemized version $\neg \psi$ of $\neg \neg \varphi$ 
+and every Herbrand domain $D$ of $\psi$, the sentence $\HExp(\psi, 
+D)$ is not a tautology. But $\HExp(\psi, D)$ is not a tautology if 
+and only if $\neg \HExp(\psi, D)$ is satisfiable, hence if and only 
+if $\HExp(\neg \psi, D)$ is satisfiable. In addition, since, just 
+like $\varphi$, the sentence $\neg \neg \varphi$ involves no 
+essentially existential quantifier, the sole Skolemized version of 
+$\neg \neg \varphi$ is $\neg \neg \varphi$ itself. Thus, we can 
+conclude that $\varphi$ is satisfiable if and only if $\HExp(\neg 
+\neg \varphi, D)$ is satisfiable for every Herbrand domain $D$ of 
+$\neg \varphi$, and therefore if and only if $\HExp(\varphi, D)$ is 
+satisfiable for every Herbrand domain $D$ of $\varphi$. Finally, 
+since by Lemma~\ref{le:Exp}\ref{le:Expb} $\HExp(\varphi, \Univ) 
+\rightarrow \HExp(\varphi, D)$ is valid for every Herbrand domain $D$ 
+of $\varphi$ (where $\Univ = \Consts^*(\varphi)$ is the finite 
+Herbrand universe of $\varphi$), we have that $\varphi$ is 
+satisfiable if and only if $\HExp(\varphi, \Univ)$ is satisfiable.
+
+ From the first part of the proof, it follows that the satisfiability 
+problem for function-free sentences of $\Lang$ involving no 
+essentially existential quantifier can be effectively reduced to the 
+satisfiability problem for propositional formulae, and therefore it 
+is decidable.
+\qed
+%
+%
+%all the formulae $\psi$, $\neg \psi$ is \emph{not} a skolemized
+%  version of $\neg \neg \varphi$ or, if $\neg \psi$ is a skolemized
+%  version of $\neg \neg \varphi$, then, for every Herbrand domain 
+%$D$ of $\psi$,
+%  $\HExp(\psi, D)$ is not a tautology, i.e., $\neg \HExp(\psi, D)$ is
+%  satisfiable. But, $\neg \HExp(\psi, D)=\HExp(\neg \psi, D)$ (see 1 of
+%  Proposition 8.6.6 in \cite{Fitting96}), and thus
+%
+%Without loss of generality, we can assume that $\varphi$ is
+%a universally quantified prenex sentence, since any conjunction of 
+%universally quantified prenex sentences can be transformed into an 
+%equivalent universally quantified prenex sentence through variable 
+%renaming and repeated application of the rule
+%\[
+% (\forall x_1,\ldots,x_n)\psi_1 \wedge (\forall 
+%y_1,\ldots,y_n)\psi_2 \quad \equiv \quad (\forall 
+%x_1,\ldots,x_n,y_1,\ldots,y_n) (\psi_1 \wedge \psi_2),
+%\]
+%where no $x_i$ is a $y_j$ and $(\forall x_1,\ldots,x_n)\psi_1$ and 
+%$(\forall y_1,\ldots,y_n)\psi_2$ are sentences.
+%
+%%  In fact, an equivalent
+%%  universally quantified prenex sentence can be constructed in linear
+%%  time from every finite conjunction of universally quantified prenex
+%%  sentences, provided that no variable occurs twice different prefixes
+%%  of the formula.
+%
+%  Since $\varphi$ if satisfiable if and only if $\neg \varphi$ is not
+%  valid, then, by Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and
+%  only if
+%
+%  for all the formulae $\psi$, $\neg \psi$ is \emph{not} a skolemized
+%  version of $\neg \neg \varphi = \varphi$ or, if $\neg \psi$ is a skolemized
+%  version of $\varphi$, then, for every Herbrand domain $D$ of $\psi$,
+%  $\HExp(\psi, D)$ is not a tautology, i.e., $\neg \HExp(\psi, D)$ is
+%  satisfiable. But, $\neg \HExp(\psi, D)=\HExp(\neg \psi, D)$ (see 1 of
+%  Proposition 8.6.6 in \cite{Fitting96}), and thus
+%
+%  A formula $\varphi$ if satisfiable if and only if $\neg \varphi$ is not
+%  valid. Thus, from Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and
+%  only if for all the formulae $\psi$, $\neg \psi$ is \emph{not} a skolemized
+%  version of $\neg \neg \varphi = \varphi$ or, if $\neg \psi$ is a skolemized
+%  version of $\varphi$, then, for every Herbrand domain $D$ of $\psi$,
+%  $\HExp(\psi, D)$ is not a tautology, i.e., $\neg \HExp(\psi, D)$ is
+%  satisfiable. But, $\neg \HExp(\psi, D)=\HExp(\neg \psi, D)$ (see 1 of
+%  Proposition 8.6.6 in \cite{Fitting96}), and thus
+%  \begin{equation}
+%  \begin{array}{rcl}
+%  \varphi\mbox{ is satisfiable}&\iff&(\forall \psi)(\neg \psi \mbox{ 
+%is a skolemized version of } \varphi \rightarrow \\
+%  &&\quad\quad(\forall D\in\mathcal{D})(\HExp(\neg \psi, D)\mbox{ is 
+%satisfiable})
+%  \end{array}
+%  \end{equation}
+%  where $\mathcal{D}$ is the set consisting of all the Herbrand domains of
+%  $\psi$, i.e., the set of all the finite subsets of the Herbrand universe of $\psi$.
+%  Now, by replacement of $\neg \psi$ with a novel symbol $\bar{\psi}$, we obtain
+%  \begin{equation}\label{HERSAT2}
+%  \begin{array}{rcl}
+%  \varphi\mbox{ is satisfiable}&\iff&(\forall \bar{\psi})(\bar{\psi} 
+%\mbox{ is a skolemized version of } \varphi \rightarrow \\
+%  &&\quad\quad(\forall D\in\mathcal{D})(\HExp(\bar{\psi}, D)\mbox{ 
+%is satisfiable}) .
+%  \end{array}
+%  \end{equation}
+%  Skolemization has no effects when applied to universally quantified prenex
+%  formulae, so that, in the hypothesis of the corollary, the solely skolemized
+%  version of $\varphi$ is $\varphi$ it self. Thus, from (\ref{HERSAT2}) easily
+%  follows
+%  \begin{equation}\label{HERSAT3}
+%  \begin{array}{rcl}
+%  \varphi\mbox{ is satisfiable}&\iff&(\forall D \in 
+%\mathcal{D})(\HExp(\varphi, D)\mbox{ is satisfiable}) .
+%  \end{array}
+%  \end{equation}
+%  Now, as we are assuming that no function symbol occurs in $\varphi$,
+%  then $\Univ$ must be finite (it consists of exactly all the constant symbols
+%  occurring in $\varphi$, or of a single constant $c$ if not any constant
+%  symbol occurs in $\varphi$).Thus, $\mathcal{D}$ coincides with the 
+%powerset of $\Univ$,
+%  and thus
+%  \begin{equation}\label{HERSAT4}
+%  \begin{array}{rcl}
+%  \varphi\mbox{ is satisfiable}&\iff&(\forall 
+%D\subseteq\Univ)(\HExp(\varphi, D)\mbox{ is satisfiable}) .
+%  \end{array}
+%  \end{equation}
+%  We conclude our proof with observing that
+%  \[
+%  (\forall D\subseteq\Univ)(\HExp(\varphi, D)\mbox{ is satisfiable}) 
+%\iff \HExp(\varphi, \Univ) \mbox{ is satisfiable.}
+%  \]
+%  The if direction is trivial, whereas the converse one easily follows
+%  from the property of Herbrand expansion $\HExp(\varphi, \Univ) 
+%\rightarrow \HExp(\varphi, D)$,
+%  which holds for all $D \subseteq \Univ$ (see Proposition 8.6.6 and 
+%Exercise 8.6.4 in \cite{Fitting96}).
+%  \qed
+\end{proof}
+
+\subsection{Disjunctive Datalog}
+% \begin{theorem}\label{HERSAT}
+% Let $\varphi$ be a finite conjunction of universally quantified prenex
+% sentences.  Then $\varphi$ is satisfiable if and only if it admits a
+% Herbrand model $\hinter$ whose universe coincides with the set
+% $\Consts(\hinter)$, if $\Consts(\hinter) \neq \emptyset$, otherwise
+% is any singleton.  \qed
+% \end{theorem}
+
+We close the section by briefly reviewing the \DisjDatalog first-order
+fragment of $\Lang$.  A \emph{\DisjDatalog-formula} is a finite
+conjunction of \emph{rules}, i.e., closed formulae of the following
+form
+\[
+  (\forall x_1)\ldots(\forall x_n)(\varphi \rightarrow \psi)\,, \]
+%
+%  \left(\left(\gamma_1 \wedge \ldots \wedge
+% 	\gamma_m\right) \rightarrow \left(\sigma_1 \vee \ldots \vee 
+%\sigma_h\right)\right)
+%\]
+where $\varphi$ (the rule \emph{body}) is a conjunction of literals,
+$\psi$ (the rule \emph{head}) is a disjunction of literals, and
+$\Vars(\psi) \subseteq \Vars(\varphi)$ (\emph{safety 
+condition}).\footnote{$\DisjDatalog$-formulae are often referred to
+also as \emph{programs}, so that the expressions
+``\DisjDatalog-formulae'' and ``\DisjDatalog-programs'' must be
+regarded as synonyms.}
+% $n$, $m$ and $h$ are natural numbers,
+% $\gamma_1$, \ldots, $\gamma_m$, $\sigma_1$, \ldots, $\sigma_h$ are
+% literals, and  $x_1, \ldots, x_n$ are variables.
+% The left-hand side of a \DisjDatalog-rule is
+% called the \emph{rule body}, whereas the right-hand side is called
+% the \emph{rule head}. In addition, rules in a \DisjDatalog-program
+% have to be \emph{safe}, i.e., every variable in the head of a
+% rule must occur in the rule body as well.
+%
+\emph{Facts} are special ground rules whose body is valid.  For
+this kind of rules, one may omit to indicate the rule body.  Thus
+facts can just be regarded as disjunctions of ground literals.  They
+are used to express facts about real world items, such as for example
+$\mathit{childOf}(\mathit{Alice}, \mathit{Bob})$, 
+$\mathit{isMale}(\mathit{Bob})$, etc.
+
+Finally, we observe that restricted universal quantifiers
+can easily be embedded  in \DisjDatalog-rules and -formulae.
+Indeed, let us consider a sentence of the form
+\begin{equation}\label{RESTR1}
+  (\forall x_1, \ldots, x_n | P(y_1, \ldots, y_m))(\varphi \rightarrow
+  \psi)\,,
+\end{equation}
+where $\{y_1, \ldots, y_m\} \subseteq \{x_1, \ldots, x_n\}$, 
+$\varphi$ is a conjunction of literals, $\psi$ is a disjunction
+of literals, $\Vars(\psi) \subseteq \Vars(\varphi) \cup
+\{y_{1},\ldots,y_{m}\}$, and $P$ is a predicate symbol of arity $m$.
+Then, as remarked earlier, (\ref{RESTR1}) is equivalent to the sentence
+\[
+  (\forall x_1, \ldots, x_n)(P(y_1, \ldots, y_m) \rightarrow (\varphi
+  \rightarrow \psi)),
+\]
+which, in its turn, is equivalent to the sentence
+\begin{equation}\label{RESTR2}
+  (\forall x_1, \ldots, x_n)((P(y_1, \ldots, y_m) \wedge \varphi)
+  \rightarrow \psi).
+\end{equation}
+Plainly, (\ref{RESTR2}) is a (standard) $\DisjDatalog$-rule, with body
+$P(y_1, \ldots, y_m) \wedge \varphi$.
+% with $n,m \in \nat$, $1\leq m \leq n$, $P$ a predicate of arity $m$,
+% and $\varphi$, $\psi$ two quantifier-free formulae, is equivalent to
+% the formula
+% \begin{equation}\label{RESTR2}
+%  (\forall x_1, \ldots, x_n)((P(x_1, \ldots, x_m) \wedge \varphi)
+%  \rightarrow \psi),
+% \end{equation}
+% so that formula (\ref{RESTR2}) is a \DisjDatalog-rule if $\Vars(\psi)
+% \subseteq \{x_1, \ldots, x_m\} \cup \Vars(\varphi)$.  In particular,
+% if the formula (\ref{RESTR1}) is closed, then it must be a
+% $\DisjDatalog$-formula.
+
+
+\section{The language \Forallpizero}\label{FORALLPIZERO}
+
+We recall the syntax and semantics of the set-theoretic
+language \Forallpizero, whose decision problem has been studied in 
+\cite{CanLonNic2011}.
+\emph{Atomic }$\Forallpizero$\emph{-formulae} are of the following types
+\begin{equation}\label{ATFORM}
+    \nonpairin{\nu}{\mu}, \quad \pairin{\nu}{\nu'}{\mu}, \quad \seteq{\nu}{\mu}
+\end{equation}
+with $\nu, \nu', \mu \in \Vars \cup \Consts$. Intuitively,
+a clause of type $\nonpairin{\nu}{\mu}$
+expresses that $\nu$ is a \emph{non-pair} member of $\mu$,
+whereas a clause of type $[\nu, \nu'] \in \mu$ expresses
+that the pair $[\nu, \nu']$ belongs to $\mu$. Atomic
+\Forallpizero-formulae and their negations are called
+$\Forallpizero$\emph{-literals}. \emph{Quantifier-free }
+$\Forallpizero$\emph{-formulae} are propositional combinations of atomic
+$\Forallpizero$-formulae. \emph{Simple-prenex }$\Forallpizero$\emph{-formulae}
+have the following form:
+\begin{equation}\label{eq:simplePrenex}
+  (\forall \nonpairin{x_1}{a_1})\ldots(\forall 
+\nonpairin{x_n}{a_n})(\forall \pairin{y_1}{z_1}{b_1})\ldots(\forall 
+\pairin{y_m}{z_m}{b_m})\psi,
+\end{equation}
+where $n, m \geq 0$, $x_i \in \Vars$ and
+$a_i \in \Consts$, for $1 \leq i \leq n$,
+$y_j, z_j \in \Vars$ and $b_j \in \Consts$, for
+$1 \leq j \leq m$, and $\psi$ is a quantifier-free
+\Forallpizero-formula. The constants $a_1, \ldots, a_n, b_1, \ldots b_m$
+are the \emph{domain constants} of (\ref{eq:simplePrenex}).
+Finally, $\Forallpizero$\emph{-formulae} are finite
+conjunctions of simple-prenex \Forallpizero-formulae.
+%
+In this paper we are mainly interested in 
+$\Forallpizero$\emph{-sentences}, namely finite conjunctions of 
+\emph{closed} simple-prenex \Forallpizero-formulae.
+The collection of the domain constants of a
+\Forallpizero-sentence $\varphi$, which we denote with $\DomConsts(\varphi)$,
+consists of the domain constants of all of its conjuncts.
+
+
+\Forallpizero-sentences can be regarded as first-order
+formulae in the language $\Lang=(\LangPreds, \LangFuncts, \LangConsts)$, with
+$\LangPreds=\{ = ,\in \}$, $\LangFuncts=\{ [\cdot, \cdot], 
+\nonpairs{\cdot} \}$,
+and $\LangConsts=\Consts$. However, \Forallpizero-sentences have some
+syntactic restrictions which do not apply to general first-order
+languages: for instance, \emph{nested terms} such as $[[a,b],c]$ are not
+allowed in them. Likewise, the semantics of the fragment 
+\Forallpizero is restricted only to \emph{set-theoretic} 
+interpretations $\inter=(D^{\inter}, \cdot^\inter)$, where 
+$D^{\inter}$ is the von Neumann hierarchy of pure sets $\VNU$ and 
+$=^{\inter}$ and $\in^{\inter}$ are the standard equality and 
+membership relations among sets in $\VNU$, so that they comply with 
+the Zermelo-Fraenkel axioms of set theory, as reported for instance 
+in \cite{Mos2005} (we will see below  that  also the interpretations 
+$[\cdot,\cdot]^\inter$ and $\nonpairssym^{\inter}$ are restricted).
+Here we list only the \emph{extensionality} axiom and a consequence 
+of the \emph{regularity} axiom, namely the acyclicity of membership 
+relation:
+\begin{enumerate}[leftmargin=.9cm]
+  \item[\textbf{(C1)}]\label{EXT} \emph{Extensionality}: two sets are 
+\emph{equal} if and only if they have the same members, i.e.,
+\[
+  u =^{\inter} v \iff (\forall x)(x \in^{\inter} u \leftrightarrow x 
+\in^{\inter} v) ;
+\]
+  \item[\textbf{(C2)}]\label{REG} \emph{Acyclicity}: membership is 
+acyclic, i.e.,
+\[
+  (\forall x)(\neg (x \mathrel{(\in^{\inter})^{+}} x) ,
+\]
+\end{enumerate}
+where $(\in^{\inter})^{+}$ is the \emph{transitive closure} of $\in^{\inter}$.
+%
+
+Concerning the interpretation of pair terms, $[\cdot,\cdot]^{\inter}$ 
+has to be a \emph{pairing function},
+in the sense described below.
+Given a binary operation $\boldsymbol{\pi}: \VNU \times \VNU 
+\rightarrow \VNU$, the \emph{Cartesian product} of $u, v \in \VNU$ 
+with
+respect to $\boldsymbol{\pi}$, denoted by $u 
+\times^{\boldsymbol{\pi}} v$, is the class defined by
+\[
+u \times^{\boldsymbol{\pi}} v \defAs \{ \boldsymbol{\pi}(u',v') \,|\, 
+u' \in u \wedge v' \in v \}.
+\]
+Then a binary operation $\boldsymbol{\pi}: \VNU \times \VNU 
+\rightarrow \VNU$ is said to be a \emph{pairing function} if
+and only if the following two conditions hold for all $u,v,u',v' \in
+\VNU$:
+\begin{enumerate}[leftmargin=.9cm]
+%[label=\textbf{(P\arabic*)},leftmargin=28pt]
+  \item[\textbf{(C3)}]$\boldsymbol{\pi}(u,v)=\boldsymbol{\pi}(u',v') 
+\iff u=u' \wedge v=v'$,
+  \item[\textbf{(C4)}]$u \times^{\boldsymbol{\pi}} v$ is a set in $\VNU$.
+\end{enumerate}
+Finally, the interpretation of the
+\emph{non-pairs} operator is constrained by the chosen
+pairing function $[\cdot,\cdot]^\inter$, as expressed by
+\begin{enumerate}[leftmargin=.9cm]
+  \item[\textbf{(C5)}]\label{NONPAIR}
+$u \in^{\inter} \nonpairssym^{\inter}(v) \iff u \in^{\inter} v \wedge 
+(\forall u', v')([u', v']^{\inter} \in^{\inter} v \rightarrow [u', 
+v']^{\inter}\neq u)
+$
+\end{enumerate}
+which must hold for all $u,v \in \VNU$.
+
+We shall refer to interpretations $\inter=(D^{\inter}, \cdot^\inter)$ 
+of the type we have just described as
+\emph{pair-aware set-theoretic interpretations}. Proceeding along the same lines as Section \ref{PRELIMINARIES},  we write 
+$\vmodels{(\inter, A)}{\varphi}$ to indicate that the pair-aware set-theoretic interpretation $\inter$ and the assignment $A$ in $\inter$ evaluate the \Forallpizero-formula $\varphi$ to $\true$. A \Forallpizero-formula $\varphi$ is said to be
+\emph{(set-theoretically) satisfiable}
+%(write $\vsat{\varphi}$)
+if and only there exist a pair-aware
+set-theoretic interpretation $\inter$ and an assignment $A$ in $\inter$ satisfying it,
+i.e., such that $\vmodels{(\inter,A)}{\varphi}$. In case $\varphi$ is a 
+\Forallpizero-sentence, we can simply write $\vmodels{\inter}{\varphi}$ to indicate that $\inter$ evaluates $\varphi$ to $\true$, for a given  
+pair-aware set-theoretic interpretation $\inter$. A \Forallpizero-sentence $\varphi$ is said to be
+\emph{(set-theoretically) satisfiable} if and only if $\vmodels{\inter}{\varphi}$, for some 
+pair-aware set-theoretic interpretation $\inter$. 
+
+%($\vmodels{\inter}{\varphi}$ if $\varphi$ is a sentence) to indicate
+%that $\inter$ is a pair-aware set-theoretic interpretation, $A$ is an 
+%assignment for $\inter$,
+%and $\varphi^{\inter, A}=\true$. 
+%
+%
+%, such that the interpretation domain is the von Neumann hierarchy of sets
+%(i.e., $D^{\inter}=\VNU$),
+%
+%Summing up,
+%every interpretation $\inter=(D^{\inter},\cdot^\inter)$ is said to
+%be a \emph{pair-aware set-theoretic interpretation} if and only if
+%the interpretation domain is the von Neumann hierarchy of sets
+%(i.e., $D^{\inter}=\VNU$) and the interpretation function $\cdot^\inter$
+%is subject to conditions (C3), (C4), and (C5).
+%Then, a \Forallpizero-sentence $\varphi$ is said to be
+%\emph{(set-theoretically) satisfiable}
+%(write $\vsat{\varphi}$)
+%if and only there exists a pair-aware
+%set-theoretic interpretation $\inter$ which satisfies it,
+%i.e., such that $\vmodels{\inter}{\varphi}$.
+% We use the notation
+% $\inter \modelsV \varphi$ to indicate that $\inter$ is a
+% pair-aware set-theoretic interpretation satisfying $\varphi$.
+
+\subsection{A decision procedure for \Forallpizero-sentences}
+
+The satisfiability test for \Forallpizero-sentences reported in
+\cite{CanLonNic2011} relies on the existence of finite structures of
+bounded size, called \emph{skeletal representations}, which witness
+the existence of certain particular interpretations, called \emph{realizations}
+(see Definitions \ref{SKREPR} and \ref{REALIZATIONDEF} below).
+
+% More specifically, \cite[Theorem 3]{CanLonNic2011}
+% states that a  \Forallpizero-sentence $\varphi$ is satisfiable
+% if and only if there exists a skeletal representation $\atset$ for
+% $\varphi$ such that its realization 
+%$\Realization_{\varphi}^{\atset}$ relative to $\varphi$
+% is a model for $\varphi$.
+
+Skeletal representations are finite collections of ground atomic
+$\Forallpizero$-formulae of the form (\ref{ATFORM}), subject to 
+certain conditions (see Definition~\ref{SKREPR} below). As such, a 
+skeletal representation induces a (first-order logic) Herbrand 
+interpretation of $\Forallpizero$-sentences, which we continue to 
+denote also by $\atset$, such that
+\[
+  \fomodels{\atset}{\gamma} \iff \gamma \in \atset ,
+\]
+holds, for every ground atomic $\Forallpizero$-formula $\gamma$.
+% In the rest of the paper
+% we shall write $\gamma^{\atset}$ to indicate that
+% the atomic $\Forallpizero$-formula $\gamma$ is a member of the
+% skeletal representation $\atset$.
+%
+The definition of skeletal representation adopted in this paper
+differs slightly from the one presented in \cite{CanLonNic2011}.  In
+particular, here we extend the notion of skeletal representation so as
+to also encapsulate the notion of \emph{V-extensionality} and the
+technical condition (i) of Theorem 3 in \cite{CanLonNic2011}.
+It turns out that all the results in \cite{CanLonNic2011}
+can be adapted to cope with this extended definition of skeletal
+representation.
+A reformulation of Theorem 3 in \cite{CanLonNic2011}, which is central
+for the set-theoretic satisfiability problem for \Forallpizero-sentences,
+is reported in Theorem~\ref{SAT} below.
+
+In the following definition, we shall make use of the \emph{membership
+closure} relation $\memclosure{\atset}$ relative to a finite set 
+$\atset$ of ground atomic \Forallpizero-formulae. This is the 
+\emph{minimal transitive relation} such that, for all constants 
+$\consta, \constb, \constc$
+occurring in $\atset$, we have
+\[
+  \begin{array}{rcl}
+   \fomodels{\atset}{\nonpairin{\consta}{\constb}} & \Longrightarrow & 
+\consta \memclosure{\atset} \constb ,\\
+   \fomodels{\atset}{\pairin{\consta}{\constb}{\constc}} & 
+\Longrightarrow & \consta \memclosure{\atset} \constc \wedge \constb 
+\memclosure{\atset} \constc .
+  \end{array}
+\]
+(Notice that equality clauses of type $a = b$ in $\atset$ play no 
+role in the definition of the relation $\memclosure{\atset}$.)
+% \begin{itemize}
+%   \item if $\nonpairin{\consta}{\constb}$ is in $\atset$, then $\consta
+%   \memclosure{\atset} \constb$, and
+%
+%   \item if $\pairin{\consta}{\constb}{\constc}$ is a member of $\atset$, then
+%   $\consta \memclosure{\atset} \constc$ and $\constb
+%   \memclosure{\atset} \constc$.
+% \end{itemize}
+
+\begin{definition}[Skeletal representation]\label{SKREPR}
+Let $V$, $T$ be
+two disjoint sets of constants. A \emph{skeletal
+representation} $\atset$ relative to $(V,T)$ is a finite set of ground atomic
+\Forallpizero-formulae (of type (\ref{ATFORM})) such that the 
+following conditions hold:
+\begin{enumerate}[label=\textrm{(S\arabic*)},leftmargin=.9cm]
+    \item\label{SIZEC} all the constants occurring in $\atset$ are in 
+$V \cup T$;
+    \item\label{REGC} the membership closure relation induced by $\atset$ is
+    irreflexive, i.e.,  $\consta \not \memclosure{\atset} \consta$, for every
+   $\consta \in V \cup T$;
+
+   \item\label{EQC} if $\fomodels{\atset}{\seteq{\consta}{\constb}}$, 
+for distinct constants $a$ and $b$, then $a,b \in V$;
+
+   \item\label{EX1C} if $\fomodels{\atset}{\seteq{\consta}{\constb}}$, then
+   $\fomodels{\atset}{\subst{\gamma}{\consta}{\constb}}$ and 
+$\fomodels{\atset}{\subst{\gamma}{\constb}{\consta}}$, for every 
+$\gamma \in \atset$;
+
+   \item\label{EX2C} if 
+$\notfomodels{\atset}{\seteq{\consta}{\constb}}$, for some $\consta, 
+\constb \in V$,
+   then $\consta$ and $\constb$ must be \emph{distinguished}
+   in $\atset$ by some constant $\constc$, in the sense that 
+$\fomodels{\atset}{\constc \in \nonpairs{\consta}}$
+   iff $\notfomodels{\atset}{\constc \in \nonpairs{\constb}}$,
+   or by some pair $[\constc, \constd]$, in the sense that 
+$\fomodels{\atset}{\pairin{\constc}{\constd}{\consta}}$
+   iff $\notfomodels{\atset}{\pairin{\constc}{\constd}{\constb}}$.  \qed
+\end{enumerate}
+\end{definition}
+%
+Condition \ref{REGC}, which is closely related to the acyclicity of 
+the membership relation in set theory, guarantees that a skeletal 
+representation
+$\atset$ can be turned into a corresponding pair-aware set-theoretic
+interpretation (i.e., its realization; see below).
+%
+Conditions \ref{EX1C} and \ref{EX2C} are related to the 
+extensionality axiom of set theory.
+%
+Finally, \ref{SIZEC} and \ref{EQC} are technical conditions which,
+together with \ref{REGC}, \ref{EX1C}, and \ref{EX2C} in Definition 
+\ref{SKREPR}, guarantee some desirable properties of realizations, as 
+shown in Lemma~\ref{REALIZATION} below.
+
+In the following definition of \emph{realization of a skeletal
+representation}, taken from \cite[Definition~1]{CanLonNic2011},
+we shall make use of the family $\{\pi_n\}_{n \in \mathbb{N}}$ of
+pairing functions recursively defined by
+$$
+\begin{array}{rcl}
+   \pi_0(u,v) & \defAs & \{u, \{u,v\}\}\\
+   \pi_{n+1}(u,v) & \defAs & \{ \pi_n(u,v)\}\, ,
+\end{array}
+$$
+for $u,v \in \VNU$.
+
+\begin{definition}[Realization \cite{CanLonNic2011}]\label{REALIZATIONDEF}
+Let $V,T$ be two finite, nonempty, and disjoint sets of constants, 
+where $T=\{t_1, t_2, \ldots, t_n\}$, and let $\atset$ be a skeletal 
+representation relative to $(V,T)$.
+%
+Then the \emph{realization} of $\atset$ relative to $(V,T)$ is
+the pair-aware set-theoretic interpretation $\Realization_{\!\atset}$ 
+defined as follows:
+\[
+\begin{array}{rclr}
+	[\cdot,\cdot]^{\Realization_{\!\atset}} & \defAs &  \pi_{h} & \\
+	\consta^{\Realization_{\!\atset}} & \defAs & 
+\{\constb^{\Realization_{\!\atset}} \, | \, \fomodels{\atset}{\constb 
+\in \nonpairs{\consta}}\} \cup 
+\{[\constb,\constc]^{\Realization_{\!\atset}} \, | \, 
+\fomodels{\atset}{[\constb,\constc] \in \consta}\},~~~& \mbox{for 
+}\consta \in V,\\
+	t_i^{\Realization_{\!\atset}} & \defAs & 
+\{\constb^{\Realization_{\!\atset}} \, | \, \fomodels{\atset}{\constb 
+\in \nonpairs{t_i}}\}  &\\
+	&&\quad {} \cup \{[\constb,\constc]^{\Realization_{\!\atset}} 
+\, | \, \fomodels{\atset}{[\constb,\constc] \in t_i} \} \cup \left\{ 
+\left\{k+1, k, i\right\} \right\}, & \mbox{for }t_i\in T,\\
+\end{array}
+\]
+where $h = |V|+|T|$ and  $k=|V| \cdot (|V| + |T| + 3)$.\footnote{We 
+are assuming that
+integers are represented \emph{\`a la} von Neumann, namely $0 \defAs
+\emptyset$ and, recursively, $n+1 \defAs n \cup \{n\}$.} \qed
+\end{definition}
+%
+The following lemma is a direct consequence of Definition 
+\ref{REALIZATIONDEF} above and of Lemma 2 in 
+\cite{CanLonNic2011}.
+
+\begin{lemma}\label{REALIZATION}
+Let $V$, $T$ be two finite, nonempty, and disjoint sets of constants, 
+$\atset$ a
+skeletal representation relative to $(V,T)$, and $\Realization_{\!\atset}$
+the realization of $\atset$ relative to $(V,T)$. Then, for all $\consta \in V$,
+%\red{\[
+% \consta^{\Realization} \subseteq \left\{ \constb^{\Realization} 
+%\,|\, (\constb \in \nonpairs{\consta})^{\atset} \right\} \cup
+% \left\{ [\constb, \constc]^{\Realization} \,|\, ([\constb, \constc] 
+%\in \consta)^{\atset} \right\} .
+%\]}
+\[
+\consta^{\Realization_{\!\atset}} \subseteq \left\{ 
+\constb^{\Realization_{\!\atset}} \,|\, \constb \in V \cup T \right\} 
+\cup
+  \left\{ [\constb, \constc]^{\Realization_{\!\atset}} \,|\, \constb, 
+\constc \in V \cup T \right\} .
+\]
+In addition, the following conditions hold,
+for all $\consta, \constb, \constc \in V \cup T$:
+\[
+\begin{array}{rcl}
+   \vmodels{\Realization_{\!\atset}}{\consta = \constb}& \iff  & \fomodels{\atset}{\seteq{\consta}{\constb}} 
+\mbox{ or }\consta, \constb\mbox{ are the same symbol}\\
+   \vmodels{\Realization_{\!\atset}}{\consta \in \nonpairs{\constb}} & 
+\iff & \fomodels{\atset}{\nonpairin{\consta}{\constb}}\\
+   \vmodels{\Realization_{\!\atset}}{\pair{\consta}{\constb} \in 
+\constc} & \iff & 
+\fomodels{\atset}{\pairin{\consta}{\constb}{\constc}} .
+\end{array}
+\]
+\qed
+\end{lemma}
+%
+
+Let $V$, $T$, and $T'$ be finite nonempty sets of constants such that 
+$T \subseteq T'$ and $V \cap T' = \emptyset$ (so that we have also 
+that $V \cap T = \emptyset$), and let $\atset$ be a skeletal 
+representation relative to $(V,T)$. Then, plainly, $\atset$ is also a 
+skeletal representation relative to $(V,T')$. Let 
+$\Realization_{\!\atset}$ be the realization of $\atset$  relative to 
+$(V,T)$, and $\Realization'_{\!\atset}$ the realization of $\atset$ 
+relative to $(V,T')$. Then, relative to \Forallpizero-sentences 
+$\varphi$ such that $\Consts(\varphi) \subseteq V$, it is not hard to 
+check that the realizations $\Realization_{\!\atset}$ and 
+$\Realization'_{\!\atset}$ are equivalent, in the sense that 
+$\varphi^{\Realization_{\!\atset}} = 
+\varphi^{\Realization'_{\!\atset}}$.
+
+In view of such considerations and of Definition \ref{SKREPR}, 
+Theorem 3 in \cite{CanLonNic2011} can then be restated as follows.
+
+%Plainly, if $\atset$ is a skeletal representation relative to a pair 
+%$(V,T)$ of finite, nonempty, and disjoint sets of constants $V$ and 
+%$T$, and if $T'$ is a set of constants extending $T$ (i.e., $T 
+%\subseteq T'$) and disjoint from $V$, then $\atset$ is also a 
+%skeletal representation relative to the pair $(V,T')$. In addition, 
+%it turns out that if $\Realization_{\!\atset}$ is the realization of 
+%$\atset$
+
+%Plainly, the \emph{names} of the constants in the set $T$ in 
+%Definition \ref{REALIZATIONDEF} do not affect the
+%realization of a skeletal representation relative to $(V,T)$.  In
+%other words, if $\atset$ is a skeletal representation relative to
+%$(V,T)$, $t$ is a constant in $T$, and $t'$ is another constant not
+%occurring in $V \cup T$, then the realization of $\atset$ relative to
+%$(V,T)$ and the realization of $\subst{\atset}{t}{t'}$ (i.e., the set
+%of atomic \Forallpizero-formulae obtained from $\atset$ by replacing
+%each occurrence of $t$ by $t'$) relative to $(V, T \setminus \{t\}
+%\cup \{t'\})$ coincide.
+%
+%In addition, if $V$, $T$ are two nonempty and disjoint set of 
+%constants, and $T'$ is a finite set of constants disjoint from $V$
+%and such that $T\subseteq T'$, then
+%\begin{itemize}
+% \item every skeletal representation $\atset$ relative to $(V,T)$ is
+% a skeletal representation relative to $(V,T')$ as well, and
+% \item the realization of $\atset$ relative to $(V,T)$ coincides
+% with the realization of $\atset$ relative to $(V,T')$.
+%\end{itemize}
+%
+%In view of the above considerations and of
+%Definition \ref{SKREPR}, Theorem 3 in
+%\cite{CanLonNic2011} can be restated as follows.
+
+\begin{theorem}\label{SAT}
+Let $\varphi$ be a \Forallpizero-sentence, let $V=\Consts(\varphi)$,
+and let $T$ be a set of constants disjoint from $V$ and such that
+$|T|=2\cdot|V|$. Then $\varphi$ is (set-theoretically) satisfiable
+if and only if there exists a skeletal representation $\atset$
+relative to $(V,T)$ such that the realization $\Realization_{\!\atset}$
+of $\atset$ relative to $(V,T)$ satisfies $\varphi$. \qed
+\end{theorem}
+%
+The decidability of the set-theoretic satisfiability problem for
+\Forallpizero-sentences easily follows from Theorem \ref{SAT}, as the
+number of possible skeletal representations for any given
+\Forallpizero-sentence is finitely bounded, and it is effectively
+verifiable whether the realization of a skeletal representation is a
+pair-aware set-theoretic model for a \Forallpizero-sentence.
+Moreover, in analogy with Herbrand logic, skeletal representations
+and Lemma \ref{REALIZATION} provide means to reduce the satisfiability
+of \Forallpizero-sentences to the satisfiability problem for 
+propositional logic. To this purpose, we prove the following 
+preliminary lemma.
+
+\begin{lemma}\label{SKREAL}
+Let $V$, $T$ be two finite, nonempty, and disjoint sets of constants, and let
+$\atset$ and $\Realization_{\!\atset}$ be, respectively, a skeletal 
+representation and
+its realization, both relative to $(V,T)$.
+Then we have
+\[
+  [\HExp(\varphi, V \cup T)]^{\atset} = \varphi^{\Realization_{\!\atset}} \,,
+\]
+for every \Forallpizero-sentence $\varphi$ such that 
+$\Consts(\varphi) \subseteq V \cup T$
+and $\DomConsts(\varphi) \subseteq V$.
+\end{lemma}
+\begin{proof}
+It will be enough to prove the lemma in the case of closed simple-prenex
+\Forallpizero-formulae, as \Forallpizero-sentences are just
+finite conjunctions of closed simple-prenex \Forallpizero-formulae.
+Accordingly, in the rest of this proof we will assume that $\varphi$
+is a closed simple-prenex \Forallpizero-formula.
+
+We proceed by induction on the length $n$ of the quantifier prefix of 
+$\varphi$. If $n=0$, i.e. $\varphi$ is quantifier-free,
+then $\HExp(\varphi, V \cup T)=\varphi$, so that $[\HExp(\varphi, V 
+\cup T)]^\atset =\varphi^\atset$.
+But then $\varphi^\atset = \varphi^{\Realization_{\!\atset}}$, since, 
+by Lemma~\ref{REALIZATION},
+the interpretations $\atset$ and $\Realization_{\!\atset}$ coincide 
+on all atomic \Forallpizero-formulae occurring in $\varphi$.
+
+%Preliminarily, we observe that $\HExp(\varphi, V \cup T)=\varphi$ if
+%$\varphi$ is quantifier-free. In addition,
+%\[
+%\gamma^{\atset} ~~\Longleftrightarrow ~~ \gamma^{\Realization_{\!\atset}} ,
+%\]
+%holds for each atomic \Forallpizero-formula $\gamma$
+%such that $\Consts(\gamma) \subseteq V \cup T$ (see Lemma~\ref{REALIZATION}),
+%so that the lemma follows easily from propositional logic
+%when $\varphi$ is quantifier-free.
+
+For the inductive case, let us first assume that $\varphi$ has the 
+form $(\forall x \in \nonpairs{\consta})\psi$, where $a \in 
+\DomConsts(\varphi) \subseteq V$ and $\psi$ is a simple-prenex 
+\Forallpizero-formula with one less quantifier than $\varphi$.
+%
+Since $\Realization_{\!\atset}$ is the realization of $\atset$ and $a 
+\in V$, we plainly have
+\begin{equation}\label{SKREAL0}
+(\nonpairs{\consta})^{\Realization_{\!\atset}} = \{ 
+\constb^{\Realization_{\!\atset}} \,|\,
+\fomodels{\atset}{\constb \in \nonpairs{\consta}} \},
+\end{equation}
+so that
+\begin{equation}\label{SKREAL1}
+((\forall x \in \nonpairs{\consta})\psi)^{\Realization_{\!\atset}} = 
+\bigwedge\limits_{\fomodels{\atset}{\constb \in \nonpairs{\consta}}} 
+(\subst{\psi}{x}{\constb})^{\Realization_{\!\atset}}.
+\end{equation}
+%
+Observe that, for every constant $\constb$ such that
+$\fomodels{\atset}{\constb \in \nonpairs{\consta}}$, we have
+$\DomConsts(\subst{\psi}{x}{\constb}) = \DomConsts(\psi) =
+\DomConsts(\varphi) \setminus \{\consta\} \subseteq V$, and
+$\Consts(\subst{\psi}{x}{\constb}) \subseteq \Consts(\psi) \cup \{\constb\}
+\subseteq \Consts(\varphi) \cup \{\constb\} \subseteq V \cup T$, as
+we have assumed that $\Consts(\varphi) \cup \Consts(\atset) \subseteq 
+V \cup T$.
+Thus, by inductive hypothesis, we have
+\[
+   [\HExp(\subst{\psi}{x}{\constb}, V \cup T)]^{\atset} = 
+(\subst{\psi}{x}{\constb})^{\Realization_{\!\atset}} ,
+\]
+for every $\constb$ such that $\fomodels{\atset}{\constb \in 
+\nonpairs{\consta}}$, and, therefore, from (\ref{SKREAL0}) and 
+(\ref{SKREAL1}), and from the definition of Herbrand expansion, we 
+have:
+\begin{align*}
+  [\HExp((\forall x \in \nonpairs{\consta})\psi, V \cup T)]^{\atset} &=
+  \bigwedge\limits_{\fomodels{\atset}{\constb \in 
+\nonpairs{\consta}}}[\HExp(\subst{\psi}{x}{\constb}, V \cup 
+T)]^{\atset}  \\
+&=  \bigwedge\limits_{\fomodels{\atset}{\constb \in 
+\nonpairs{\consta}}} 
+(\subst{\psi}{x}{\constb})^{\Realization_{\!\atset}} =
+   ((\forall x \in \nonpairs{\consta})\psi)^{\Realization_{\!\atset}} .
+\end{align*}
+
+Concerning the case in which $\varphi$ has the form
+$(\forall [x,y] \in \consta)\psi$, where $a \in \DomConsts(\varphi) 
+\subseteq V$ and $\psi$ is a simple-prenex \Forallpizero-formula with 
+one less quantifier than $\varphi$, by Lemma \ref{REALIZATION}, we 
+have
+$\consta^{\Realization_{\!\atset}}
+\setminus (\nonpairs{\consta})^{\Realization_{\!\atset}}=\{ [\constb, 
+\constc]^{\Realization_{\!\atset}} \,|\,
+\fomodels{\atset}{[\constb, \constc] \in \consta} \}$, so that
+\[
+((\forall [x,y] \in \consta)\psi)^{\Realization_{\!\atset}} = 
+\bigwedge\limits_{\fomodels{\atset}{[\constb, \constc] \in\consta}} 
+(\subst{\subst{\psi}{x}{\constb}}{y}{\constc})^{\Realization_{\!\atset}}. 
+\]
+Much as before, by inductive hypothesis we have
+\[
+   [\HExp(\subst{\subst{\psi}{x}{\constb}}{y}{\constc}, V \cup 
+T)]^{\atset} = 
+(\subst{\subst{\psi}{x}{\constb}}{y}{\constc})^{\Realization_{\!\atset}} 
+,
+\]
+for all $b,c$ such that $\fomodels{\atset}{[\constb, \constc] 
+\in\consta}$, and therefore
+\begin{align*}
+  [\HExp((\forall [x,y] \in \consta)\psi, V \cup T)]^{\atset} &=
+  \bigwedge\limits_{\fomodels{\atset}{[\constb, \constc] 
+\in\consta}}[\HExp(\subst{\subst{\psi}{x}{\constb}}{y}{\constc}, V 
+\cup T)]^{\atset}  \\
+&=  \bigwedge\limits_{\fomodels{\atset}{[\constb, \constc] 
+\in\consta}} 
+(\subst{\subst{\psi}{x}{\constb}}{y}{\constc})^{\Realization_{\!\atset}}\\
+&= ((\forall [x,y] \in \consta)\psi)^{\Realization_{\!\atset}} ,
+\end{align*}
+concluding the proof of the lemma.\qed
+\end{proof}
+%
+Now, Theorem \ref{SAT} can be restated in a form which resembles more closely
+Lemma~\ref{HERSAT}.
+
+\begin{corollary}\label{SATEXP}
+Let $\varphi$ be a \Forallpizero-sentence, $V=\Consts(\varphi)$,
+and $T$ a set of constants disjoint from $V$ and such that
+$|T|=2\cdot|V|$. Then $\varphi$ is (set-theoretically) satisfiable
+if and only if $\HExp(\varphi, V\cup T)$ is satisfied by the Herbrand 
+interpretation
+$\atset$ which is a skeletal representation
+relative to $(V,T)$, i.e., $[\HExp(\varphi, V\cup T)]^\atset = \true$.
+\end{corollary}
+\begin{proof}
+ From Theorem \ref{SAT}, $\varphi$ is satisfiable if and only if
+there exists a skeletal representation $\atset$
+relative to $(V,T)$ such that the realization $\Realization_{\!\atset}$
+of $\atset$ relative to $(V,T)$ satisfies $\varphi$. But since, by 
+Lemma \ref{SKREAL}, we have
+\[
+  \varphi^{\Realization_{\!\atset}} = [\HExp(\varphi, V \cup T)]^{\atset},
+\]
+the thesis follows. \qed
+\end{proof}
+
+
+\subsection{The Disjunctive Datalog fragment of \Forallpizero}
+We close the section by defining the \emph{Disjunctive Datalog subset}
+$\ForallpizeroDisjDatalog$\emph{ of }\Forallpizero as the collection
+of the \Forallpizero-sentences whose conjuncts are
+closed simple-prenex \Forallpizero-formulae
+of the form
+\begin{equation}\label{starr}
+  (\forall \nonpairin{x_1}{a_1})\ldots(\forall 
+\nonpairin{x_n}{a_n})(\forall \pairin{y_1}{z_1}{b_1})\ldots(\forall 
+\pairin{y_m}{z_m}{b_m})\psi,
+\end{equation}
+such that $\psi$ has the form
+\[
+   \left(\gamma_1 \wedge \ldots \wedge \gamma_l\right) \rightarrow
+   \left(\sigma_1 \vee \ldots \vee \sigma_h\right) ,
+\]
+where $l,h \geq 0$ and $\gamma_1$, \ldots, $\gamma_l$, $\sigma_1$,
+\ldots $\sigma_h$ are \Forallpizero-literals.  Since (\ref{starr}) is
+closed, each variable $x$ which may occur in the head of the rule
+$\psi$ must be bound, so that $x$ occurs in at least one atom of the
+rule body, as required for Disjunctive Datalog rules, when restricted
+quantifiers in (\ref{starr}) are expanded as indicated in
+(\ref{RESTR2}).
+
+%\centerline{\red{\textbf{Occorrerebbe dire qualcosa sul perch\'e 
+%stiamo definendo questo frammento}}}
+
+In the next section we present a reduction of the set-theoretic
+satisfiability problem for \Forallpizero-sentences to the satisfiability
+problem of first-order formulae, and thus to Herbrand
+satisfiability. In addition, we shall see that the same reduction 
+maps $\ForallpizeroDisjDatalog$-sentences
+to $\DisjDatalog$-sentences, so that reducibility of the set-theoretic
+satisfiability problem for $\ForallpizeroDisjDatalog$-sentences to the
+satisfiability problem for $\DisjDatalog$-sentences will follow readily.
+
+%In the next section we present a reduction of the set-theoretic
+%satisfiability for \Forallpizero-sentences to Herbrand satisfiability.
+
+\section{Herbrand-satisfiability of \Forallpizero-sentences}\label{REDUCTION}
+
+%%SKSAFETY FORMULAE
+\newcommand{\regf}{\chi_1}
+\newcommand{\exonef}{\chi_2}
+\newcommand{\extwof}{\chi_3^{(V,T)}}
+\newcommand{\eqf}{\chi_4^{(V,T)}}
+
+%ADDITIONAL PREDICATES
+\newcommand{\distPbyS}{\mathit{distBy}_{\pi}}
+\newcommand{\distbyS}{\mathit{distBy}}
+\newcommand{\distPS}{\mathsf{dist}_{\pi}}
+\newcommand{\distS}{\mathsf{dist}}
+\newcommand{\CPpizeroS}{P^{\bar{\pi}}}
+\newcommand{\PpizeroS}{P^{[,]}}
+\newcommand{\EqPpizeroS}{P^{=}}
+
+\newcommand{\memhatP}{\widehat{\in}}
+\newcommand{\memhat}[2]{#1 \memhatP #2}
+\newcommand{\dist}[2]{\distS(#1,#2)}
+\newcommand{\distP}[2]{\distPS(#1,#2)}
+\newcommand{\distby}[3]{\distbyS(#1,#2,#3)}
+\newcommand{\distPby}[4]{\distPbyS(#1,#2,#3,#4)}
+
+%MARIANNA'S DEFINITIONS
+
+
+In this section we show how to reduce the set-theoretic 
+satisfiability problem for  \Forallpizero-sentences to the 
+satisfiability problem in first-order logic. To this purpose, we 
+introduce the function-free first-order language \Elpizero which 
+involves, besides constants, also the following
+predicate symbols:
+% ,
+\begin{center}
+\begin{tabular}[m]{|c|c|c|}
+     \hline
+     binary & ternary & 4-ary \\
+     \hline
+~~~$\memhatP$, ~$\EqPpizeroS$, ~$\CPpizeroS$
+%,~$\distS$, ~$\distPS$
+~~~  &
+%
+~~~$\PpizeroS$,  ~$\distbyS$~~~ &
+%
+~~~$\distPbyS$~~~\\
+\hline
+\end{tabular}
+\end{center}
+
+% \begin{itemize}
+% \item $\memhatP$, $\EqPpizeroS$,$\CPpizeroS$, $\distS$, $\distPS$ (binary),
+% \item $\PpizeroS$, $\distbyS$ (ternary), and
+% \item $\distPbyS$ (4-ary).
+% \end{itemize}
+
+We shall provide a polynomial-time reduction $\varphi \mapsto
+\Theta_{\varphi}$ from \Forallpizero-sentences into \Elpizero-sentences
+such that the \Forallpizero-sentence $\varphi$ is set-theoretically
+satisfiable if and only if the corresponding \Elpizero-sentence 
+$\Theta_{\varphi}$ is Herbrand-satisfiable.
+%
+In our reduction, the predicate $\memhatP$ will represent the
+transitive closure of the membership relation among sets, whereas the
+predicates
+%$\distS$, $\distPS$,
+$\distbyS$ and $\distPbyS$ will model the fact that two sets are 
+distinct.  In particular, the
+predicate
+%s $\distS$ and
+$\distbyS$ will take care of the case in which
+two sets are distinguished by a set that is not a pair,
+whereas the predicate
+%s $\distPS$ and
+$\distPbyS$ will take care of the
+case in which two sets are distinguished by a pair.  Finally, the predicate
+$\EqPpizeroS(\nu_1,\nu_2)$ will model equality between
+$\nu_1$ and $\nu_2$, the predicate $\CPpizeroS(\nu_1, \nu_2)$
+will represent the set-theoretic atomic formula $\nu_1 \in \nonpairs{\nu_2}$,
+and $\PpizeroS(\nu_1, \nu_2, \nu_3)$ will represent the atomic 
+formula $[\nu_1, \nu_2] \in \nu_3$, where $\nu_1,\nu_2,\nu_3 \in 
+\Vars \cup \Consts$.
+
+For the sake of clarity, with a slight abuse of notation, we shall
+write $\nu_1=\nu_2$, $\nu_1 \in \nonpairs{\nu_2}$, and $[\nu_1, \nu_2]
+\in \nu_3$ in place of $\EqPpizeroS(\nu_1, \nu_2)$, $\CPpizeroS(\nu_1,
+\nu_2)$ and $\PpizeroS(\nu_1, \nu_2, \nu_3)$, respectively, for all
+$\nu_1,\nu_2,\nu_3 \in \Vars \cup \Consts$.  With such an
+understanding, \Forallpizero can be regarded as a sublanguage of
+$\Elpizero$, and skeletal representations as particular Herbrand 
+interpretations (over \Elpizero), subject to the conditions reported 
+in Definition~\ref{SKREPR}.
+%Notice that Corollary~\ref{SATEXP} applies to \Forallpizero-sentences, when these are regarded as first-order formulae in \Elpizero.
+
+$\Forallpizero$-formulae have a set-theoretic semantics.  However, 
+Lemma~\ref{HERSAT} and Corollary~\ref{SATEXP} suggest how to 
+circumvent this issue by mapping skeletal representations into 
+Herbrand interpretations. Indeed, skeletal representations are 
+Herbrand interpretations of a very particular type, but, of course, 
+there are Herbrand interpretations which do not comply with the 
+conditions of Definition~\ref{SKREPR}.
+
+Our reduction $\varphi \mapsto \Theta_{\varphi}$ from 
+\Forallpizero-sentences into \Elpizero-sentences will be defined in 
+terms of an \Elpizero-formula $\chi^{(V,T)}$, depending on two 
+nonempty and disjoint sets of constants $V$ and $T$, where $V = 
+\Consts(\varphi)$ and $|T| = 2 \cdot |V|$, intended to enforce the 
+conditions of Definition \ref{SKREPR}, in such a way that
+\begin{itemize}
+  \item every Herbrand interpretation $\hinter$ satisfying $\chi^{(V,T)}$
+  is a skeletal representation relative to $(V,T)$, and
+  \item every skeletal representation relative to $(V,T)$
+  satisfies $\chi^{(V,T)}$.
+\end{itemize}
+Then we shall put $\Theta_{\varphi} \equivAs\, \chi^{(V,T)} \wedge 
+\varphi$ and prove that $\varphi$ is set-theoretically satisfiable if 
+and only if $\Theta_{\varphi}$ is satisfiable in first-order logic.
+
+% In the rest of the paper, we shall refer to the subset of a Herbrand
+% interpretation $\hinter$ consisting of the atomic
+% \Forallpizero-sentences in $\hinter$ as the
+% $\Forallpizero$\emph{-subset} of $\hinter$.
+
+Thus, let $V$, $T$ be two nonempty and disjoint sets of constants 
+(such that $|T| = 2 \cdot |V|$). The formula $\chi^{(V,T)}$
+is defined as follows:
+\[
+   \chi^{(V,T)} \equivAs\, \regf \wedge \exonef \wedge \extwof \wedge \eqf ,
+\]
+where
+%\newpage
+\begin{align*}
+   \regf  \equivAs {} & (\forall x, y)(\nonpairin{x}{y} \rightarrow 
+\memhat{x}{y}) \wedge (\forall x, y, z)(\pairin{x}{y}{z} \rightarrow 
+\memhat{x}{z} \wedge \memhat{y}{z})\\
+   & {~} \wedge
+(\forall x, y, z)(\memhat{x}{y} \wedge \memhat{y}{z} \rightarrow \memhat{x}{z})
+   \wedge (\forall x)\neg(\memhat{x}{x})\\ \displaybreak[0]
+   &\\
+   \exonef \equivAs {} & (\forall x, y)(\seteq{x}{y} \rightarrow 
+\seteq{y}{x}) \wedge (\forall x, y, z)(\seteq{x}{y} \wedge 
+\seteq{y}{z} \rightarrow \seteq{x}{z}) \\
+   & {~} \wedge (\forall x, y, z)(\nonpairin{x}{y} \wedge \seteq{x}{z} 
+\rightarrow \nonpairin{z}{y})  \\
+   & {~} \wedge (\forall x, y, z)(\nonpairin{x}{y} \wedge \seteq{y}{z} 
+\rightarrow \nonpairin{x}{z})  \\
+   & {~} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
+\seteq{x}{v} \rightarrow \pairin{v}{y}{z}) \\
+   & {~} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
+\seteq{y}{v} \rightarrow \pairin{x}{v}{z}) \\
+   & {~} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
+\seteq{z}{v} \rightarrow \pairin{x}{y}{v})\\
+   &\\ \displaybreak[0]
+   \extwof \equivAs {} & \bigwedge\limits_{x,y \in V}
+   \big( \neg(\seteq{x}{y}) \rightarrow \distS^{(V,T)}(x,y) \vee 
+\distPS^{(V,T)}(x,y) \big)  \\
+   & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
+\nonpairin{z}{x} \wedge \neg(\nonpairin{z}{y})\big) \\
+   & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
+   \pairin{z}{v}{x} \wedge \neg(\pairin{z}{v}{y})\big)\\
+   &\\ \displaybreak[0]
+   \eqf \equivAs {} & \bigwedge\limits_{x \in V \cup T, t \in T, x\neq 
+t} \neg(\seteq{x}{t}),
+\end{align*}
+and where we are using the following abbreviations
+\begin{align*}
+%
+\distS^{(V,T)}(x,y) \equivAs {} & \bigvee\limits_{z \in V \cup 
+T}\big(\distby{x}{y}{z} \vee \distby{y}{x}{z}\big) \\ \\
+%
+\distPS^{(V,T)}(x,y) \equivAs {} & \bigvee\limits_{z,v \in V \cup 
+T}\big(\distPby{x}{y}{z}{v} \vee \distPby{y}{x}{z}{v}\big) .
+\end{align*}
+
+%\[
+% \begin{array}{rcl}
+%  &&\\
+%  \regf & \equivAs & (\forall x, y)%(\nonpairin{x}{y} \rightarrow 
+%\memhat{x}{y}) \wedge (\forall x, y)%(\pairin{x}{y}{z} \rightarrow 
+%\memhat{x}{z})\\
+%%  && {} \wedge (\forall x, y)(\pairin{x}{y}{z} \rightarrow \memhat{x}{z}) \\
+%  && {} \wedge (\forall x, y)(\pairin{x}{y}{z} \rightarrow 
+%\memhat{y}{z}) \wedge (\forall x, y, z)%(\memhat{x}{y} \wedge 
+%\memhat{y}{z} \rightarrow \memhat{x}{z})\\
+%%  && {} \wedge (\forall x, y, z)(\memhat{x}{y} \wedge \memhat{y}{z} 
+%\rightarrow \memhat{x}{z}) \\
+%  && {} \wedge (\forall x)\neg(\memhat{x}{x})\\
+%  &&\\
+%  \exonef & \defAs & (\forall x, y)(\seteq{x}{y} \rightarrow 
+%\seteq{y}{x}) \wedge (\forall x, y, z)(\seteq{x}{y} \wedge 
+%\seteq{y}{z} \rightarrow \seteq{x}{z}) \\
+%%  && {} \wedge (\forall x, y, z)(\seteq{x}{y} \wedge \seteq{y}{z} 
+%\rightarrow \seteq{x}{z})  \\
+%  && {} \wedge (\forall x, y, z)(\nonpairin{x}{y} \wedge 
+%\seteq{x}{z} \rightarrow \nonpairin{z}{y})  \\
+%  && {} \wedge (\forall x, y, z)(\nonpairin{x}{y} \wedge 
+%\seteq{y}{z} \rightarrow \nonpairin{x}{z})  \\
+%  && {} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
+%\seteq{x}{v} \rightarrow \pairin{v}{y}{z}) \\
+%  && {} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
+%\seteq{y}{v} \rightarrow \pairin{x}{v}{z}) \\
+%  && {} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
+%\seteq{z}{v} \rightarrow \pairin{x}{y}{v})\\
+%  &&\\
+%  \extwof & \defAs & \bigwedge\limits_{x,y \in V}
+%  \big( \neg(\seteq{x}{y}) \rightarrow \dist{x}{y} \vee \distP{x}{y} \big)  \\
+%  && {} \wedge (\forall x,y)\left(\dist{x}{y} \rightarrow 
+%\bigvee\limits_{z \in V \cup T}\big(\distby{x}{y}{z} \vee 
+%\distby{y}{x}{z}\big)\right) \\
+%  && {} \wedge (\forall x,y)\left(\!\!\distP{x}{y} \rightarrow 
+%\bigvee\limits_{z,v \in V \cup T}\big(\distPby{x}{y}{z}{v} \vee 
+%\distPby{y}{x}{z}{v}\big)\!\!\right) \\
+%  && {} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
+%(\nonpairin{z}{x} \wedge \neg(\nonpairin{z}{y}))\big) \\
+%  && {} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
+%  (\pairin{z}{v}{x} \wedge \neg(\pairin{z}{v}{y}))\big)\\
+%  &&\\
+%  \eqf & \defAs & \bigwedge\limits_{x \in V \cup T, t \in T, x\neq 
+%t} \neg(\seteq{x}{t}) .
+%  \end{array}
+%\]
+It can be easily verified that $\chi^{(V,T)}$ is a
+$\DisjDatalog$-formula. In addition, $V \cup T$ is the Herbrand
+universe of $\chi^{(V,T)}$. Indeed, no constant occurs in
+$\regf$ and $\exonef$, whereas $\extwof$ and $\eqf$ involve
+all the constants in $V \cup T$ and no other.
+
+%
+The formulae $\regf$, $\exonef$, $\extwof$, and $\eqf$ are intended 
+to formalize the conditions \ref{REGC}, \ref{EX1C}, \ref{EX2C}, and 
+\ref{EQC} of
+Definition \ref{SKREPR}, as clarified in the following lemma.
+
+
+\begin{lemma}\label{HERTOSK}
+Let $V$, $T$ be two disjoint and nonempty sets of constants.
+Let $\hinter$ be a Herbrand interpretation such that:
+\begin{itemize}
+  \item $\Consts(\hinter)\subseteq V \cup T$, i.e.,
+  all the atomic formulae of $\Elpizero$ involving some constant not in
+  $V \cup T$ are evaluated to $\false$ by $\hinter$, and
+  \item $\fomodels{\hinter}{\HExp(\chi^{(V,T)}, V \cup T)}$.
+\end{itemize}
+Then $\hinter$ is a skeletal representation relative to $(V,T)$.
+\end{lemma}
+\begin{proof}
+We must prove that $\hinter$ satisfies all the conditions
+reported in Definition \ref{SKREPR}.
+In view of Lemma
+\ref{HERSAT},
+%\marginpar{Il corollario non dice proprio questo.}
+$\hinter$ satisfies $\chi^{(V,T)}$, as we are assuming that
+$\hinter$ satisfies $\HExp(\chi^{(V,T)}, V \cup T)$ and $V \cup T$ is
+the Herbrand universe of $\chi^{(V,T)}$.
+
+Concerning \ref{SIZEC}, there is nothing to prove, since it follows 
+directly from the hypotheses.
+
+Next, we observe that the relation $\memhatP^{\hinter}$ is acyclic,
+as $\hinter$ satisfies the conjunct $\regf$ of $\chi^{(V,T)}$.
+Hence, $\memclosure{\hinter}$ must be acyclic as well, as required by
+condition \ref{REGC}, since $\memclosure{\hinter} \subseteq
+\memhatP^{\hinter}$.\footnote{The relation $\memclosure{\hinter}$ does
+not necessarily coincide with $\memhatP_{\hinter}$, as the minimality
+of $\memhatP_{\hinter}$ is not enforced by $\regf$.}
+
+Concerning \ref{EQC}, let 
+$\fomodels{\hinter}{\seteq{\consta}{\constb}}$, where $a$ and $b$ are 
+distinct constants, and assume by
+way of contradiction that $\constb \notin V$. Then we must have 
+$\constb \in T$, as $b \in \Consts(\hinter) \subseteq V \cup T$.
+But since $\fomodels{\hinter}{\eqf}$, then, \emph{a fortiori}, 
+$\fomodels{\hinter}{\neg(\seteq{\consta}{\constb})}$, a contradiction,
+proving that $\constb \in V$. Since 
+$\fomodels{\hinter}{\seteq{\consta}{\constb}}$ and 
+$\fomodels{\hinter}{\HExp(\exonef, V \cup T)}$,
+then we have also $\fomodels{\hinter}{\HExp((\forall x)(\seteq{x}{y} 
+\rightarrow \seteq{y}{x}), V \cup T)}$, so
+that $\fomodels{\hinter}{\seteq{\constb}{\consta}}$ holds. Thus, the 
+same argument as before shows that we have also
+$\consta \in V$, proving \ref{EQC}.
+
+Next, let $\fomodels{\hinter}{\seteq{\consta}{\constb}}$, for some constants
+$\consta, \constb \in V \cup T$, and let $\gamma$ be a ground atomic 
+\Forallpizero-formula such that $\fomodels{\hinter}{\gamma}$.
+Since, as observed earlier, we have 
+$\fomodels{\hinter}{\HExp(\exonef, V \cup T)}$, then it follows also 
+that
+$\fomodels{\hinter}{\subst{\gamma}{\consta}{\constb}}$ and 
+$\fomodels{\hinter}{\subst{\gamma}{\constb}{\consta}}$, proving 
+\ref{EX1C}.
+
+Finally, let $\consta, \constb \in V$ be such that 
+$\notfomodels{\hinter}{\seteq{\consta}{\constb}}$. Hence,
+$\fomodels{\hinter}{\distS^{(V,T)}(\consta,\constb) \vee 
+\distPS^{(V,T)}(\consta,\constb)}$, as, from the hypotheses, we have
+$\fomodels{\hinter}{\HExp(\extwof, V \cup T)}$. It can easily be 
+verified that if 
+$\fomodels{\hinter}{\distS^{(V,T)}(\consta,\constb)}$,
+then $\consta$ and $\constb$ are distinguished in $\hinter$ by a 
+constant (in the sense of Definition \ref{SKREPR}), whereas if
+$\fomodels{\hinter}{\distPS^{(V,T)}(\consta,\constb)}$, then 
+$\consta$ and $\constb$ are distinguished in $\hinter$ by a pair term.
+Indeed, if $\fomodels{\hinter}{\distS^{(V,T)}(\consta,\constb)}$, 
+then $\fomodels{\hinter}{\distby{\consta}{\constb}{\constc} \vee
+\distby{\constb}{\consta}{\constc}}$, for some constant $\constc \in 
+V \cup T$, so that either 
+$\fomodels{\hinter}{\nonpairin{\constc}{\consta} \wedge 
+\neg(\nonpairin{\constc}{\constb})}$
+or $\fomodels{\hinter}{\nonpairin{\constc}{\constb} 
+\wedge\neg(\nonpairin{\constc}{\consta})}$, and in either case 
+$\consta$ and
+$\constb$ are distinguished in $\hinter$ by some constant $\constc 
+\in V \cup T$. By reasoning much as
+above, it can also be checked that if 
+$\fomodels{\hinter}{\distPS^{(V,T)}(\consta,\constb)}$, then 
+$\consta$ and $\constb$ are
+distinguished in $\hinter$ by some pair $\pair{\constc}{d}$, with 
+$\constc, d \in V \cup T$.
+Thus, $\hinter$ satisfies condition \ref{EX2C}. \qed
+\end{proof}
+%
+In addition, every skeletal interpretation can be extended to
+comply with the constraints imposed by $\chi^{(V,T)}$.
+
+\begin{lemma}\label{SKTOHER}
+Given two nonempty and disjoint sets of constants $V$, $T$ (such that 
+$|T| = 2 \cdot |V|$), every skeletal representation $\atset$ relative 
+to $(V,T)$
+can be extended/redefined in such a way that $ 
+\fomodels{\atset}{\HExp(\chi^{(V,T)}, V \cup T)}$.
+\end{lemma}
+\begin{proof}
+Let $\atset$ be a skeletal representation relative to $(V,T)$, where
+$V$ and $T$ are sets of constants as in the hypotheses. We extend 
+$\atset$ as follows.
+%
+% Initially, we put $\hinter \defAs \atset$ and then we enrich $\hinter$
+% with new atomic formulae according to the following rules.
+%
+To begin with, $\memhatP{}^{\atset}$ is defined as the minimal 
+transitive relation over $V \cup T$
+such that
+%$\smash{\memhatP}^{\atset}$
+\[
+\begin{array}{rcl}
+  (\nonpairin{\consta}{\constb})^{\atset} & \Longrightarrow & 
+(\memhat{\consta}{\constb})^{\atset} \\
+  (\pairin{\consta}{\constb}{\constc})^{\atset} & \Longrightarrow & 
+(\memhat{\consta}{\constc})^{\atset} \wedge 
+(\memhat{\constb}{\constc})^{\atset}.
+\end{array}
+\]
+Next, the relations $\distS^{\atset}$, $\distPS^{\atset}$, 
+$\distbyS^{\atset}$ and $\distPbyS^{\atset}$ are defined
+as indicated below:
+\[
+\begin{array}{rcl}
+   \dist{\consta}{\constb}^{\atset} & \iff & (\exists 
+\constc)\distby{\consta}{\constb}{\constc}^{\atset}\\
+   \distby{\consta}{\constb}{\constc}^{\atset} & \iff & 
+((\nonpairin{\constc}{\consta})^{\atset} \leftrightarrow \neg 
+(\nonpairin{\constc}{\constb})^{\atset}) \\
+   \distP{\consta}{\constb}^{\atset} & \iff & (\exists \constc, 
+\constd)\distPby{\consta}{\constb}{\constc}{\constd}^{\atset} \\
+   \distPby{\consta}{\constb}{\constc}{\constd}^{\atset} & \iff & 
+((\pairin{\constc}{\constd}{\consta})^{\atset} \leftrightarrow \neg 
+(\pairin{\constc}{\constd}{\constb})^{\atset}) .
+\end{array}
+\]
+%
+% for every $x,y \in V$, if $\atset \not\models \seteq{x}{y}$ and
+% $x$ and $y$ are distinguished in $\atset$ by a $z \in V \cup T$, we
+% add to $\hinter$ the atoms $\dist{x}{y}$ and $\distby{x}{y}{z}$
+% (resp., $\dist{y}{x}$ and $\distby{y}{x}{z}$), provided that
+% $\nonpairin{z}{x}$ is in $\atset$ and $\nonpairin{z}{y}$ is not in
+% $\atset$ (resp., $\nonpairin{z}{y}$ is in $\atset$ and
+% $\nonpairin{z}{x}$ is not in $\atset$).  Otherwise, if $x$ and $y$ are
+% distinguished in $\atset$ by a pair $\pair{z}{v}$, with $z,v \in V
+% \cup T$, we add to $\hinter$ the atoms $\distP{x}{y}$ and
+% $\distPby{x}{y}{z}{v}$ (resp., $\distP{y}{x}$ and
+% $\distPby{y}{x}{z}{v}$), provided that $\pairin{z}{v}{x}$ is in
+% $\atset$ and $\pairin{z}{v}{y}$ is not in $\atset$ (resp.,
+% $\pairin{z}{v}{y}$ is in $\atset$ and $\pairin{z}{v}{x}$ is not in
+% $\atset$).
+%
+In order to show that the Herbrand interpretation $\atset$, extended
+in this way, satisfies $\chi^{(V,T)}$, we have to prove that $\atset$
+satisfies the formulae $\regf$, $\exonef$, $\extwof$, and
+$\eqf$.
+
+By the very construction process, $\atset$ satisfies the first four
+conjuncts of $\regf$.  In addition, $\atset$ satisfies also the last
+conjunct $(\forall x)\neg(\memhat{x}{x})$ of $\regf$.  Indeed, if this
+were not the case, $\atset$ would evaluate to \true an atom of the form
+$\memhat{\constc}{\constc}$, for some $\constc \in V \cup T$.  But 
+this would be
+possible only if one of the following situations occurs:
+\begin{enumerate}[label={(\alph*)}]
+\item\label{firstCase} $\atset$ evaluates to \true an atom of one of the
+following three forms
+\[
+\nonpairin{\constc}{\constc},~ \pairin{\constc}{\constb}{\constc},~
+\pairin{\consta}{\constc}{\constc}\,,
+\]
+for some $\consta,\constb \in V \cup T$;
+
+\item\label{secondCase} $\atset$ evaluates to \true all atoms in a 
+sequence of the form
+\[
+\memhat{\constc}{\consta_{1}},~\memhat{\consta_{1}}{\consta_{2}},~ \ldots,~
+\memhat{\consta_{n-1}}{\consta_{n}},~\memhat{\consta_{n}}{\constc}\,,
+\]
+with $\consta_{i} \in V \cup T$ for $1 \leq i \leq n$.
+\end{enumerate}
+However, case \ref{firstCase} cannot occur, since, by condition
+\ref{REGC}, the membership relation induced by $\atset$ is acyclic.
+We show that also case \ref{secondCase} cannot occur, thereby proving
+that $\atset$ cannot contain any atom of the form $\memhat{\constc}{\constc}$.
+Indeed, if \ref{secondCase} were true, then $\atset$ would evaluate to \true a
+maximal sequence of atoms of the form
+\[
+\memhat{\consta_{0}}{\consta_{1}},~\memhat{\consta_{1}}{\consta_{2}},~ \ldots,~
+\memhat{\consta_{n-1}}{\consta_{n}},~\memhat{\consta_{n}}{\consta_{n+1}}\,,
+\]
+where $\consta_{0}$ and $\consta_{n+1}$ coincide. But then, for each
+$i=0,1,\ldots,n$, $\atset$ would evaluate to \true at least an atom of one of
+the following types
+\[
+\nonpairin{\consta_i}{\consta_{i+1}},~ 
+\pairin{\consta_{i}}{\constb}{\consta_{i+1}},~
+\pairin{\constb}{\consta_{i}}{\consta_{i+1}}\,,
+\]
+with $\constb \in V \cup T$, and therefore the membership relation
+$\memclosure{\atset}$ induced by $\atset$ would contain a cycle,
+contradicting condition \ref{REGC}.
+%
+Summing up, $\atset$ satisfies also the last conjunct of $\regf$,
+and hence it satisfies the whole formula $\regf$.
+
+To show that $\atset$ satisfies $\exonef$ and $\extwof$, it is enough
+to observe that $\Consts(\atset)\subseteq V \cup T$ and that $\atset$ satisfies
+conditions \ref{EX1C} and \ref{EX2C}, respectively, as, in our assumptions,
+it is a skeletal representation.
+
+% Similarly, since $\atset \subseteq \hinter$ and $\atset$ satisfies
+% condition \ref{EX2C}, by the very construction process of $\hinter$,
+% it follows that $\hinter$ satisfies also the formula $\extwof$.
+
+Finally, since (again) $\atset$ comply with condition \ref{EQC},
+it follows that $\atset$ satisfies also the formula $\eqf$,
+as no new atom of the form $\consta = \constb$ can
+possibly be introduced into $\atset$ during the extension process
+indicated above.
+
+Hence, in conclusion, $\atset$ satisfies formula
+$\chi^{(V,T)}$ at whole.\qed
+\end{proof}
+%
+Finally, the next theorem states that the satisfiability of every
+\Forallpizero-sentence $\varphi$ can be decided by checking the
+Herbrand satisfiability of the corresponding \Elpizero-formula
+$\chi^{(V,T)} \wedge \varphi$, thus concluding the verification of the
+correctness of our reduction.
+
+\begin{theorem}\label{FORALLPIZEROSAT}
+Let $\varphi$ be a \Forallpizero-sentence, let $V=\Consts(\varphi)$,
+and let $T$ be any set of constants disjoint from $V$ such that $|T|=2\cdot|V|$.  Then $\varphi$ is set-theoretically 
+satisfiable if and only if $\chi^{(V,T)} \wedge \varphi$ is 
+satisfiable in first-order logic.
+\end{theorem}
+\begin{proof}
+To begin with, let us assume that $\varphi$ is set-theoretically satisfiable.  Then, by
+Corollary \ref{SATEXP}  there exists a skeletal representation $\atset$ relative to $(V,T)$ such that 
+$\fomodels{\atset}{\HExp(\varphi, V \cup T)}$. Since $\atset$ is a skeletal representation relative to $(V,T)$, by Lemma \ref{SKTOHER} we can assume that
+$\fomodels{\atset}{\HExp(\chi^{(V,T)}, V \cup T)}$ holds as well, so that
+$\fomodels{\atset}{\HExp(\chi^{(V,T)} \wedge \varphi, V \cup T)}$. Hence, considering that the Herbrand universe of $\chi^{(V,T)}$ coincides with $V \cup T$, and
+the one of $\varphi$ is a subset of $V \cup T$, by Lemma \ref{HERSAT} we can conclude
+that $\chi^{(V,T)} \wedge \varphi$ is satisfiable in the sense of first-order
+logic.
+
+Conversely, let $\chi^{(V,T)} \wedge \varphi$ be satisfiable,
+in the sense of first-order logic. Then, by  Lemma \ref{HERSAT} there is a Herbrand
+interpretation $\hinter$ such that 
+$\fomodels{\hinter}{\HExp(\chi^{(V,T)}\wedge\varphi, V \cup T)}$, so that 
+$\fomodels{\hinter}{\HExp(\chi^{(V,T)}, V \cup T)}$
+and $\fomodels{\hinter}{\HExp(\varphi, V \cup T)}$ must hold as well.
+Since $\HExp(\chi^{(V,T)}\wedge\varphi, V \cup T)$ involves  
+constants in $V \cup T$ only, we can 
+assume, without loss of generality, that 
+$\Consts(\hinter)\subseteq V \cup T$.
+In addition, by Lemma \ref{HERTOSK}, 
+$\hinter$ is a skeletal representation relative to 
+$(V,T)$, so that we can conclude that $\varphi$ is set-theoretically 
+satisfiable, as consequence
+of Corollary \ref{SATEXP}. \qed
+\end{proof}
+
+%\begin{proof}
+%To begin with, let us assume that $\varphi$ is satisfiable.  Then, by
+%Corollary \ref{SATEXP}, there exists a skeletal representation
+%$\atset$, relative to $(V,T)$, such that 
+%$\fomodels{\atset}{\HExp(\varphi, V \cup T)}$.
+%In addition, being $\atset$ a skeletal representation, we can assume that
+%$\fomodels{\atset}{\HExp(\chi^{(V,T)},$ $V \cup T)}$ holds as well 
+%for Lemma \ref{SKTOHER}, so that
+%$\HExp(\chi^{(V,T)} \wedge \varphi, V \cup T)^{\atset}$. Thus, we can conclude
+%that $\chi^{(V,T)} \wedge \varphi$ is satisfiable in the sense of first order
+%logic as consequence of Lemma \ref{HERSAT}, considering that
+%the Herbrand universe of $\chi^{(V,T)}$ coincides with $V \cup T$, and
+%the one of $\varphi$ is a subset of $V \cup T$.
+%
+%Conversely, let $\chi^{(V,T)} \wedge \varphi$ be satisfiable,
+%in the sense of first-order logic. Then there is a Herbrand
+%interpretation $\hinter$ such that 
+%$\fomodels{\hinter}{\HExp(\chi^{(V,T)}\wedge\varphi, V \cup T)}$,
+%as consequence of Lemma \ref{HERSAT}, so that 
+%$\fomodels{\hinter}{\HExp(\chi^{(V,T)}, V \cup T)}$
+%and $\fomodels{\hinter}{\HExp(\varphi, V \cup T)}$ must hold as well.
+%We can assume, without loss of generality, that 
+%$\Consts(\hinter)\subseteq V \cup T$,
+%as $\HExp(\chi^{(V,T)}\wedge\varphi, V \cup T)$ involve just 
+%constants in $V \cup T$.
+%In addition, $\hinter$ is a skeletal representation relative to 
+%$(V,T)$, for Lemma \ref{HERTOSK},
+%so that we can conclude that $\varphi$ is set-theoretically 
+%satisfiable, as consequence
+%of Corollary \ref{SATEXP}. \qed
+%\end{proof}
+%
+We conclude this section by observing that, if $\varphi$ is a
+\ForallpizeroDisjDatalog-sentence, then $\chi^{(V,T)} \wedge \varphi$
+is a \DisjDatalog-sentence, as $\chi^{(V,T)}$ is a \DisjDatalog-sentence.  Thus
+the satisfiability problem for \ForallpizeroDisjDatalog-sentences can
+be reduced in polynomial time to the Herbrand satisfiability problem
+for \DisjDatalog-sentences.
+
+\begin{corollary}
+Let $\varphi$ be a \ForallpizeroDisjDatalog-sentence.  Let
+$V=\Consts(\varphi)$ and let $T$ be any set of constants disjoint from
+$V$ and such that $|T|=2\cdot|V|$.  Then $\varphi$ is
+set-theoretically satisfiable if and only if the corresponding
+\DisjDatalog-sentence $\chi^{(V,T)} \wedge \varphi$ is satisfiable, in
+the sense of Disjunctive Datalog.  \qed
+\end{corollary}
+
+\section{Conclusions and future work}\label{CONCLUSIONS}
+
+In this paper we have identified a correspondence between the fragment
+of set theory \Forallpizero and first-order logic (in particular
+Herbrand logic) by providing a polynomial-time reduction of
+\Forallpizero-sentences to formulae in a first-order language, called
+\Elpizero, suitable for this purpose.  In addition, we have shown that
+if we limit ourselves to the Disjunctive Datalog restriction of
+\Forallpizero, called \ForallpizeroDisjDatalog, then our reduction maps
+formulae in this subfragment to \DisjDatalog-formulae.
+
+Such a correspondence, and its consequences, has to be further
+investigated.  For instance, applications of techniques and results
+devised in the context of logic programming (such as, for example,
+answer-set programming and negation-as-failure) to the
+\ForallpizeroDisjDatalog subfragment need to be studied.  In view of
+our reduction, a satisfiability checker for
+\ForallpizeroDisjDatalog-formulae can be implemented by reusing some
+machinery from logic programming, for example the Disjunctive Datalog
+system \emph{DLV} described in
+\cite{AlvFabLeoPerPfeTer2011}.\footnote{\url{http://www.dlvsystem.com/}}
+
+We intend to develop analogous reductions for other decidable
+fragments of set theory, such as, for instance, the quantified
+fragment $\forall_{0,2}^{\pi}$, whose decision procedure is based on 
+a reduction to $\Forallpizero$ (see \cite{CanLon2012}), and the
+unquantified fragment $\mlsscart$ , whose
+satisfiability problem can in turn be reduced to the satisfiability
+problem for $\forall_{0,2}^{\pi}$ (see \cite{CanLonNic2010}).
+
+
+
+\bibliographystyle{plain}
+\bibliography{biblio}
+
+\end{document}
