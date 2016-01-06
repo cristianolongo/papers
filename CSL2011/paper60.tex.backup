@@ -1,0 +1,1383 @@
+\documentclass[a4paper,UKenglish]{lipics}
+
+\usepackage{microtype}
+
+\bibliographystyle{plain}% the recommended bibstyle
+
+% Author macros %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{A Decidable Quantified Fragment of Set Theory Involving Ordered
+Pairs with Applications to Description Logics}
+\titlerunning{A Quantified Fragment of Set Theory Involving Ordered
+Pairs} %optional, in case that the title is too long; the running title should fit into the top page column
+\Copyright[nc-nd]%choose "nd" or "nc-nd"
+          {John Q. Open and Joan R. Access}
+
+\author{Domenico Cantone}
+\author{Cristiano Longo}
+\author{Marianna Nicolosi Asmundo}
+\affil{Dipartimento di Matematica e Informatica, Universit\`a di Catania\\
+  Viale Andrea Doria 6, 95125, Catania,  Italy\\
+  \texttt{\{cantone|longo|nicolosi\}@dmi.unict.it}}
+
+\Copyright[nc-nd]%choose "nd" or "nc-nd"
+          {Domenico Cantone and Cristiano Longo and Marianna Nicolosi Asmundo}
+
+% \subjclass{\textbf{F.4.1 Mathematical Logic (mechanical theorem proving, set theory)}}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation".
+\subjclass{\textbf{I.2.3, F.4.1, I.2.4}}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation".
+\keywords{\textbf{NP-complete decision procedures, set theory, description logic}}% mandatory: Please provide 1-5 keywords
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Editor-only macros (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\serieslogo{}%please provide filename (without suffix)
+\volumeinfo%(easychair interface)
+  {Billy Editor, Bill Editors}% editors
+  {2}% number of editors: 1, 2, ....
+  {Conference title on which this volume is based on}% event
+  {1}% volume
+  {1}% issue
+  {1}% starting page number
+\EventShortName{}
+\DOI{10.4230/LIPIcs.xxx.yyy.p}% to be completed by the volume editor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{amssymb}
+\usepackage{amsfonts}
+%\usepackage{amsmath}
+\usepackage{dl}
+\usepackage{mls}
+\usepackage{enumitem}
+\usepackage{setspace}
+
+
+
+\newcommand{\Lang}{\ensuremath{\mathbf{\forall_{0}^{\pi}}}\xspace}
+\newcommand{\LangBounded}[1]{\ensuremath{(\forall_{0}^{\pi})^{\leq #1}}\xspace}
+\newcommand{\nonpairs}[1]{\bar{\pi}(#1)}
+
+\newcommand{\assignment}[1]{\ensuremath{M_{#1}}}
+\newcommand{\pairf}[1]{\ensuremath{\pi_{#1}}}
+\newcommand{\inter}{\ensuremath{\mathbf{I}}\xspace}
+\newcommand{\atset}{\mathcal{S}}
+\newcommand{\vheight}{\mathsf{height}_{\atset}}
+\newcommand{\expansion}[2]{\mathsf{exp}_{#2}(#1)}
+\newcommand{\Expansion}[2]{\mathsf{Exp}_{#2}(#1)}
+
+
+%TOOLS
+\newcommand{\memclosure}[1]{\in_{#1}^{+}}
+\newcommand{\aslit}[1]{\mbox{``}#1\mbox{''}}
+\newcommand{\real}{\mathbf{R}}
+
+\newcommand{\mtrue}{\ensuremath{\mathbf{t}}}
+\newcommand{\mfalse}{\ensuremath{\mathbf{f}}}
+
+%DESCRIPTION LOGICS
+\newcommand{\dlLang}{\ensuremath{\mathcal{DL\langle}\Lang\mathcal{\rangle}}\xspace}
+\newcommand{\dlLangMeta}{\ensuremath{\mathcal{DLM\langle}\Lang\mathcal{\rangle}}\xspace}
+\newcommand{\selfrestriction}[1]{\exists #1.\mathsf{Self}}
+\newcommand{\istransitive}[1]{\mathsf{Trans}(#1)}
+\newcommand{\isreflexive}[1]{\mathsf{Ref}(#1)}
+\newcommand{\isantisymmetric}[1]{\mathsf{ASym}(#1)}
+\newcommand{\symmetricclosure}[1]{\mathsf{sym}(#1)}
+\newcommand{\roleidentity}[1]{\mathsf{id}(#1)}
+\newcommand{\universalrole}{\mathbb{U}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a decision procedure for a quantified fragment of
+set theory, called \Lang, involving ordered pairs and some operators to manipulate them.
+When our decision procedure is applied to \Lang-formulae whose quantifier prefixes
+have length bounded by a fixed constant, it runs in nondeterministic
+polynomial-time.
+
+Related to the fragment \Lang, we also introduce a description logic,
+\dlLang, which provides an unusually large set of constructs, such as,
+for instance, Boolean constructs among roles.  The set-theoretic
+nature of the description logics semantics yields a straightforward
+reduction of the knowledge base consistency problem for \dlLang to the
+satisfiability problem for \Lang-formulae with quantifier prefixes of
+length at most 2, from which the \textsc{NP}-completeness of reasoning
+in \dlLang follows.  Finally, we extend this reduction to cope with
+\textsf{SWRL} rules.
+\end{abstract}
+
+\section{Introduction}\label{INTRO}
+
+
+\emph{Computable Set Theory} is a research field, started around
+thirty years ago, devoted to the study of the decision problem for
+fragments of set theory (see \cite{CanFerOmo89a,CanOmoPol01} for a
+thorough account of the state-of-the-art until 2001).  The most
+efficient decision procedures devised in this context have been
+implemented in the inferential core of the system
+\textsf{{\AE}tnaNova/Referee}, described
+in~\cite{CanOmoSchUrs03,OmoCanPolSch06,SchwCanOmoPol11}.
+
+
+The first unquantified sublanguage of set theory that has been proved
+decidable is \emph{Multi-Level Syllogistic} (in short \mls).  \mls
+involves the set predicates $\in$, $\subseteq$, $=$, the Boolean set
+operators $\cup$, $\cap$, $\setminus$, and the connectives of
+propositional logic (cf.\ \cite{FerOmoSch1980}).  Subsequently,
+several extensions of \mls with various combinations of operators
+(such as singleton, powerset, unionset, etc.)  and predicates (on
+finiteness, transitivity, etc.)  have been proved to have a solvable
+satisfiability problem. Also, some extensions of \mls with various
+map\footnote{According to \cite{SchDewSchDub1986}, we use the term
+`maps' to denote sets of ordered pairs.}
+constructs have been shown to be decidable (cf.\
+\cite{CanSch91,CanLonNic2010}).
+
+
+Concerning \emph{quantified} fragments, of particular interest to
+us is the restricted quantified fragment of set theory $\forall_{0}$,
+which has been proved to have a decidable satisfiability problem in
+\cite{BreFerOmoSch1981}.  We recall that $\forall_{0}$-formulae are
+propositional combinations of restricted quantified prenex formulae
+$(\forall y_1 \in z_1) \cdots (\forall y_n \in z_n)p$, where $p$ is a
+Boolean combination of atoms of the forms $x \in y$, $x=y$, and no
+$z_j$ is a $y_i$ (i.e., nesting among quantified variables is not
+allowed).  The same paper considered also the extension with another
+sort of variables representing \emph{single-valued} maps, the map
+domain operator, and terms of the form $f(t)$ (representing the value
+of the map $f$ on a function-free term $t$).  However, neither
+one-to-many, nor many-to-one, nor many-to-many relationships can be
+represented in this language.  We observe that the
+$\forall_{0}$-fragment is very close to the undecidability boundary,
+as shown in \cite{ParPol93}. In fact, if nesting among quantified variables 
+in prenex formulae of type $(\forall y_1 \in z_1) \cdots (\forall y_n
+\in z_n)p$ are allowed and a predicate stating that a set is an 
+unordered pair is also admitted, then it turns out that the 
+satisfiability for the 
+resulting collection of formulae is undecidable.
+
+In this paper we present a decision procedure for the novel
+fragment of set theory \Lang, which extends the fragment $\forall_{0}$
+with ordered pairs and various constructs related to them, thus 
+further thinning the gap between the decidable and the undecidable.
+% 
+A considerable amount of set-theoretic constructs can be expressed 
+by \Lang-formulae, in particular constructs on \emph{multi-valued} maps
+like map inverse, Boolean operator among maps, map transitivity, and
+so on.  Furthermore, when restricted to formulae with quantifier
+nesting bounded by a constant, our decision procedure runs in
+nondeterministic polynomial-time.  This fragment has also interesting
+applications in the field of \emph{knowledge representation}.
+
+Applications of Computable Set Theory to knowledge representation have
+been recently proposed in \cite{CanLonPis2010}, where the
+correspondence between (decidable) fragments of set theory and
+\emph{Description Logics} (a well established framework for knowledge
+representation systems; see \cite{DLHANDBOOK} for a quite complete
+overview) is exploited by introducing the very expressive description
+logic $\dlmlsscart$.
+
+Description logics are a family of logic based formalisms widely used
+in knowledge representation. In particular, several results and
+decision procedures devised in this context have been profitably
+employed in the area of the Semantic Web (cf. \cite{HorKutSat2006}).
+%
+The key problem in description logic is to determine whether a
+knowledge base $\mathcal{K}$ is \emph{consistent} (knowledge base
+consistency is formally described in Section \ref{DL}), and many other
+reasoning tasks can be reduced to it.  Unfortunately, this problem is
+\textsc{ExpTime}-hard (cf.  \cite[Theorem 3.27, page 132]{DLHANDBOOK})
+also for $\al$, a basic description logic with a very limited
+expressive power.  However, \cite{CanLonPis2010} shows how a better
+computational complexity can be achieved by imposing some limitations
+on the usage of existential quantification and number restrictions
+(definitions of these two constructs are reported in
+Table~\ref{DLCONS}).
+
+The quantified nature of the language \Lang and the pair-related
+constructs it provides allow a straightforward mapping of numerous
+description logic constructs to \Lang-formulae.  The resulting
+description logic, called \dlLang, extends those presented in
+\cite{CanLonPis2010} with several constructs like, for instance, role
+transitivity, self restrictions, and role identity.  It also allows
+\emph{finite} existential restrictions of the form $\exists R.\{a_1,
+\ldots, a_n\}$ to be used without limitations.  Furthermore, it turns
+out that the consistency problem for \dlLang-knowledge bases is
+\textsc{NP}-complete.  This is a quite significant result since in
+most of the cases in which Boolean operators among roles are present
+the consistency problem turns out to be \textsc{NExpTime}-hard
+(cf.~\cite{Lutz2001}).
+
+
+Finally, we observe that \textsf{SWRL} rules (cf.  \cite{HorPat2004}) can be
+easily embedded in \dlLang without disrupting decidability.  \textsf{SWRL}
+rules
+are a simple form of Horn-style rules, which were proposed with the
+aim of increasing the expressive power of description logics.
+Here we consider only a restricted set of \textsf{SWRL} rules,
+namely those which do not contain \emph{data literals}. Extending
+description logics with \textsf{SWRL} rules in general leads to
+undecidability.  In \cite{MotSatStu2005} this issue has been overcome
+by restricting the applicability of rules to a finite set of named
+individuals.
+%
+Another approach, studied in \cite{KroRudHit2008}, consists in
+restricting to rules which can be \emph{internalized}, i.e. rules
+which can be converted into knowledge base statements.
+
+The paper is organized as follows.  Section~\ref{LANG} presents the
+precise syntax and semantics of the language \Lang.  A decision
+procedure for \Lang is then developed in Section~\ref{DECPROC}.  In
+Section~\ref{DL} the correspondences of \Lang with description logics
+are exploited by introducing the novel description logic \dlLang,
+whose extension with \textsf{SWRL} rules is studied in Section~\ref{SWRL}.
+Finally, concluding remarks and some hints to future work are given in
+Section~\ref{CONCLUSIONS}.
+
+\section{The language \Lang}\label{LANG}
+The language \Lang is a quantified fragment of set theory which
+contains a denumerable infinity of \emph{variables}, $\Vars = \{x, y,
+z, \ldots \}$, the binary \emph{pairing} operator $[\cdot,\cdot]$, the
+monadic function $\nonpairs{\cdot}$, which represents the non-pair
+members of a set, the relators $\in, =$, the Boolean connectives of
+propositional logic $\neg, \wedge, \vee, \rightarrow,
+\leftrightarrow$, parentheses, and the universal quantifier
+$\forall$.
+
+A \emph{quantifier-free \Lang-formula} is any propositional
+combination of \emph{atomic \Lang-formulae}.  These are expressions of
+the following types:
+\begin{equation}\label{ATOMICFORMULAE}
+    x \in \nonpairs{z},\quad [x,y] \in z,\quad x=y,
+\end{equation}
+with $x,y,z \in \Vars$.  Intuitively, terms of the form $[x,y]$
+represent ordered pairs of sets.
+
+A \emph{simple prenex \Lang-formula} is a formula $Q_1\cdots Q_n
+\varphi$, with $n \geq 0$, where $\varphi$ is a quantifier-free
+\Lang-formula, each $Q_i$ is a restricted universal quantifier of form
+$(\forall x \in \nonpairs{y})$ or of the form $(\forall [x,x'] \in y)$
+(we will refer to $x$ and $x'$ as \emph{quantified variables} and to
+$y$ as \emph{domain variable}), and no variable can occur both as a
+quantified and a domain variable, i.e., roughly speaking, no $x$ can
+be a $y$.
+
+Finally, a \Lang-\emph{formula} is any finite conjunction of simple
+prenex \Lang-formulae.
+
+Semantics of the \Lang-language is based upon the von Neumann
+standard cumulative hierarchy $\VNU$ of sets, which is
+defined as follows:
+\[
+\begin{array}{rcll}
+  \VNU_0          & = & \emptyset
+\\
+  \VNU_{\gamma+1} & = & \mathcal{P}(\VNU_\gamma) \,,
+  & \textrm{for each ordinal $\gamma$}
+\\
+  \VNU_\lambda    & = & \bigcup_{\mu < \lambda} \VNU_\mu
+  \,,& \textrm{for each limit ordinal $\lambda$}
+\\
+  \VNU & = & \bigcup_{\gamma \in \mathit{On}} \VNU_{\gamma} \,,
+\end{array}
+\]
+where $\mathcal{P}(\cdot)$ is the powerset operator and
+$\mathit{On}$ denotes the class of all ordinals.
+
+A \Lang-\emph{interpretation} is a pair $\inter=(\assignment{\inter},
+\pairf{\inter})$, where $\assignment{\inter}$ is a total function
+which maps each variable into a set of \VNU, and $\pairf{\inter}$ is a
+\emph{pairing function} over sets. We recall that a
+\emph{pairing function} $\pi$ is a binary operation over sets such
+that $\pi(u,v)=\pi(u',v') \iff u=u' \wedge v=v'$ and the class $u
+\times_{\pi} v \defAs \{ \pi(s,t) : s \in u \wedge t \in v\}$ is a set
+of \VNU, for all $u,v,u',v' \in \VNU$. 
+
+Let $W$ be a finite subset of
+$\Vars$, we say that $\inter' = (\assignment{\inter'},
+\pairf{\inter})$ is a $W$-\emph{variant} of $\inter$ if $M_{\inter'} y
+= M_{\inter} y$, for $y \in \Vars \setminus W$.  To any term of the
+form $x$, $[x,y]$, and $\nonpairs{x}$, a \Lang-interpretation \inter
+associates a set in \VNU as follows:
+\[
+\begin{array}{rcl}
+ \inter x & \defAs & \assignment{\inter} x\\
+ \inter [x,y] & \defAs & \pairf{\inter} (\inter x, \inter y)\\
+ \inter \nonpairs{x} & \defAs &
+ \inter x \setminus \{\pi_{\inter}(u,v) : u, v \in \VNU\},
+\end{array}
+\]
+for all $x,y \in \Vars$.
+
+A \Lang-interpretation evaluates atomic \Lang-formulae to the truth
+values \mtrue\ (true) and \mfalse\ (false) in the usual way, by
+interpreting `$\in$' and `$=$' as the membership and the equality
+relations between sets, respectively.
+Evaluation of quantifier-free
+\Lang-formulae is carried out according to the standard rules of
+propositional logic, and simple prenex \Lang-formulae are evaluated as
+follows:
+\begin{itemize}
+\item $\inter(\forall x \in \nonpairs{y})\varphi = \mtrue$ iff
+$\inter' \varphi = \mtrue$ for every $\{x\}$-variant $\inter'$ of
+$\inter$ such that $\inter' x \in \inter' \nonpairs{y}$,
+
+\item $\inter(\forall [x,y] \in z)\varphi = \mtrue$ iff $\inter'
+\varphi = \mtrue$ for every $\{x,y\}$-variant $\inter'$ of $\inter$
+such that $\inter' [x,y] \in \inter' z$.
+\end{itemize}
+
+A \Lang-interpretation \inter which evaluates a \Lang-formula
+$\varphi$ to true is said to be a \emph{model} for $\varphi$ (and we
+write $\inter \models \varphi$).  A \Lang-formula is said to be
+\emph{satisfiable} if it admits a model.  Thus the satisfiability
+problem (in short, s.p.) for \Lang-formulae consists in determining
+whether a \Lang-formula is satisfiable or not.
+%
+Observe that in the context of satisfiability, all free variables in a
+\Lang-formula may be regarded as existentially quantified.
+
+In the following section we present a decision procedure for the
+s.p.\ for \Lang-formulae.
+
+\section{A decision procedure for \Lang}\label{DECPROC}
+In this section we solve the s.p.\ for \Lang-formulae.  
+In particular,
+we will prove that a \Lang-formula is satisfiable if and only if
+there exists a finite collection of atomic \Lang-formulae which
+\emph{represents} a model for the formula.  
+We begin by
+introducing the notions of skeletal representations and of their
+realizations: these are, respectively, collections of atomic
+\Lang-formulae with an acyclic membership relation among their
+variables, and suitably defined \Lang-interpretations.  In particular,
+we will focus on skeletal representations ``completed'' w.r.t. the
+predicate ``='' over a set of variables $V$, which we call
+$V$-extensional.
+It turns out, as will be shown in Lemma \ref{REALIZATIONLEMMA}, that
+each $V$-extensional skeletal representation is modeled correctly by
+any realization associated with it.  Finally, we prove the main result
+of this section, namely that a \Lang-formula $\varphi$ with free
+variables $V$ is satisfiable if and only if it is satisfied by the
+realization associated with a suitable $V$-extensional skeletal
+representation whose size is bounded by the cardinality of $V$ (cf.\
+Theorem \ref{SAT}).  The latter result entails immediately the
+decidability of the fragment \Lang of our interest.
+
+Given a \Lang-formula $\varphi$, we denote with $\varphi^{x}_{y}$ the
+formula obtained by replacing each free occurrence of $x$ in $\varphi$
+with $y$ and with $\Vars(\varphi)$ the collection of the free
+variables of $\varphi$.  Likewise, given a finite collection $\atset$
+of atomic \Lang-formulae, we denote with $\Vars(\atset)$ the
+collection of the variables occurring in the formulae of $\atset$.  In
+addition, we indicate with $\memclosure{\atset}$ (the \emph{membership
+closure} of $\atset$) the minimal transitive relation on
+$\Vars(\atset)$ such that the following conditions hold:
+\begin{itemize}
+    \item if $\aslit{x \in \nonpairs{z}} \in \atset$, then $x
+    \memclosure{\atset} z$;
+
+    \item if $\aslit{[x,y] \in z} \in \atset$, then $x
+    \memclosure{\atset} z \wedge y \memclosure{\atset} z$.
+\end{itemize}
+
+A collection $\atset$ of atomic \Lang-formulae is a
+\emph{skeletal representation} if $x \not \memclosure{\atset} x$, for all
+$x \in \Vars(\atset)$.
+
+Let $\atset$ be a skeletal representation.  We define the
+\emph{height} of a variable $x \in \Vars(\atset)$ with respect to
+$\atset$ (which we write $\vheight(x)$) as the length $n$ of the
+longest $\memclosure{\atset}$-chain of the form $x_1
+\memclosure{\atset} \ldots \memclosure{\atset} x_n \memclosure{\atset}
+x$ ending at $x$, with $x_1, \ldots ,x_n \in \Vars(\atset)$.  Thus,
+$\vheight(x)=0$ if $y \not\memclosure{\atset} x$, for all $y \in
+\Vars(\atset)$.
+
+A skeletal representation $\atset$ is said to be
+$V$\emph{-extensional}, for a given set of variables $V$, if the following conditions hold:
+\begin{itemize}
+ \item if $\aslit{x=y} \in \atset$, then $x,y \in V$ and
+ $\alpha_y^x$ and $\alpha_x^y$ belong to $\atset$, for each atomic
+ formula $\alpha$ in $\atset$;
+
+ \item if $\aslit{x=y} \notin \atset$, for some $x,y \in V$, then the
+ variables $x$ and $y$ must be explicitly \emph{distinguished} in
+ $\atset$ either by some variable $z$, in the sense that $\aslit{z \in
+ \nonpairs{x}} \in \atset$ iff $\aslit{z \in \nonpairs{y}} \notin
+ \atset$, or by some pair $[z,z']$, in the sense that $\aslit{[z,z']
+ \in x} \in \atset$ iff $\aslit{[z,z'] \in y} \notin \atset$.
+\end{itemize}
+
+
+Skeletal representations allow one to define special
+\Lang-interpretations, called \emph{realizations}, which were first
+introduced in \cite{CanFer1995}, though with a slightly different
+meaning.  To this purpose we introduce the following family
+$\{\pi_n\}_{n \in \mathbb{N}}$ of pairing functions, recursively
+defined by
+$$
+\begin{array}{rcl}
+  \pi_0(u,v) & \defAs & \{u, \{u,v\}\}\\
+  \pi_{n+1}(u,v) & \defAs & \{ \pi_n(u,v)\}\, ,
+\end{array}
+$$
+for every $u,v \in \VNU$.
+
+
+\begin{definition}[Realization]\label{REALIZATION}
+Let $\atset$ be a skeletal representation, let $V$ and $T$ be two
+finite, nonempty, and disjoint sets of variables such that
+$\Vars(\atset) \subseteq V \cup T$, and let $\sigma$ be a bijection
+from $T$ onto $\{1,2,\ldots,|T|\}$.  We extend the function
+$\vheight(\cdot)$ also to variables $x \in (V \cup T) \setminus
+\Vars(\atset)$ by putting for such variables $\vheight(x) \defAs 0$.
+
+Then the \emph{realization} of $\atset$ relative to $(V,T)$ is
+the \Lang-interpretation $\real=(\assignment{\real}, \pairf{\real})$
+such that $\pairf{\real} \defAs \pi_{|V|+|T|}$ and, recursively on
+$\vheight(x)$ for $x \in V \cup T$,
+\[
+\assignment{\real} x \defAs \left\{ \real y : \aslit{y \in
+\nonpairs{x}} \in \atset\right\} \cup \left\{ \real [y,z] :
+\aslit{[y,z] \in x} \in \atset\right\} \cup s(x)\, ,
+\]
+where
+\[
+s(x) \defAs  \begin{cases}
+\left\{ \left\{k+1, k, \sigma(x)\right\} \right\} & \mbox{ if } x \in T\\
+\emptyset &\mbox{ otherwise, }\\
+\end{cases}
+\]
+with $k=|V| \cdot (|V| + |T| + 3)$.\footnote{We are assuming that
+integers are represented \emph{\`a la} von Neumann, namely $0 \defAs
+\emptyset$ and, recursively, $n+1 \defAs n \cup \{n\}$.} \qed
+\end{definition}
+
+Realizations have useful properties, stated by the following
+lemma.
+\begin{lemma}\label{REALIZATIONLEMMA}
+Let $\atset$, $V$, $T$, $\sigma$, and $k$ be as in Definition
+\ref{REALIZATION} and let $\real$ be the realization of $\atset$
+relative to $(V,T)$.  If $\atset$ is $V$-extensional, then for every
+$x,y,z \in V \cup T$ the following conditions hold:
+\begin{enumerate}[label=\textbf{(R\arabic*)},leftmargin=28pt]
+  \item\label{R1} $\real x \neq \pairf{\real}(u,v)$ for $u,v \in
+  \VNU$;
+
+  \item\label{R2} $\real x \neq \{k+1, k, i\}$ for
+  $1 \leq i \leq |T|$;
+
+  \item\label{R3} $\real x = \real y$ iff either $\aslit{x=y}
+  \in \atset$ or $x$ and $y$ coincide;
+
+  \item\label{R4} $\real x \in \real \nonpairs{y}$ iff $\aslit{x \in
+  \nonpairs{y}} \in \atset$;
+
+  \item\label{R5} $\real [x,y] \in \real z$ iff $\aslit{[x,y] \in z}
+  \in \atset$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+To prove \ref{R1}, we establish the more general property
+\begin{equation}\label{REALIZATION2EQ2}
+\text{if~ } \vheight(x) \leq n \leq |V|+|T| ,
+\text{ ~then~ }
+\real x  \neq \pi_n(u, v), \text{ for } x \in V \cup T
+\text{ and } u, v \in \VNU.
+\end{equation}
+Let $n \leq |V|+|T|$ and let us assume by way of contradiction that
+$\real x =\pi_n(u,v)$ for some $u,v \in \VNU$ and some $x \in V \cup
+T$ of minimal height such that $0 \leq \vheight(x) \leq n$.
+
+We can rule out at once the case in which $n=0$, as in this case
+$\vheight(x) = 0$, so that $|\real x| \leq 1$, and therefore $\real x
+\neq \pi_0(u,v)$, since $|\pi_0(u,v)| = 2$.
+
+Thus, we can assume that $n>0$.  Let us consider first the case in
+which $\vheight(x) = 0$.  If $x \in V$ then, by the very definition of
+realization, we have $\real x = \emptyset \neq \pi_n(u,v)$.  On the
+other hand, if $x \in T$, then $\real x = \{\{k+1,k,\sigma(x)\}\}$ and
+since $|\{k+1,k,\sigma(x)\}| > |\pi_{n-1}(u,v)|$ and $\pi_n(u,v) =
+\{\pi_{n-1}(u,v)\}$, it follows that $\real x \neq \pi_n(u,v)$.  In
+both cases we found a contradiction, so that we must have $\vheight(x)
+> 0$.
+
+On the other hand, if $\vheight(x)>0$, our absurd hypothesis $\real x
+= \pi_{n}(u,v) =\{ \pi_{n-1}(u,v) \}$ and the definition of realization imply that
+either
+\begin{enumerate}[label=\textbf{(\roman*)},leftmargin=23pt]
+\item\label{REALIZATIONLEMMA1} $\pi_{n-1}(u,v)=\{k+1,k,\sigma(x)\}$,
+but provided that $x \in T$, or
+
+\item\label{REALIZATIONLEMMA2} $\pi_{n-1}(u,v)=\real y$,
+for some $y$ such that $\aslit{y \in \nonpairs{x}} \in \atset$, or
+
+\item\label{REALIZATIONLEMMA3} $\pi_{n-1}(u,v)=\real [y,z] =
+\pi_{|V|+|T|} (\real y, \real z)$, for some $y,z$ such that
+$\aslit{[y,z] \in x} \in \atset$.
+\end{enumerate}
+We can exclude at once case \ref{REALIZATIONLEMMA1}, since
+$|\pi_{n-1}(u,v)|\leq 2 < |\{k+1,k,\sigma(x)\}|$.  Case
+\ref{REALIZATIONLEMMA2} can be excluded as well, since it would
+contradict the minimality of $\vheight(x)$, as $\vheight(y) <
+\vheight(x)$.  In case \ref{REALIZATIONLEMMA3}, from elementary
+properties of our pairing functions $\pi_{i}$ it would follow that
+$|V|+|T|= n-1$, contradicting our initial assumption that $n \leq
+|V|+|T|$.  Thus (\ref{REALIZATION2EQ2}) holds.
+
+In view of (\ref{REALIZATION2EQ2}), to establish \ref{R1} it is now
+enough to observe that $\vheight(x) < |V|+|T|$.
+
+\smallskip
+
+Next, since $\rank(\{k+1, k, i\}) = k+2$, for $1 \leq i \leq |T|$ (as
+$k > |T|$),\footnote{We recall that the \emph{rank} of a set $u \in
+\VNU$ denotes the least ordinal $\gamma$ such that $u \subseteq
+\VNU_{\gamma}$ (i.e., $u \in \VNU_{\gamma+1}$).} to establish \ref{R2}
+it will be enough to show that $\rank(\real x) \neq k+2$, for $x \in V
+\cup T$.  Thus, let $x \in V \cup T$.  If $y \memclosure{\atset} x$,
+for some $y \in T$, then $\rank(\real x) \geq \rank(\real y) \geq k+3$.
+The same conclusion can be reached also in the case in which $x \in
+T$.  On the other hand, if $y \not\memclosure{\atset} x$, for any $y
+\in T$, and $x \in V$, it can easily be proved by induction on
+$\vheight(x)$ that $\rank(\real x) \leq (|V| + |T| + 3)\cdot \vheight(x)
+\leq |V|\cdot (|V| + |T|+3) = k$.  Hence, in any case $\rank(\real x)
+\neq k+2$ holds, proving \ref{R2}.
+
+\smallskip
+
+Concerning \ref{R3}, we observe preliminarily that if $\aslit{x=y} \in
+\atset$, then $\real x = \real y$ is a direct consequence of the
+$V$-extensionality of $\atset$.  Thus, to complete the proof of
+\ref{R3} it is enough to show that if $\real x = \real y$, for
+distinct variables $x,y \in V \cup T$, then $\aslit{x=y} \in \atset$.
+So, assume that $\aslit{x=y} \notin \atset$, for two distinct
+variables $x,y \in V \cup T$ and consider first the case in which
+either $x$ or $y$, say $y$, is a variable in $T$.  From the definition
+of realization it follows that $\{k+1,k,\sigma(y)\} \in \real y$,
+while from \ref{R2} and the fact that $\{k+1,k,\sigma(y)\}$ is not a
+pair with respect to $\pi_{|V|+|T|}$, it follows that
+$\{k+1,k,\sigma(y)\} \notin \real x$, unless $x \in T$ and
+$\{k+1,k,\sigma(y)\} = \{k+1,k,\sigma(x)\}$.  But in such a case, we
+would have $\sigma(x) = \sigma(y)$ and therefore $x$ and $y$ must
+coincide, contradicting our initial assumption that $x$ and $y$ are
+distinct variables. Therefore we have $\real x \neq \real y$.
+
+Next, let us assume that $x,y \in V$. We will induction on
+$\max(\vheight(x), \vheight(y))$. From the $V$-extensionality of
+$\atset$ it follows that $x,y$ are distinguished in $\atset$ by a
+variable $z$ or by a pair $[z',z'']$.  Let us first assume that $x,y$
+are distinguished in $\atset$ by a variable $z$.  If $\aslit{z \in
+\nonpairs{x}} \in \atset$ and $\aslit{z \in \nonpairs{y}} \notin
+\atset$, then for all $w$ such that $\aslit{w \in \nonpairs{y}} \in
+\atset$ we have $\real z\neq \real w$ by the inductive hypothesis,
+since $\vheight(z) < \vheight(x)$ and $\vheight(w)<\vheight(y)$.
+Furthermore, from \ref{R1} it follows also that $\real z \neq \real
+[w,w']$, for all $w,w'$ such that $\aslit{[w,w'] \in y} \in \atset$.
+Thus $\real z \in \real x \setminus \real y$.  If $\aslit{z \in
+\nonpairs{y}} \in \atset$ and $\aslit{z \in \nonpairs{x}} \notin
+\atset$ we can prove that $\real z \in \real y \setminus \real x$ in
+an analogous way. In both case we have $\real x \neq \real y$.
+%
+On the other hand, if $x,y$ are distinguished by a pair $[z',z'']$, we
+can argue as follows.  Assume first that $\aslit{[z',z''] \in x} \in
+\atset$ and $\aslit{[z',z''] \in y} \notin \atset$.  Plainly, $\real
+[z',z''] \in \real x$.  If $\real [z',z''] \in \real y$, then by
+\ref{R1} $\real [z',z''] = \real [w',w'']$, for a pair $[w',w'']$ such
+that $\aslit{[w',w''] \in y} \in \atset$.  Since $\pi_{|V|+|T|}$ is a
+pairing function, we have $\real z'=\real w'$ and $\real z''=\real
+w''$. Considering that
+$\vheight(z'),\vheight(z'') < \vheight(x)$ and that
+$\vheight(w'),\vheight(w'')<\vheight(y)$,
+the inductive
+hypothesis yields that
+\begin{itemize}
+    \item $z'$ and $w'$ coincide or $\aslit{z' = w'}$ is in
+    $\atset$, and
+
+    \item $z''$ and $w''$ coincide or $\aslit{z'' = w''}$ is in
+    $\atset$.
+\end{itemize}
+But then, by the $V$-extensionality of $\atset$, $\aslit{[z',z''] \in
+y}$ would be in $\atset$, a contradiction.  Hence, $\real [z',z''] \in
+\real x \setminus \real y$.  Analogously, if $\aslit{[z',z''] \in x}
+\notin \atset$ and $\aslit{[z',z''] \in y} \in \atset$, we have $\real
+[z',z''] \in \real y \setminus \real x$.  Therefore, in both cases we
+have $\real x \neq \real y$, proving \ref{R3}.
+
+The cases \ref{R4} and \ref{R5} are easy consequences of \ref{R1},
+\ref{R2}, and \ref{R3}.  Details are left to the reader. This
+completes the proof of the lemma.
+\end{proof}
+
+Realizations act as \emph{minimal models} for skeletal
+representations, in the sense that if $V,T$ are two disjoint sets of
+variables, $\atset$ is a $V$-extensional skeletal representation such
+that $\Vars(\atset) \subseteq V \cup T$, and $\real$ is the
+realization of $\atset$ relative to $(V,T)$ (and to a bijection
+$\sigma$), then $\real \models \alpha$ if and only if $\alpha \in
+\atset$.
+
+In the next theorem we show how skeletal representations can be
+used to witness the satisfiability of \Lang-formulae.
+
+\begin{theorem}\label{SAT}
+Let $\varphi$ be a \Lang-formula, and let $V=\Vars(\varphi)$. Then
+$\varphi$
+is satisfiable iff there exists a $V$-extensional
+skeletal representation $\atset$ such that:
+\begin{enumerate}[label=(\roman*),leftmargin=18pt]
+ \item\label{SAT1} $\Vars(\atset) \subseteq V \cup T$, for some $T$
+ such that $1 \leq |T| < 2|V|$;
+
+ \item\label{SAT3} $\real \models \varphi$, where $\real$ is the
+ realization of $\atset$ relative to $(V,T)$.
+\end{enumerate}
+
+\end{theorem}
+\begin{proof}
+To prove the theorem, it is enough to exhibit a skeletal
+representation $\atset$ that satisfies conditions \ref{SAT1} and
+\ref{SAT3} above, given a model $\inter$ for $\varphi$.
+
+Thus, let $\inter$ be a model for $\varphi$ and let $\Sigma = \{
+\inter x : x \in V\}$.  As shown in \cite{CanFer1995}, there exists a
+collection $\Sigma_0$ of size strictly less than $|\Sigma|$ which
+witnesses all the inequalities among the members of $\Sigma$, in the
+sense that $s \cap \Sigma_0 \neq s' \cap \Sigma_0$ for any two
+distinct $s,s' \in \Sigma$.  Let us \emph{split} the pairs present in
+$\Sigma_0$ (relative to the pairing function $\pairf{\inter}$ of
+$\inter$) forming the collection
+\[
+ \Sigma_1 \defAs \{ s : s \in \Sigma_0 \wedge (\forall u,v \in
+ \VNU)(s \neq \pairf{\inter}(u,v))\}\; \cup \;
+ \bigcup \left\{ \{u,v\} : \pairf{\inter}(u,v) \in \Sigma_0 \right\}.
+\]
+Then we put
+\[
+ \Sigma_{2} \defAs \begin{cases}
+ \Sigma_{1} \setminus \Sigma & \text{if } \Sigma_{1} \setminus \Sigma
+ \neq \emptyset\\
+%
+ \{\emptyset\} & \text{otherwise}
+ \end{cases}
+\]
+and let $T$ be any collection of variables in $\Vars$, not already
+occurring in $\varphi$, such that $|T|=|\Sigma_2|$ (so that $|T| \geq
+1$).  Notice that $|T| \leq 2|\Sigma_0| + 1 < 2|V|$.
+
+Finally, we define our skeletal representation as the collection
+$\atset$ of atomic \Lang-formulae such that:
+\[
+ \begin{array}{rcl}
+  \aslit{x \in \nonpairs{y}} \in \atset& \iff & \inter x \in \inter \nonpairs{y}\\
+  \aslit{[x,y] \in z} \in \atset & \iff & \inter [x,y] \in \inter z\\
+  \aslit{x=y} \in \atset & \iff & \inter x = \inter y \text{ ~and~ }
+  x,y \in V
+ \end{array}
+\]
+for all $x,y,z \in V \cup T$.
+
+As can be easily verified, the above construction process yields a
+$V$-extensional skeletal representation $\atset$ satisfying condition
+\ref{SAT1} of the theorem.
+
+We prove next that also condition \ref{SAT3} is satisfied, i.e. $\real
+\models \varphi$ holds, where $\real$ is the realization of $\atset$
+relative to $(V,T)$.  This amounts to showing that $\real$ models
+correctly all conjuncts of $\varphi$.  These are simple prenex
+\Lang-formulae whose free variables belong to $V \cup T$ and whose
+domain variables belong to $V$, which are correctly modeled by
+$\inter$.  It will therefore be enough to prove the following general
+property stating that
+\begin{equation}\label{SATEQ1}
+\inter \models \psi  \Longrightarrow \real \models \psi,
+\end{equation}
+for every simple prenex \Lang-formula $\psi$ such that $\Vars(\psi)
+\subseteq V \cup T$ and whose domain variables, if any, belong to $V$.
+
+We prove (\ref{SATEQ1}) by induction on the length of the quantifier prefix
+of $\psi$.
+
+When $\psi$ is quantifier-free, (\ref{SATEQ1}) follows from
+propositional logic, by observing that the definition of $\atset$
+together with conditions \ref{R3}, \ref{R4}, and \ref{R5} of Lemma
+\ref{REALIZATIONLEMMA} yield that $\inter \alpha = \real \alpha$, for
+each atomic \Lang-formula $\alpha$ such that $\Vars(\alpha) \subseteq
+V \cup T$.
+
+For the inductive step, let $\psi$ have either the form $(\forall x
+\in \nonpairs{y})\chi$ or the form $(\forall [x,y] \in z)\chi$, with
+$\chi$ a simple prenex \Lang-formula having one less quantifier than
+$\psi$.  For the sake of simplicity, we consider here only the case in
+which $\psi$ has the form $(\forall x \in \nonpairs{y})\chi$, as the
+other case can be dealt with much in the same manner.  We remark that,
+by hypothesis, the domain variable $y$ in $(\forall x \in
+\nonpairs{y})\chi$ belongs to $V$.
+
+Let us assume that $\inter \models \psi$.  To complete the inductive
+proof of (\ref{SATEQ1}) we need to show that $\real \models \psi$.  From $\inter \models
+\psi$ it follows that $\inter \models (w \in \nonpairs{y}) \rightarrow
+\chi_w^x$, for every variable $w$, and in particular for every
+variable $w \in W$, where
+$
+ W \defAs \{ w \in V \cup T : \aslit{w \in \nonpairs{y}} \in \atset\}.
+$
+Let $w \in W$.  We clearly have $\inter \models w \in \nonpairs{y}$,
+and therefore $\inter \models \chi_w^x$.  Plainly, $\Vars(\chi_w^x)
+\subseteq V \cup T$.  In addition, all domain variables in $\chi_w^x$
+belong to $V$, since this is the case for all domain variables in
+$\chi$ and $w$ can not appear in $\chi_w^x$ as a domain variable,
+since $x$ is a quantified variable of $\psi$ and as such can not
+appear also as a domain variable in $\psi$, and therefore in $\chi$.
+Hence, by inductive hypothesis, we have $\real \models \chi_w^x$ and,
+\emph{a fortiori}, $\real \models (w \in \nonpairs{y}) \rightarrow
+\chi_w^x$.
+
+Notice that the latter relation holds also for $w \in (V \cup T)
+\setminus W$, since in this case $\inter \not\models (w \in
+\nonpairs{y})$ and therefore, as observed above, $\real \not\models (w
+\in \nonpairs{y})$.  Thus we have
+\begin{equation}
+    \label{eq_allW}
+    \real \models (w \in \nonpairs{y}) \rightarrow \chi_w^x,
+\end{equation}
+for every $w \in V \cup T$.  We show that (\ref{eq_allW}) implies
+$\real \models (\forall x \in \nonpairs{y})\chi$, which is what we
+want to prove.
+
+Indeed, if by contradiction $\real \not\models (\forall x \in
+\nonpairs{y})\chi$, then $\real' \not\models (x \in \nonpairs{y})
+\rightarrow \chi$, for some $\{x\}$-variant $\real'$ of $\real$, so
+that $\real' \models (x \in \nonpairs{y})$ and $\real' \not\models
+\chi$. But then
+\[
+\real' x \in \real' \nonpairs{y} = \real \nonpairs{y} \subseteq
+\{\real z : \aslit{z \in \nonpairs{y}} \in \atset\}.
+\]
+Therefore $\real' x = \real z_{0}$, for some variable $z_{0}$ (in $V
+\cup T$) such that the literal $\aslit{z_{0} \in \nonpairs{y}}$
+belongs to $\atset$. Thus we have
+$
+\real \models z_{0} \in \nonpairs{y} \quad \text{and} \quad
+\real \not\models (z_{0} \in \nonpairs{y}) \rightarrow
+\chi^{x}_{z_{0}},
+$
+contradicting (\ref{eq_allW}).
+%
+Hence, $\real \models (\forall x \in \nonpairs{y})\chi$ holds,
+completing the inductive proof of (\ref{SATEQ1}) and, in turn, the
+proof of condition \ref{SAT3} of the theorem.
+%
+\end{proof}
+
+Theorem \ref{SAT} yields a decision test for the s.p.\ for \Lang-formulae, as the number of possible $V$-extensional
+skeletal representations satisfying condition \ref{SAT1} of the
+theorem is finite, for any given \Lang-formula, and condition
+\ref{SAT3} is effectively verifiable.  In the following section, we
+analyze the s.p.\ for \Lang-formulae from a
+complexity point of view.
+
+\subsection{Complexity issues}
+
+The s.p.\ for propositional logic can be easily
+reduced to the one for \Lang-formulae as follows.  Given a
+propositional formula $Q$, we construct in linear time a
+quantifier-free \Lang-formula $\varphi_{Q}$, by replacing each
+propositional variable $p$ in $Q$ with a corresponding atomic
+\Lang-formula $x_{p} \in \nonpairs{U}$, where $U$ is a set variable
+distinct from all set variables $x_{p}$ so introduced.  It is then
+immediate to check that $Q$ is propositionally satisfiable if and only
+if the resulting \Lang-formula $\varphi_{Q}$ is satisfiable.  Thus the
+\textsc{NP}-hardness of the satisfiability of \Lang-formulae follows
+immediately.
+
+Having shown a lower bound for the s.p.\ for \Lang-formulae, we next
+give an upper bound for it, proving that it is in the
+\textsc{NExpTime} class and, furthermore, when restricted to a certain
+useful collection of \Lang-formulae, it is \textsc{NP}-complete.
+
+As proved in Theorem \ref{SAT}, satisfiability of a \Lang-formula
+$\varphi$ can be tested by first guessing a skeletal representation
+$\atset$, whose size is polynomial in the size $|\varphi|$ of
+$\varphi$ (since $|\Vars(\atset)| < 3\cdot|\Vars(\varphi)|$), and then
+verify that the formula $\varphi$ is modeled correctly by the
+realization $\real$ of $S$ relative to $(V,T)$, where $V =
+\Vars(\varphi)$ and $T = \Vars(\atset) \setminus \Vars(\varphi)$.
+Construction of the realization $\real$ takes polynomial time, however
+to verify that $\real \models \varphi$ can take exponential time.
+Indeed, it is easy to check that $\real$ models correctly $\varphi$ if
+and only if it satisfies the \emph{expansion}
+$\Expansion{\varphi}{\atset}$ of $\varphi$ relative to $\atset$,
+which we define shortly. For a simple prenex \Lang-formula $\psi$, we
+put
+\[
+ \expansion{\psi}{\atset} \defAs \begin{cases}
+          \hspace{22pt}\psi & \text{if }\psi \text{ is quantifier-free},\\
+% 	
+	  \bigwedge\limits_{\aslit{x' \in \nonpairs{y}} \in \atset}
+	  \expansion{\chi_{x'}^x}{\atset} & \text{if
+	  }\psi=(\forall x \in \nonpairs{y})\chi,\\
+% 	
+	  \bigwedge\limits_{\aslit{[x',y'] \in z} \in \atset}
+	  \expansion{\chi_{x',y'}^{x,\,\,y}}{\atset}~~~ & \text{if }
+	  \psi=(\forall [x,y] \in z)\chi.
+ \end{cases}
+\]
+Then we put
+\[
+\Expansion{\varphi}{\atset} \defAs
+\expansion{\varphi_1}{\atset}\wedge
+\ldots \wedge \expansion{\varphi_n}{\atset},
+\]
+where $\varphi_{1}, \ldots, \varphi_{n}$ are the (simple prenex)
+conjuncts of $\varphi$. If $\ell$ is the longest quantifier prefix of
+the formulae $\varphi_{1}, \ldots, \varphi_{n}$, then it turns out
+that $|\Expansion{\varphi}{\atset}| =
+\mathcal{O}(|\varphi|^{2\ell}) = \mathcal{O}(|\varphi|^{2\cdot|\varphi|})$, and therefore to test whether $\real
+\models \Expansion{\varphi}{\atset}$ takes at most exponential time,
+showing that the s.p.\ for \Lang-formula is in \textsc{NExpTime}.
+
+However, the same proof shows that if we restrict to the collection of
+\Lang-formulae whose quantifier prefixes are bounded by a constant $h
+\geq 0$, which we call $\LangBounded{h}$, then
+$|\Expansion{\varphi}{\atset}|$ is only polynomial in $|\varphi|$, for
+any $\LangBounded{h}$-formula $\varphi$, and therefore to test whether
+$\real$ models correctly $\Expansion{\varphi}{\atset}$, and in turn to
+test whether $\real \models \varphi$, takes polynomial time in
+$|\varphi|$, proving the following result:
+\begin{corollary}\label{UDECSIZEBOUNDED}
+The s.p.\ for $\LangBounded{h}$-formulae is \textsc{NP}-complete, for
+any $h \geq 0$.
+\qed
+\end{corollary}
+
+In the rest of the paper we describe some applications of
+\Lang-formulae in the field of knowledge representation.  More
+specifically, in the next section we introduce a novel description
+logic whose consistency problem can be reduced to the s.p.\ for
+$\LangBounded{2}$-formulae.  Such description logic will then be
+extended with Horn-style rules in Section~\ref{SWRL}.
+
+
+\section{The description logic \dlLang}\label{DL}
+
+Description logics are a family of logic-based formalisms which allow
+to represent knowledge about a domain of interest in terms of
+\emph{concepts} (which denote sets of elements), \emph{roles} (which
+represent relations between elements), and \emph{individuals} (which
+denote domain elements).  Each language in this family is mainly
+characterized by its set of \emph{constructors}, which allow to form
+complex terms starting from \emph{concept names}, \emph{role names},
+and \emph{individual names} (see Table \ref{DLCONS} for the syntax and
+semantics of the most widely used description logic constructs).  A
+description logic \emph{knowledge base} is a finite set of statements
+which define constraints on the domain structure.
+
+Description logic semantics\footnote{Here we are recalling the
+\emph{descriptive} semantics.  There are several other semantics that
+are out of the scope of this paper.} is given in terms of
+\emph{interpretations}.  An interpretation $\I$ consists of a nonempty
+\emph{domain} $\Delta^{\I}$ and an interpretation function assigning
+to each concept name a subset of $\Delta^{\I}$, to every role name a
+relation over $\Delta^{\I}$, and to every individual name a domain
+item in $\Delta^{\I}$.  An interpretation $\I$ extends recursively to
+complex terms.  An interpretation \I that satisfies all the
+constraints of a knowledge base $\mathcal{K}$ is said to be a
+\emph{model} for $\mathcal{K}$.  A knowledge base is said to be
+\emph{consistent} if it admits a model.  Thus the \emph{consistency
+problem} for description logic knowledge bases is to determine whether
+a knowledge base is consistent or not.
+
+\begin{table}
+\begin{math}
+\begin{array}{|rclr|}
+\hline
+&&&\\
+A^{\I} & \subseteq & \Delta^{\I} & \mbox{ (concept name)}\\
+P^{\I} & \subseteq & \Delta^{\I} \times \Delta^{\I} & \mbox{ (role name)}\\
+a^{\I} & \in & \Delta^{\I} & \mbox{ (individual name)}\\
+&&&\\
+\hline
+&&&\\
+\top^{\I}          & = & \Delta^{\I} & \mbox{ (universal concept)}\\
+\bot^{\I}          & = & \emptyset & \mbox{ (bottom concept)}\\
+(\neg C)^{\I} & = & \Delta^{\I} \setminus C^{\I} & \mbox{  (concept negation)}\\
+(C \sqcup D)^{\I} & = & C^{\I} \cup D^{\I} & \mbox{ (concept union)}\\
+(C \sqcap D)^{\I} & = & C^{\I} \cap D^{\I} & \mbox{ (concept intersection)}\\
+\{a\}^{\I} & = & \{a^{\I}\} & \mbox{ (nominal)}\\
+(\selfrestriction{R})^{\I} & = & \{x \in \Delta^{\I}: [x,x] \in R^{\I}\} & \mbox{ (self restriction)}\\
+
+(\forall R.C)^{\I} & = &
+\{x \in \Delta^{\I} : (\forall [x,y] \in R^{\I})(y \in C^{\I}) \}
+& \mbox{ (value restriction)}\\
+
+(\exists R.C)^{\I}& = & \{x \in \Delta^{\I} : (\exists y \in C^{\I})([x,y] \in R^{\I}) \}
+%& \mbox{ (existential quantification)}\\
+&\mbox{ (existential quantifier)}\\
+(\leq n R.C)^{\I} & = & \{x \in \Delta^{\I} : |\{y \in C^{\I} : [x,y] \in R^{\I} \}| \leq n\} & \mbox{ (number restrictions)}\\
+(\geq n R.C)^{\I} & = & \{x \in \Delta^{\I} : |\{y \in C^{\I} : [x,y] \in R^{\I} \}| \geq n\} &\\
+(R \subseteq S)^{\I} & = & \{x \in \Delta^{\I} : (\forall y \in \Delta^{\I})([x,y] \in R^{\I} \rightarrow &\\
+  &&\;\;\;\;\;[x,y] \in S^{\I})\}& \mbox{ (role-value-map)}\\
+&&&\\
+\hline
+&&&\\
+\universalrole^{\I} & = & \Delta^{\I} \times \Delta^{\I} & \mbox{ (universal role)}\\
+(\neg R)^{\I} & = & (\Delta \times \Delta) \setminus R^{\I} & \mbox{  (role negation)}\\
+(R \sqcup S)^{\I} & = & R^{\I} \cup S^{\I} & \mbox{ (role union)}\\
+(R \sqcap S)^{\I} & = & R^{\I} \cap S^{\I} & \mbox{ (role intersection)}\\
+(R^{-})^{\I} & = & \{[x,y] \in \Delta^{\I}\times\Delta^{\I} : [y,x] \in  R^{\I}\} & \mbox{ (role inverse)}\\
+(R_{C|})^{\I} & = & \{ [x,y] \in R^{\I} : x \in C^{\I} \} & \mbox{ (role restrictions)}\\
+(R_{|D})^{\I} & = & \{ [x,y] \in R^{\I} : y \in D^{\I} \} & \\
+(R_{C|D})^{\I} & = & (R_{C|})^{\I} \cap (R_{|D})^{\I} & \\
+
+id(C)^{\I} & = & \{ [x,x] : x \in C^{\I} \} & \mbox{ (role identity)}\\
+(R \circ S)^{\I} & = & R^{\I} \circ S^{\I} & \mbox{ (role composition)}\\
+(R^{*})^{\I} & = & (R^{\I})^{*} & \mbox{ (transitive closure)}\\
+(\symmetricclosure{R})^{\I} & = & R^{\I} \cup (R^{-})^{\I} & \mbox{ (symmetric closure)}\\
+&&&\\
+\hline
+&&&\\
+\I \models C \Issub D & \iff & C^{\I} \subseteq D^{\I} & \mbox{ (inclusion axioms)}\\
+\I \models R \Issub S & \iff & R^{\I} \subseteq S^{\I}&\\
+\I \models C \equiv D & \iff & C^{\I} = D^{\I}& \mbox{ (equivalence axioms)}\\
+\I \models R \equiv S & \iff & R^{\I} = S^{\I}&\\
+&&&\\
+\hline
+&&&\\
+\I \models \istransitive{R} & \iff & R^{\I} \circ R^{\I} \subseteq R^{\I}&\mbox{ (role transitivity)}\\
+\I \models \isreflexive{R} & \iff & (\roleidentity{\exists R.\top})^{\I} \subseteq R^{\I} & \mbox{ (role reflexivity)}\\
+\I \models \isantisymmetric{R} & \iff & R^{\I} \cap (R^{-})^{\I} = \emptyset & \mbox{ (role asymmetry)}\\
+&&&\\
+\hline
+&&&\\
+\I \models C(a) & \iff & a^{\I} \in C^{\I}& \mbox{ (concept assertion)}\\
+\I \models R(a,b) & \iff & [a^{\I}, b^{\I}] \in R^{\I}& \mbox{ (role assertion)}\\
+&&&\\
+\hline
+\end{array}
+\end{math}
+\caption{Description logic constructs}\label{DLCONS}
+\end{table}
+
+
+It turns out that the semantical definitions
+of several description logic statements $\Sigma$ may be expressed as formulae of
+the form
+\[
+ \I \models \Sigma \mbox{ iff } \left(\forall x_1 \in \Delta^{\I}\right)
+  \ldots \left(\forall x_n \in \Delta^{\I}\right)\Gamma_\Sigma,
+\]
+where $\Gamma_\Sigma$ is a Boolean combination of expressions of the types
+\[
+u \in C^{\I},~ [u,u'] \in R^{\I},~ u=a^{\I},~ u=u',
+\]
+with $C,R,a$ respectively a concept term, a role term, and an
+individual name, and with $u,u'$ ranging over the variables $x_1,
+\ldots, x_n$ (see Table \ref{DLCONS}).
+
+This holds in particular for all the knowledge base statements
+allowed in the novel description logic \dlLang defined next.
+
+\begin{definition}\label{DLLANG}
+Let $\mathcal{N}^c, \mathcal{N}^r, \mathcal{N}^i$ be the three
+denumerable, infinite and mutually disjoint collections of, respectively,
+concept, role, and individual names.
+\dlLang-concept terms and \dlLang-role terms are formed according to the
+following syntax rules:
+\[
+ \begin{array}{rcl}
+  C,D & \longrightarrow & A \,|\, \top \,|\, \bot \,|\, \neg C \,|\, C \sqcup D \,|\, C \sqcap D \,|\, \{ a \} \,|\, \selfrestriction{R} \,|\, \exists R.\{a\}\\
+%
+  R,S & \longrightarrow & P \,|\, \universalrole \,|\, R^{-} \,|\, \neg R \,|\, R \sqcup S \,|\, R \sqcap S \,|\, R_{C|} \,|\,R_{|D} \,|\, R_{C|D} \,|\, \roleidentity{C} \,|\, \symmetricclosure{R}
+ \end{array}
+\]
+where $C,D$ denote \dlLang-concept terms, $R,S$ denote \dlLang-role
+terms, $A, P$ denote a concept and a role name, respectively, and $a$
+denotes an individual name.  A \dlLang-knowledge base is then a finite
+collection of statements of the following types:
+\[
+ \begin{array}{lllll}
+ C \equiv D\;, & C \Issub D\;, & R \equiv S\;, &R \Issub S\;, & C \Issub \forall R.D\;, \\
+ \exists R.C \Issub D\;, & R \circ R' \Issub S\;, & \istransitive{R}\;, & \isreflexive{R} \;, &\isantisymmetric{R}
+\end{array}
+\]
+where $C,D$ are \dlLang-concept terms and $R,S,R'$ are \dlLang-role terms.
+\end{definition}
+
+Notice that the above definition of \dlLang is not minimal,
+as we intended to give a clear and immediate overview of its
+expressive power.
+
+The major limitation of \dlLang (with respect to other description
+logics) is that value restriction and existential quantification are
+restricted to the left-hand side and right-hand side of inclusions,
+respectively.  Moreover, number restrictions are not allowed.  On
+the other hand, the set of allowed constructs is extremely large.  In
+particular, complex role constructors can be used freely, in contrast
+with most expressive description logics.  Additionally, reasoning in
+\dlLang is \textsc{NP}-complete, as will be proved in the following
+theorem.
+
+\begin{theorem}\label{DLANGT}
+The consistency problem for \dlLang-knowledge bases is \textsc{NP}-complete.
+\end{theorem}
+\begin{proof}
+We will show that the consistency problem for \dlLang-knowledge bases
+reduces to the satisfiability problem for \LangBounded{2}-formulae.
+
+We begin with observing that we can restrict our attention to
+\dlLang-knowledge bases containing only statements of the following
+types:
+\[
+\begin{array}{lllllll}
+  A \equiv \top \;,& A \equiv \neg B \;,& A \equiv B \sqcup B' \;,& A \equiv \{a\} \;,& A \Issub \forall P.B \;,& \exists P.A \Issub B \;,& A \equiv \exists P.\{a\},\\
+  P \equiv \universalrole \;,& P \equiv \neg Q \;,& P \equiv Q \sqcup Q' \;,& P \equiv Q^{-} \;,& P \equiv \roleidentity{A} \;,& P \equiv Q_{A|} \;,& P \circ P' \Issub Q,\\
+  \isreflexive{P}
+\end{array}
+\]
+where $A,B,B'$ are concept names, $P,P',Q,Q'$ are role names, and $a$ is
+an individual name, since any \dlLang-knowledge base $\mathcal{K}$ can
+be easily transformed into a knowledge base $\mathcal{K'}$ which
+contains only statements of these types, and such that $\mathcal{K}$
+is consistent if and only if $\mathcal{K'}$ is.
+
+Next, we define a mapping $\tau$ from \dlLang-statements to simple
+prenex \Lang-formulae as follows:
+\[
+ \begin{array}{rcl}
+  \tau(A \equiv \top) & \defAs & \left(\forall x \in \nonpairs{\Delta}\right)\left(x \in \nonpairs{A}\right)\\
+  \tau(A \equiv \neg B) & \defAs & \left(\forall x \in \nonpairs{\Delta}\right)\left(x \in \nonpairs{A} \leftrightarrow x \notin \nonpairs{B}\right)\\
+  \tau(A \equiv B \sqcup B') & \defAs & \left(\forall x \in \nonpairs{\Delta}\right)\left(x \in \nonpairs{A} \leftrightarrow x \in \nonpairs{B} \vee x \in \nonpairs{B'}\right)\\
+  \tau(A \equiv \{a\}) & \defAs & \left(\forall x \in \nonpairs{\Delta}\right)\left(x \in \nonpairs{A} \leftrightarrow x=a\right) \wedge a \in \nonpairs{A}\\
+  \tau(A \Issub \forall P.B) & \defAs & \left(\forall [x,y] \in P\right)\left(x \in \nonpairs{A} \rightarrow y \in \nonpairs{B}\right)\\
+  \tau(\exists P.A \Issub B) & \defAs & \left(\forall [x,y] \in P\right)\left(y \in \nonpairs{A} \rightarrow x \in \nonpairs{B}\right)\\
+  \tau(A \equiv \exists P.\{a\}) & \defAs & \left(\forall x \in \nonpairs{\Delta}\right)\left(x \in \nonpairs{A} \leftrightarrow [x,a] \in P\right)\\
+  \tau(P \equiv \universalrole) & \defAs & \left(\forall [x,y] \in \Delta\right)\left([x,y] \in P\right)\\
+  \tau(P \equiv \neg Q) & \defAs & \left(\forall x,y \in \nonpairs{\Delta}\right)\left([x,y] \in P \leftrightarrow [x,y] \notin Q\right)\\
+  \tau(P \equiv Q \sqcup Q') & \defAs & \left(\forall x,y \in \nonpairs{\Delta}\right)\left([x,y] \in P \leftrightarrow [x,y] \in Q \vee [x,y] \in Q'\right)\\
+  \tau(P \equiv Q^{-}) & \defAs & \left(\forall x,y \in \nonpairs{\Delta}\right)\left([x,y] \in P \leftrightarrow [y,x] \in Q\right)\\
+  \tau(P \equiv Q_{A|}) & \defAs & \left(\forall x,y \in \nonpairs{\Delta}\right)\left([x,y] \in P \leftrightarrow [x,y] \in Q \wedge x \in \nonpairs{A}\right)\\
+  \tau(P \equiv \roleidentity{A}) & \defAs & \left(\forall x,y \in \nonpairs{\Delta}\right)\left([x,y] \in P \leftrightarrow x=y \wedge x \in \nonpairs{A}\right)\\
+  \tau(P \circ P' \Issub Q) & \defAs & \left(\forall [x,y]\in P\right)\left(\forall [y',z] \in P'\right)\left(y=y' \rightarrow [x,z] \in Q\right)\\
+  \tau(\isreflexive{P}) & \defAs & \left(\forall [x,y] \in P\right)\left( [x,x] \in P\right)\\
+ \end{array}
+\]
+We remark that in the above definition of the mapping $\tau$ we are
+assuming that the collection $\Vars$ of the variables of the language
+\Lang contains all the concept, role, and individual names.  Moreover,
+we used the same symbol $\Delta$ which is also used to denote the
+domain of a description logic interpretation, under the assumption
+that $\Delta \notin \mathcal{N}^c \cup \mathcal{N}^r \cup
+\mathcal{N}^i$.  These are just technical assumptions (not strictly
+necessary for the proof) which have been just introduced to enhance
+readability of the formulae $\tau(\cdot)$ and to emphasize the strong
+correlation between the semantical definitions of \dlLang-statements
+and their corresponding \Lang-formulae.
+
+Now let $\mathcal{K}$ be a \dlLang-knowledge base.  We define the
+\Lang-formula $\varphi$, expressing the consistency of $\mathcal{K}$,
+as follows
+\[
+\begin{array}{lcl}
+ \varphi & \defAs &  \varphi_{\Delta} \wedge \varphi_C \wedge \varphi_R \wedge \varphi_I \wedge \varphi_{\mathcal{K}}\\
+ \varphi_{\Delta} & \defAs & \left(\forall [x,y] \in \Delta\right)\left([x,y] \notin \Delta\right)\\
+ \varphi_C & \defAs & \bigwedge\limits_{A \in \mathsf{Cpts}} \left( \left(\forall x \in \nonpairs{A}\right)\left(x \in \nonpairs{\Delta}\right) \wedge
+\left(\forall [x,y] \in A\right)\left([x,y] \notin A\right)\right)\\
+ \varphi_R & \defAs & \bigwedge\limits_{P \in \mathsf{Rls\phantom{s}}} \left( \left(\forall x \in \nonpairs{P}\right)\left(x \notin \nonpairs{P}\right) \wedge
+\left(\forall [x,y] \in P\right)\left(x \in \nonpairs{\Delta} \wedge y \in \nonpairs{\Delta}\right)\right)\\
+ \varphi_I & \defAs & \bigwedge\limits_{a \in \mathsf{Inds}} a \in \nonpairs{\Delta}\\
+  \varphi_{\mathcal{K}} & \defAs & \bigwedge\limits_{\Sigma \in \mathcal{K}} \tau(\Sigma)
+\end{array}
+\]
+where $\mathsf{Cpts}, \mathsf{Rls}$, and $\mathsf{Inds}$ are
+respectively the sets of concept, role and individual names occurring
+in $\mathcal{K}$.
+
+The consistency problem for $\mathcal{K}$ is equivalent to the
+satisfiability of $\varphi$, as we prove next.
+% We prove that $\varphi$ is satisfiable if and only if $\mathcal{K}$ is
+% consistent.
+
+Plainly, $\varphi_{\Delta}, \varphi_{C}, \varphi_{R}$, and $\varphi_{I}$
+guarantee that each model of $\varphi$ can be easily turned into a
+\dlLang-interpretation. Additionally, $\varphi_{\mathcal{K}}$ ensures
+that the  \dlLang-interpretation obtained in this way satisfies all
+the statements in $\mathcal{K}$.
+
+Conversely, let \I be a model for $\mathcal{K}$. Without loss of
+generality, we may assume that $\Delta^{\I}$ is a set belonging to
+the von Neumann hierarchy $\VNU$ (otherwise, we embed $\Delta^{\I}$ in
+ $\VNU$). Let $\inter=(\assignment{\inter}, \pairf{\inter})$ be the \Lang-interpretation,
+induced by \I, defined by
+\[
+\begin{array}{rcll}
+ \pairf{\inter}(u,v) & \defAs & \{u, \{u,v\}, \Delta^{\I}\} & \mbox{ for all }u,v \in \VNU\\
+ \assignment{\inter} \Delta & \defAs & \Delta^{\I}&\\
+ \assignment{\inter} A & \defAs & A^{\I} & \mbox{ for all }A \in \mathcal{N}^c\\
+ \assignment{\inter} P & \defAs &\{ \pairf{\inter}(u,v) : [u,v] \in P^{\I}\} & \mbox{ for all }P \in \mathcal{N}^r\\
+ \assignment{\inter} a & \defAs & a^{\I} & \mbox{ for all }a \in \mathcal{N}^i.
+\end{array}
+\]
+Since $\inter \Delta \in \pairf{\inter}(u,v)$ for all $u,v \in \VNU$,
+from the well-foundedness of the membership relation it follows that
+$\inter \Delta$ does not contain any pair (with respect to
+$\pairf{\inter}$).  Thus $x \in \inter \nonpairs{A} \iff x \in A^{\I}$
+and $\pairf{\inter}(x,y) \in \inter P \iff [x,y] \in P^{\I}$ follow
+from the definition of $\inter$, and then $\inter \tau(\Sigma) =
+\true$ if and only if $\I$ satisfies $\Sigma$, for all the statements
+$\Sigma \in \mathcal{K}$.
+
+We conclude the proof by observing that each conjunct in $\varphi$
+contains at most two quantifiers (i.e., $\varphi$ is a formula of
+\LangBounded{2}), thus in view of Corollary~\ref{UDECSIZEBOUNDED} the
+satisfiability of $\varphi$ can be checked in nondeterministic
+polynomial time, while the \textsc{NP}-hardness of this problem
+follows directly from the \textsc{NP}-completeness of the
+satisfiability problem for propositional formulae.
+\end{proof}
+
+\section{Extending \dlLang with \textsf{SWRL} rules}\label{SWRL}
+
+In order to increase the expressive power of description logics, in
+\cite{HorPat2004} it was proposed to extend this framework with a
+simple form of Horn-style rules called \textsf{SWRL} rules.  \textsf{SWRL}
+rules have the form
+\[
+ H \rightarrow B_1 \wedge \ldots \wedge B_n
+\]
+where $H, B_1, \ldots, B_n$ are \emph{atoms} of the forms $A(x),
+P(x,y), x=y, x\neq y$, with $A$ a concept name, $P$ a role
+name, and $x,y$ either \textsf{SWRL}-variables or individual names.
+
+A \emph{binding} $\mathcal{B}(\I)$ is any extension of
+the interpretation $\I$ which assigns a domain item to each
+\textsf{SWRL}-variable. An interpretation $\I$ satisfies a rule
+$H \rightarrow B_1 \wedge \ldots \wedge B_n$ if each
+binding $\mathcal{B}(\I)$ which satisfies all the atoms
+$B_1, \ldots, B_n$ satisfies $H$ also.
+
+A \dlLang-knowledge base $\mathcal{K}$ extended with
+a finite set of \textsf{SWRL} rules $\mathcal{R}$ is said to be
+\emph{satisfiable} if and only if it has a model
+which satisfies all the rules in $\mathcal{R}$.
+
+The reduction provided in Section \ref{DL} can be
+easily extended to cope with \dlLang-knowledge bases extended
+with finite sets of \textsf{SWRL} rules, as shown in the following theorem.
+
+\begin{theorem}
+The consistency problem for \dlLang-knowledge bases extended with
+finite sets of \textsf{SWRL} rules is decidable.
+\end{theorem}
+\begin{proof}
+Let $\mathcal{K}$ be a \dlLang-knowledge base, and let
+$\mathcal{R}$ be a finite set of \textsf{SWRL} rules. Let us extend
+the mapping $\tau$, defined in Theorem \ref{DLANGT},
+to \textsf{SWRL} rules and atoms as follows:
+\[
+ \begin{array}{rcl}
+  \tau(H \rightarrow B_1 \wedge \ldots \wedge B_n) & \defAs&
+  \left(\forall x_1, \ldots, x_m \in \nonpairs{\Delta}\right)\left(\tau(H) \rightarrow \tau(B_1) \wedge \ldots
+  \wedge \tau(B_n)\right)\\
+%
+  \tau(A(x)) & \defAs & x \in \nonpairs{A}\\
+%
+  \tau(P(x,y)) & \defAs & [x,y] \in P \\
+%
+  \tau(x=y) & \defAs & x=y\\
+%
+  \tau(x\neq y) & \defAs & x\neq y\\
+ \end{array}
+\]
+where $H, B_1, \ldots B_n$ are \textsf{SWRL} atoms, $x_1, \ldots, x_m$ are the \textsf{SWRL} variables occurring
+in $H \rightarrow B_1 \wedge \ldots \wedge B_n$, $x,y$ can be either \textsf{SWRL} variables or
+individual names, and $A,P$ are respectively
+a concept and a role name.
+
+We conclude the proof by observing that the following \Lang-formula
+$\varphi'$ is satisfiable if and only if the knowledge base
+$\mathcal{K}$ extended with $\mathcal{R}$ is consistent:
+\[
+ \varphi' \defAs \bigwedge\limits_{\rho \in \mathcal{R}}\tau(\rho)
+ \wedge \varphi,
+\]
+where $\varphi$ is built from $\mathcal{K}$ as described in
+Theorem~\ref{DLANGT}, extending $\mathsf{Cpts}$, $\mathsf{Rls}$ and
+$\mathsf{Inds}$ with the concept, role and individual names occurring
+in $\mathcal{R}$, respectively.
+\end{proof}
+
+\section{Conclusions and future works}\label{CONCLUSIONS}
+
+We have introduced the collection of quantified \Lang-formulae of set
+theory, which allow the explicit manipulation of ordered pairs, and
+proved that they have a decidable satisfiability problem.  In fact,
+when restricted to \Lang-formulae whose conjuncts have quantifier
+prefixes of length bounded by a constant, the satisfiability problem
+is \textsc{NP}-complete.
+
+In addition, we have introduced the novel description logic \dlLang
+and shown that its consistency check is \textsc{NP}-complete, since it
+can be reduced to the satisfiability test for a \Lang-formula whose
+conjuncts involve at most two quantifiers.  Finally we have extended
+the description logic \dlLang with \textsf{SWRL} rules without
+disrupting the decidability of the knowledge base consistency problem.
+
+In contrast with description logics, 
+the semantics of set theory is \emph{multi-level}, so that
+sets (and consequently relations) can be nested
+arbitrarily.
+In the light of this observation, we intend to
+investigate whether the description logic \dlLang can be extended with
+\emph{meta-modeling}
+features (cf.
+\cite{Mot2007}), which would allow to state relationships
+among elements of the conceptual model.
+
+Finally, we intend to investigate if \Lang (and consequently \dlLang) can be
+extended with concrete domains, in order to promote definitively \Lang
+as a language for knowledge representation, and, consequently,
+for the semantic web.
+
+\begin{small}
+\begin{thebibliography}{10}
+
+\bibitem{DLHANDBOOK}
+Franz Baader, Diego Calvanese, Deborah~L. McGuinness, Daniele Nardi, and
+  Peter~F. Patel-Schneider, editors.
+\newblock {\em The Description Logic Handbook: Theory, Implementation, and
+  Applications}.
+\newblock Cambridge University Press, 2003.
+
+\bibitem{BreFerOmoSch1981}
+Michael Breban, Alfredo Ferro, Eugenio~G. Omodeo, and Jacob~T. Schwartz.
+\newblock Decision procedures for elementary sublanguages of set theory. {II}.
+  {F}ormulas involving restricted quantifiers, together with ordinal, integer,
+  map, and domain notions.
+\newblock {\em Communications on Pure and Applied Mathematics}, 34:177--195,
+  1981.
+
+\bibitem{CanFer1995}
+Domenico Cantone and Alfredo Ferro.
+\newblock {\em Techniques of computable set theory with applications to proof
+  verification}, volume XLVIII of {\em Comm. Pure Appl. Math.}, pages 901--945.
+\newblock Wiley, 1995.
+
+\bibitem{CanFerOmo89a}
+Domenico Cantone, Alfredo Ferro, and Eugenio Omodeo.
+\newblock {\em Computable set theory}, volume~6 of {\em International Series of
+  Monographs on Computer Science}.
+\newblock Oxford Science Publications. Clarendon Press, Oxford, {UK}, 1989.
+
+\bibitem{CanLonNic2010}
+Domenico Cantone, Cristiano Longo, and Marianna {Nicolosi Asmundo}.
+\newblock A {D}ecision {P}rocedure for a {T}wo-sorted {E}xtension of
+  {M}ulti-{L}evel {S}yllogistic with the {C}artesian {P}roduct and {S}ome {M}ap
+  {C}onstructs.
+\newblock In Wolfgang Faber and Nicola Leone, editors, {\em CILC2010 : 25th
+  Italian Conference on Computational Logic}, 2010.
+
+\bibitem{CanLonPis2010}
+Domenico Cantone, Cristiano Longo, and Antonio Pisasale.
+\newblock {C}omparing {D}escription {L}ogics with {M}ulti-level {S}yllogistics:
+  the {D}escription {L}ogic \dlmlsscart.
+\newblock In {\em 6th Workshop on Semantic Web Applications and Perspectives
+  (SWAP)}, 2010.
+
+\bibitem{CanOmoPol01}
+Domenico Cantone, Eugenio Omodeo, and Alberto Policriti.
+\newblock {\em Set theory for computing: from decision procedures to
+  declarative programming with sets}.
+\newblock Monographs in Computer Science. Springer-Verlag, New York, NY, USA,
+  2001.
+
+\bibitem{CanOmoSchUrs03}
+Domenico Cantone, Eugenio~G. Omodeo, Jacob~T. Schwartz, and Pietro Ursino.
+\newblock Notes from the logbook of a proof-checker's project.
+\newblock In Nachum Dershowitz, editor, {\em Verification: Theory and
+  Practice}, volume 2772 of {\em Lecture Notes in Computer Science}, pages
+  182--207. Springer, 2003.
+
+\bibitem{CanSch91}
+Domenico Cantone and Jacob~T. Schwartz.
+\newblock {D}ecision {P}rocedures for {E}lementary {S}ublanguages of {S}et
+  {T}heory: {XI}. {M}ultilevel {S}yllogistic {E}xtended by {S}ome {E}lementary
+  {M}ap {C}onstructs.
+\newblock {\em J. Autom. Reasoning}, 7(2):231--256, 1991.
+
+\bibitem{FerOmoSch1980}
+Alfredo Ferro, Eugenio~G. Omodeo, and Jacob~T. Schwartz.
+\newblock {\em Decision Procedures for Elementary Sublanguages of Set Theory.
+  I. Multi-level syllogistic and some extensions.}, volume XXXIII of {\em Comm.
+  Pure Appl. Math.}, pages 599--608.
+\newblock Wiley, 1980.
+
+\bibitem{HorKutSat2006}
+Ian Horrocks, Oliver Kutz, and Ulrike Sattler.
+\newblock {The Even More Irresistible SROIQ}.
+\newblock In {\em Proc. of the 10th Int. Conf. on Principles of Knowledge
+  Representation and Reasoning (KR2006)}, pages 57--67. 10th International
+  Conference on Principles of Knowledge Representation and Reasoning, AAAI
+  Press, June 2006.
+
+\bibitem{HorPat2004}
+Ian Horrocks and Peter~F. Patel-Schneider.
+\newblock A proposal for an {OWL} rules language.
+\newblock In Stuart~I. Feldman, Mike Uretsky, Marc Najork, and Craig~E. Wills,
+  editors, {\em WWW}, pages 723--731. ACM, 2004.
+
+\bibitem{KroRudHit2008}
+Markus Kr{\"o}tzsch, Sebastian Rudolph, and Pascal Hitzler.
+\newblock Description {L}ogic {R}ules.
+\newblock In Malik Ghallab, Constantine~D. Spyropoulos, Nikos Fakotakis, and
+  Nikolaos~M. Avouris, editors, {\em ECAI}, volume 178 of {\em Frontiers in
+  Artificial Intelligence and Applications}, pages 80--84. IOS Press, 2008.
+
+\bibitem{Lutz2001}
+Carsten Lutz and Ulrike Sattler.
+\newblock The {C}omplexity of {R}easoning with {B}oolean {M}odal {L}ogics.
+\newblock In Frank Wolter, Heinrich Wansing, Maarten de~Rijke, and Michael
+  Zakharyaschev, editors, {\em Advances in Modal Logic}, pages 329--348. World
+  Scientific, 2000.
+
+\bibitem{Mot2007}
+Boris Motik.
+\newblock On the {P}roperties of {M}etamodeling in {OWL}.
+\newblock {\em J. Log. Comput.}, 17(4):617--637, 2007.
+
+\bibitem{MotSatStu2005}
+Boris Motik, Ulrike Sattler, and Rudi Studer.
+\newblock Query {A}nswering for {OWL-DL} with rules.
+\newblock {\em J. Web Sem.}, 3(1):41--60, 2005.
+
+\bibitem{OmoCanPolSch06}
+Eugenio Omodeo, Domenico Cantone, and Alberto Policriti.
+\newblock Reasoning, {A}ction and {I}nteraction in {AI} {T}heories and
+  {S}ystems, {E}ssays {D}edicated to {L}uigia {C}arlucci {A}iello.
+\newblock In Oliviero Stock and Marco Schaerf, editors, {\em Reasoning, Action
+  and Interaction in AI Theories and Systems}, volume 4155 of {\em Lecture
+  Notes in Computer Science}. Springer, 2006.
+
+\bibitem{ParPol93}
+Franco Parlamento and Alberto Policriti.
+\newblock Undecidability results for restricted universally quantified formulae
+  of set theory.
+\newblock {\em Comm. Pure Appl. Math.}, {ILVI}:57--73, 1993.
+
+\bibitem{SchwCanOmoPol11}
+Jacob~T. Schwartz, Domenico Cantone, and Eugenio~G. Omodeo.
+\newblock {\em Computational {L}ogic and {S}et {T}heory: {A}pplying
+  {F}ormalized {L}ogic to {A}nalysis}.
+\newblock Texts in Computer Science. Springer-Verlag New York, Inc., 2011.
+
+\bibitem{SchDewSchDub1986}
+Jacob~T. Schwartz, Robert B.~K. Dewar, Edmond Schonberg, and E~Dubinsky.
+\newblock {\em Programming with sets; an introduction to SETL}.
+\newblock Springer-Verlag New York, Inc., New York, NY, USA, 1986.
+
+\end{thebibliography}
+\end{small}
+
+\end{document}

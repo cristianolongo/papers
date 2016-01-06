@@ -1,0 +1,14 @@
+We present a decision procedure for a quantified fragment of
+set theory involving ordered pairs and some operators to manipulate them.
+When our decision procedure is applied to formulae in this fragment
+whose quantifier prefixes have length bounded by a fixed constant, it
+runs in nondeterministic polynomial-time.
+
+Related to this fragment, we also introduce a description logic which
+provides an unusually large set of constructs, such as, for instance,
+Boolean constructs among roles.  The set-theoretic nature of the
+description logics semantics yields a straightforward reduction of the
+knowledge base consistency problem to the satisfiability problem for
+formulae of our fragment with quantifier prefixes of length at most 2, from
+which the NP-completeness of reasoning in this novel description logic
+follows.  Finally, we extend this reduction to cope also with SWRL rules.

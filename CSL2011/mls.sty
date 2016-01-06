@@ -1,0 +1,57 @@
+%% Style for Multi-Level Syllogistic 
+
+\usepackage{xspace}
+\usepackage{amssymb}
+
+% ACRONYMS
+\newcommand{\mls}{\ensuremath{\mathsf{MLS}}\xspace}
+\newcommand{\mlss}{\ensuremath{\mathsf{MLSS}}\xspace}
+\newcommand{\mlsu}{\ensuremath{\mathsf{MLSU}}\xspace}
+\newcommand{\mlsscart}{\ensuremath{\mathsf{MLSS}_{2,m}^{\times}}\xspace}
+\newcommand{\dlmlsscart}{\ensuremath{\mathcal{DL\langle}\mathsf{MLSS}_{2,m}^{\times}\mathcal{\rangle}}\xspace}
+\newcommand{\Forallpizero}{\ensuremath{\mathbf{\forall_{0}^{\pi}}}\xspace}
+\newcommand{\ForallpizeroBounded}[1]{\ensuremath{(\forall_{0}^{\pi})^{\leq #1}}\xspace}
+\newcommand{\dlForallpizero}{\ensuremath{\mathcal{DL\langle}\Forallpizero\mathcal{\rangle}}\xspace}
+
+
+
+% MAP PREDICATES
+\newcommand{\inj}{\mathsf{injective}}
+\newcommand{\singlev}{\mathsf{single\_valued}}
+\newcommand{\bij}{\mathsf{bijective}}
+\newcommand{\dom}{\mathsf{dom}\xspace}
+\newcommand{\range}{\mathsf{range}\xspace}
+
+\newcommand{\sym}{\mathsf{sym}\xspace}
+\newcommand{\refl}{\mathsf{refl}}
+\newcommand{\transcl}{\mathsf{trans}}
+
+
+% SET THEORY
+\newcommand{\rank}{\mathsf{rank}}
+\newcommand{\VNU}{\ensuremath{\mathcal{V}}\xspace}
+\newcommand{\Realization}{\ensuremath{\mathcal{R}\,}}
+
+% OTHERS
+\newcommand{\Vars}{\mathit{Vars}}
+\newcommand{\SetVars}{\Vars_{s}}
+\newcommand{\MapVars}{\Vars_{m}}
+
+\newcommand{\true}{\ensuremath{\mathbf{true}}\xspace}
+\newcommand{\false}{\ensuremath{\mathbf{false}}\xspace}
+
+\newcommand{\defAs}
+{\mathrel{\makebox{\:= \hspace{-.2cm} \raisebox{-0.5 ex}[0 ex][0 ex]{\tiny Def}}}}
+
+\newenvironment{hypotheses}{
+\begin{enumerate}[label=(\alph*)]
+}{
+\end{enumerate}
+}
+
+\newenvironment{theses}{
+\begin{enumerate}[label=(\roman*)]
+}{
+\end{enumerate}
+}
+
