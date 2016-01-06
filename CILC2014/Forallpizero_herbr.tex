@@ -690,13 +690,13 @@ atomic)}  \\
   \HExp(\varphi \oplus \psi, D) & \defAs & \HExp(\varphi, D) \oplus 
 \HExp(\psi, D)\\
   \HExp((\forall x)\varphi, D) & \defAs & 
-\HExp(\subst{\varphi}{x}{t_1}) \wedge \ldots \wedge 
+\HExp(\subst{\varphi}{x}{t_1}, D) \wedge \ldots \wedge 
 \HExp(\subst{\varphi}{x}{t_n}, D)\\
-  \HExp((\exists x)\varphi, D) & \defAs & \HExp(\subst{\varphi}{x}{t_1}) \vee 
+  \HExp((\exists x)\varphi, D) & \defAs & \HExp(\subst{\varphi}{x}{t_1}, D) \vee 
 \ldots \vee \HExp(\subst{\varphi}{x}{t_n}, D),\\
   \end{array}
 \]
-where $\oplus \in \{\wedge, \vee\}$.\qed
+where $\oplus \in \{\wedge, \vee, \rightarrow\}$.\qed
 %
 %for all $P \in \LangPreds$, $r_1, \ldots, r_m \in \LangTerms$, $x \in \Vars$,
 %for every binary connective of propositional logic $\oplus$, and
