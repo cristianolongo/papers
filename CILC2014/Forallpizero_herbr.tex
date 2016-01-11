@@ -141,7 +141,10 @@ procedure to reduce the satisfiability problem for the fragment
 $\Forallpizero$ to the problem of Herbrand satisfiability for a
 first-order language extending it.  In addition, it turns out that
 such a reduction maps formulae of the \emph{Disjunctive Datalog} subset
-of $\Forallpizero$ into Disjunctive Datalog programs.
+of $\Forallpizero$ into Disjunctive Datalog formulae.\footnote{$\DisjDatalog$-formulae are often referred to
+also as \emph{programs}, so that the expressions
+``\DisjDatalog-formulae'' and ``\DisjDatalog-programs'' must be
+regarded as synonyms.}
 \end{abstract}
 
 \section{Introduction}\label{INTRO}
@@ -205,17 +208,17 @@ $\chi_{\varphi} \wedge \varphi$ admits a Herbrand model (cf.
 \wedge \varphi$ are regarded as uninterpreted predicates.
 %
 It turns out that these formulae $\chi_{\varphi}$ can be considered
-as \DisjDatalog-programs. As a consequence, the reduction we
+as \DisjDatalog-formulae. As a consequence, the reduction we
 are going to discuss can be seen as a reduction from
 \ForallpizeroDisjDatalog to \DisjDatalog, where
 $\ForallpizeroDisjDatalog$
 consists of the formulae in \Forallpizero which satisfy
 the syntactic constraints required to be regarded also as 
-\DisjDatalog-programs.
+\DisjDatalog-formuale.
 
 We recall that \DisjDatalog (read \emph{Disjunctive Datalog})
 extends Datalog by allowing disjunctions in the
-head of program rules. Such additional feature considerably increments the expressive power of the basic language and makes \DisjDatalog suitable to be used in several applications such as reasoning for ontologies of the semantic web \cite{hustadt2007reasoning} and planning problems \cite{Eiter:2004}. 
+head of rules. Such additional feature considerably increments the expressive power of the basic language and makes \DisjDatalog suitable to be used in several applications such as reasoning for ontologies of the semantic web \cite{hustadt2007reasoning} and planning problems \cite{Eiter:2004}. 
 \DisjDatalog has been introduced in \cite{EitGotMan1997}, where its formal semantics, its expressive power, and the complexity of its reasoning problems have been treated in depth. Decidability and complexity of Datalog
 extensions with various combinations of disjunction and negation have
 been studied in \cite{AlvianoFLM12,GottlobMMP12}.
@@ -943,19 +946,7 @@ form
 where $\varphi$ (the rule \emph{body}) is a conjunction of literals,
 $\psi$ (the rule \emph{head}) is a disjunction of literals, and
 $\Vars(\psi) \subseteq \Vars(\varphi)$ (\emph{safety 
-condition}).\footnote{$\DisjDatalog$-formulae are often referred to
-also as \emph{programs}, so that the expressions
-``\DisjDatalog-formulae'' and ``\DisjDatalog-programs'' must be
-regarded as synonyms.}
-% $n$, $m$ and $h$ are natural numbers,
-% $\gamma_1$, \ldots, $\gamma_m$, $\sigma_1$, \ldots, $\sigma_h$ are
-% literals, and  $x_1, \ldots, x_n$ are variables.
-% The left-hand side of a \DisjDatalog-rule is
-% called the \emph{rule body}, whereas the right-hand side is called
-% the \emph{rule head}. In addition, rules in a \DisjDatalog-program
-% have to be \emph{safe}, i.e., every variable in the head of a
-% rule must occur in the rule body as well.
-%
+condition}).
 \emph{Facts} are special ground rules whose body is valid.  For
 this kind of rules, one may omit to indicate the rule body.  Thus
 facts can just be regarded as disjunctions of ground literals.  They
