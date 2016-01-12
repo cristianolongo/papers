@@ -301,7 +301,7 @@ $\LangConsts \subseteq \Consts$.
 The collection $\LangTerms$ of the \emph{terms} of $\Lang$ is
 defined as the smallest set of expressions such that:
 \begin{itemize}
-\item $\Vars \cup \Consts \subseteq \LangTerms$;
+\item $\Vars \cup \LangConsts \subseteq \LangTerms$;
 
 \item $f(t_1, \ldots, t_n) \in \LangTerms$, for all $f \in 
 \LangFuncts$ and $t_1, \ldots, t_n \in \LangTerms$ (where $n = \ar(f)$).
@@ -398,13 +398,6 @@ variable.\footnote{Plainly, any ground formula is closed.}
 
 \end{itemize}
 
-%
-% Finally, given any set $\Sigma$ of atomic formulae and any
-% atomic formula $\gamma$, with a slight abuse of notation we
-% write $\Sigma \models \gamma$ to express that $\gamma$ is
-% a member of $\Sigma$, i.e., $\gamma \in \Sigma$. Likewise,
-% we write $\Sigma \not\models \gamma$ when $\gamma \not\in \Sigma$.
-
 In the rest of the paper we shall sometimes abbreviate
 quantifier prefixes as $(\forall x_1)\ldots(\forall x_n)$
 by $(\forall x_1, \ldots, x_n)$.
@@ -463,25 +456,9 @@ f^{\inter}(t_1^{\inter,A}, \ldots, t_n^{\inter,A})$, for all $f \in
 \LangFuncts$ and
   $t_1, \ldots, t_n \in \LangTerms$, where $n = \ar(f)$.
 \end{itemize}
-%\[
-% \begin{array}{ll}
-% x^{\inter,A} \defAs A x & \mbox{ for all }x \in \Vars\\
-% a^{\inter,A} \defAs a^{\inter} & \mbox{ for all }a \in \LangConsts\\
-% f(t_1, \ldots, t_n)^{\inter,A} \defAs f^{\inter}(t_1^{\inter}, 
-%\ldots, t_n^{\inter})& \mbox{ for all }f \in \LangFuncts,
-% \ar(f)=n, \\
-% &\quad\quad\{t_1, \ldots, t_n\} \subseteq \LangTerms .
-% \end{array}
-%\]
-%
 Moreover, the pair $(\inter, A)$ \emph{evaluates} each
 formula $\varphi$ of $\Lang$ to a truth value $\true$ or $\false$ 
 according to the following rules:
-%We write $\varphi^{\inter, A}=\true$, or simply $\varphi^{\inter, A}$,
-%if $(\inter, A)$  evaluates $\varphi$ to $\true$,
-%$\varphi^{\inter, A}=\false$, or, more concisely, $\neg \varphi^{\inter, A}$,
-%otherwise. Evaluation of first-order formulae proceeds as follows:
-%first,
 \begin{itemize}
 \item $P(t_1, \ldots, t_n)^{\inter,A} = \true$ \quad iff \quad
 $\big[t_1^{\inter,A}, \ldots, t_n^{\inter,A}\big] \in P^{\inter}$, \\
@@ -599,21 +576,6 @@ is said to be a \emph{Herbrand interpretation} for $\Lang$ if
 
 \item $t^{\hinter} = t$,  for all $t \in \LangClTerms$.
 \end{itemize}
-%\[
-% \begin{array}{lcll}
-% D^{\hinter} & = & \LangClTerms & \mbox{ and}\\
-% t^{\hinter} & = & t & \mbox{ for all }t \in \LangClTerms .
-% \end{array}
-%\]
-%
-%In other words, Herbrand interpretations map each closed term into itself.
-%Thus,
-% a Herbrand interpretation is characterized by the set of ground
-% atomic formulae which are evaluated to \true by 
-%it.
-%\marginpar{considera di omettere}
-%
-
 A formula $\varphi$ of $\Lang$ is said to be
 \emph{Herbrand-satisfiable} iff
 $\fomodels{(\hinter,A)}{\varphi}$, for some Herbrand interpretation 
@@ -625,8 +587,9 @@ in a simplified form:
 
 \begin{theorem}\label{HERSENT}
 Let $\Lang$ be a first-order
-language, and let $\varphi$ be a sentence of $\Lang$. Then
-$\varphi$ is satisfiable if and only if it is Herbrand-satisfiable.
+language such that $\LangConsts=\Consts$, and let $\varphi$ be a sentence of
+$\Lang$.
+Then $\varphi$ is satisfiable if and only if it is Herbrand-satisfiable.
 \qed
 \end{theorem}
 %
