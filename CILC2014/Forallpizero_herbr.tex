@@ -621,16 +621,6 @@ More precisely, it is the minimal set $\Univ$ such that
 \item $f(t_1, \ldots, t_n) \in \Univ$, ~~for all $f \in 
 \Functs(\varphi)$ and $t_1, \ldots, t_n \in \Univ$, where $\ar(f)=n$.
 \end{itemize}
-%\[
-%\begin{array}{ll}
-% \Consts(\varphi) \subseteq \Univ & \mbox{ if 
-%}\Consts(\varphi)\neq\emptyset,\\
-% c \in \Univ& \mbox{ if }\Consts(\varphi)=\emptyset\mbox{, and}\\
-% f(t_1, \ldots, t_n) \in \Univ&\mbox{ for all }f \in 
-%\Functs(\varphi), \ar(f)=n, t_1, \ldots, t_n \in \Univ.
-%\end{array}
-%\]
-%
 Observe that if no function symbol occurs in $\varphi$, then $\Univ$ 
 is finite and coincides with the extended set of constant symbols of 
 $\varphi$.
@@ -644,8 +634,6 @@ t_n\}$ be a nonempty finite set of closed terms of $\Lang$. For any
 formula $\chi$ of $\Lang$, the \emph{Herbrand expansion  $\HExp(\chi, 
 D)$ of $\chi$ over $D$} is the formula of $\Lang$ recursively defined 
 as follows:
-%
-%of formulae of $\Lang$ over $D$ is the map recursively defined as follows
 \[
   \begin{array}{rcll}
   \HExp(\mathcal{A}, D) & \defAs & 
@@ -662,11 +650,7 @@ atomic)}  \\
 \ldots \vee \HExp(\subst{\varphi}{x}{t_n}, D),\\
   \end{array}
 \]
-where $\oplus \in \{\wedge, \vee, \rightarrow\}$.\qed
-%
-%for all $P \in \LangPreds$, $r_1, \ldots, r_m \in \LangTerms$, $x \in \Vars$,
-%for every binary connective of propositional logic $\oplus$, and
-%for every two formulae $\varphi$, $\psi$ of $\Lang$.  \qed
+where $\oplus \in \{\wedge, \vee\}$.\qed
 \end{definition}
 
 Herbrand expansions enjoy some interesting properties. Indeed, if $D$ 
@@ -1500,7 +1484,7 @@ Lemma~\ref{HERSAT}.
 Let $\varphi$ be a \Forallpizero-sentence, $V=\Consts(\varphi)$,
 and $T$ a set of constants disjoint from $V$ and such that
 $|T|=2\cdot|V|$. Then $\varphi$ is (set-theoretically) satisfiable
-if and only if $\HExp(\varphi, V\cup T)$ is satisfied by the Herbrand 
+if and only if $\HExp(\varphi, V\cup T)$ is satisfied by a Herbrand 
 interpretation
 $\atset$ which is a skeletal representation
 relative to $(V,T)$, i.e., $[\HExp(\varphi, V\cup T)]^\atset = \true$.
