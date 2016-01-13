@@ -1061,30 +1061,6 @@ pair-aware set-theoretic interpretation $\inter$. A \Forallpizero-sentence $\var
 \emph{(set-theoretically) satisfiable} if and only if $\vmodels{\inter}{\varphi}$, for some 
 pair-aware set-theoretic interpretation $\inter$. 
 
-%($\vmodels{\inter}{\varphi}$ if $\varphi$ is a sentence) to indicate
-%that $\inter$ is a pair-aware set-theoretic interpretation, $A$ is an 
-%assignment for $\inter$,
-%and $\varphi^{\inter, A}=\true$. 
-%
-%
-%, such that the interpretation domain is the von Neumann hierarchy of sets
-%(i.e., $D^{\inter}=\VNU$),
-%
-%Summing up,
-%every interpretation $\inter=(D^{\inter},\cdot^\inter)$ is said to
-%be a \emph{pair-aware set-theoretic interpretation} if and only if
-%the interpretation domain is the von Neumann hierarchy of sets
-%(i.e., $D^{\inter}=\VNU$) and the interpretation function $\cdot^\inter$
-%is subject to conditions (C3), (C4), and (C5).
-%Then, a \Forallpizero-sentence $\varphi$ is said to be
-%\emph{(set-theoretically) satisfiable}
-%(write $\vsat{\varphi}$)
-%if and only there exists a pair-aware
-%set-theoretic interpretation $\inter$ which satisfies it,
-%i.e., such that $\vmodels{\inter}{\varphi}$.
-% We use the notation
-% $\inter \modelsV \varphi$ to indicate that $\inter$ is a
-% pair-aware set-theoretic interpretation satisfying $\varphi$.
 
 \subsection{A decision procedure for \Forallpizero-sentences}
 
@@ -1111,11 +1087,6 @@ denote also by $\atset$, such that
   \fomodels{\atset}{\gamma} \iff \gamma \in \atset ,
 \]
 holds, for every ground atomic $\Forallpizero$-formula $\gamma$.
-% In the rest of the paper
-% we shall write $\gamma^{\atset}$ to indicate that
-% the atomic $\Forallpizero$-formula $\gamma$ is a member of the
-% skeletal representation $\atset$.
-%
 The definition of skeletal representation adopted in this paper
 differs slightly from the one presented in \cite{CanLonNic2011}.  In
 particular, here we extend the notion of skeletal representation so as
@@ -1145,14 +1116,6 @@ occurring in $\atset$, we have
 \]
 (Notice that equality clauses of type $a = b$ in $\atset$ play no 
 role in the definition of the relation $\memclosure{\atset}$.)
-% \begin{itemize}
-%   \item if $\nonpairin{\consta}{\constb}$ is in $\atset$, then $\consta
-%   \memclosure{\atset} \constb$, and
-%
-%   \item if $\pairin{\consta}{\constb}{\constc}$ is a member of $\atset$, then
-%   $\consta \memclosure{\atset} \constc$ and $\constb
-%   \memclosure{\atset} \constc$.
-% \end{itemize}
 
 \begin{definition}[Skeletal representation]\label{SKREPR}
 Let $V$, $T$ be
@@ -1632,7 +1595,22 @@ $\nu_1,\nu_2,\nu_3 \in \Vars \cup \Consts$.  With such an
 understanding, \Forallpizero can be regarded as a sublanguage of
 $\Elpizero$, and skeletal representations as particular Herbrand 
 interpretations (over \Elpizero), subject to the conditions reported 
-in Definition~\ref{SKREPR}.
+in Definition~\ref{SKREPR}. For example, the skeletal
+representation\marginpar{aggiunto} 
+$\atset=\{ \nonpairin{\consta}{\constb} \}$ can be regarded as 
+a Herbrand interpretation such that $\fomodels{\atset}{\gamma} \iff
+\gamma=\nonpairin{\consta}{\constb}$. Conversely, let us consider
+the two set of constants $V=\{\consta, \constb\}$ and $T=\{t\}$
+and let $\hinter=\{\nonpairin{\consta}{\constb}, \seteq{\consta}{t}\}$,
+$\hinter'=\hinter \cup \{\nonpairin{t}{\constb}\}$ be two
+Herbrand interpretations.\footnote{With a slight abuse of notation and in
+analogy with skeletal representations, here we are representing Herbrand interpretations
+as sets with posing $\gamma \in \hinter \iff \fomodels{\hinter}{\gamma}$,
+for every Herbrand interpretation $\hinter$ and for every ground atomic formula
+$\gamma$.} Then $\hinter'$ is a skeletal representation relative to $(V,T)$
+whereas $\hinter$ is not, as $\hinter$ does not comply with condition
+\ref{EQC}.
+
 %Notice that Corollary~\ref{SATEXP} applies to \Forallpizero-sentences, when these are regarded as first-order formulae in \Elpizero.
 
 $\Forallpizero$-formulae have a set-theoretic semantics.  However, 
