@@ -1659,11 +1659,6 @@ Then we shall put $\Theta_{\varphi} \equivAs\, \chi^{(V,T)} \wedge
 \varphi$ and prove that $\varphi$ is set-theoretically satisfiable if 
 and only if $\Theta_{\varphi}$ is satisfiable in first-order logic.
 
-% In the rest of the paper, we shall refer to the subset of a Herbrand
-% interpretation $\hinter$ consisting of the atomic
-% \Forallpizero-sentences in $\hinter$ as the
-% $\Forallpizero$\emph{-subset} of $\hinter$.
-
 Thus, let $V$, $T$ be two nonempty and disjoint sets of constants 
 (such that $|T| = 2 \cdot |V|$). The formula $\chi^{(V,T)}$
 is defined as follows:
@@ -1715,53 +1710,6 @@ T}\big(\distby{x}{y}{z} \vee \distby{y}{x}{z}\big) \\ \\
 T}\big(\distPby{x}{y}{z}{v} \vee \distPby{y}{x}{z}{v}\big) .
 \end{align*}
 
-%\[
-% \begin{array}{rcl}
-%  &&\\
-%  \regf & \equivAs & (\forall x, y)%(\nonpairin{x}{y} \rightarrow 
-%\memhat{x}{y}) \wedge (\forall x, y)%(\pairin{x}{y}{z} \rightarrow 
-%\memhat{x}{z})\\
-%%  && {} \wedge (\forall x, y)(\pairin{x}{y}{z} \rightarrow \memhat{x}{z}) \\
-%  && {} \wedge (\forall x, y)(\pairin{x}{y}{z} \rightarrow 
-%\memhat{y}{z}) \wedge (\forall x, y, z)%(\memhat{x}{y} \wedge 
-%\memhat{y}{z} \rightarrow \memhat{x}{z})\\
-%%  && {} \wedge (\forall x, y, z)(\memhat{x}{y} \wedge \memhat{y}{z} 
-%\rightarrow \memhat{x}{z}) \\
-%  && {} \wedge (\forall x)\neg(\memhat{x}{x})\\
-%  &&\\
-%  \exonef & \defAs & (\forall x, y)(\seteq{x}{y} \rightarrow 
-%\seteq{y}{x}) \wedge (\forall x, y, z)(\seteq{x}{y} \wedge 
-%\seteq{y}{z} \rightarrow \seteq{x}{z}) \\
-%%  && {} \wedge (\forall x, y, z)(\seteq{x}{y} \wedge \seteq{y}{z} 
-%\rightarrow \seteq{x}{z})  \\
-%  && {} \wedge (\forall x, y, z)(\nonpairin{x}{y} \wedge 
-%\seteq{x}{z} \rightarrow \nonpairin{z}{y})  \\
-%  && {} \wedge (\forall x, y, z)(\nonpairin{x}{y} \wedge 
-%\seteq{y}{z} \rightarrow \nonpairin{x}{z})  \\
-%  && {} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
-%\seteq{x}{v} \rightarrow \pairin{v}{y}{z}) \\
-%  && {} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
-%\seteq{y}{v} \rightarrow \pairin{x}{v}{z}) \\
-%  && {} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
-%\seteq{z}{v} \rightarrow \pairin{x}{y}{v})\\
-%  &&\\
-%  \extwof & \defAs & \bigwedge\limits_{x,y \in V}
-%  \big( \neg(\seteq{x}{y}) \rightarrow \dist{x}{y} \vee \distP{x}{y} \big)  \\
-%  && {} \wedge (\forall x,y)\left(\dist{x}{y} \rightarrow 
-%\bigvee\limits_{z \in V \cup T}\big(\distby{x}{y}{z} \vee 
-%\distby{y}{x}{z}\big)\right) \\
-%  && {} \wedge (\forall x,y)\left(\!\!\distP{x}{y} \rightarrow 
-%\bigvee\limits_{z,v \in V \cup T}\big(\distPby{x}{y}{z}{v} \vee 
-%\distPby{y}{x}{z}{v}\big)\!\!\right) \\
-%  && {} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
-%(\nonpairin{z}{x} \wedge \neg(\nonpairin{z}{y}))\big) \\
-%  && {} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
-%  (\pairin{z}{v}{x} \wedge \neg(\pairin{z}{v}{y}))\big)\\
-%  &&\\
-%  \eqf & \defAs & \bigwedge\limits_{x \in V \cup T, t \in T, x\neq 
-%t} \neg(\seteq{x}{t}) .
-%  \end{array}
-%\]
 It can be easily verified that $\chi^{(V,T)}$ is a
 $\DisjDatalog$-formula. In addition, $V \cup T$ is the Herbrand
 universe of $\chi^{(V,T)}$. Indeed, no constant occurs in
@@ -1823,15 +1771,25 @@ that $\fomodels{\hinter}{\seteq{\constb}{\consta}}$ holds. Thus, the
 same argument as before shows that we have also
 $\consta \in V$, proving \ref{EQC}.
 
-Next, let $\fomodels{\hinter}{\seteq{\consta}{\constb}}$, for some constants
-$\consta, \constb \in V \cup T$, and let $\gamma$ be a ground atomic 
-\Forallpizero-formula such that $\fomodels{\hinter}{\gamma}$.
+Next, let $\fomodels{\hinter}{\seteq{\consta}{\constb}}$, for some
+constants\marginpar{modificato}
+$\consta, \constb \in V \cup T$, and let $\gamma$ be a ground
+atomic \Forallpizero-formula such that $\fomodels{\hinter}{\gamma}$. We have to prove
+that $\fomodels{\hinter}{\subst{\gamma}{\consta}{\constb}}$ and
+$\fomodels{\hinter}{\subst{\gamma}{\constb}{\consta}}$. Such a formula $\gamma$
+can be of one of the types listed in (\ref{ATFORM}). 
 Since, as observed earlier, we have 
-$\fomodels{\hinter}{\HExp(\exonef, V \cup T)}$, then it follows also 
-that
-$\fomodels{\hinter}{\subst{\gamma}{\consta}{\constb}}$ and 
-$\fomodels{\hinter}{\subst{\gamma}{\constb}{\consta}}$, proving 
-\ref{EX1C}.
+$\fomodels{\hinter}{\HExp(\exonef, V \cup T)}$, then \ref{EX1C} easily 
+follows. Suppose that, for example, $\gamma=\nonpairin{\consta}{\constc}$, 
+for some $\constc \in V \cup T$. It can be easily verified that
+$\nonpairin{\consta}{\constc} \wedge \seteq{\consta}{\constb} \rightarrow
+\nonpairin{\constb}{\constc}$  is a conjunct of $\HExp(\exonef, V \cup T)$
+as $(\forall x, y, z)(\nonpairin{x}{y} \wedge \seteq{x}{z} 
+\rightarrow \nonpairin{z}{y})$ is a conjunct of $\exonef$,
+and thus $\fomodels{\hinter}{\subst{\gamma}{\constb}{\consta}}$
+follows from $\fomodels{\hinter}{\HExp(\exonef, V \cup T)}$ in the case
+under consideration. The
+remaining possible cases for $\gamma$ can be proved analogously.
 
 Finally, let $\consta, \constb \in V$ be such that 
 $\notfomodels{\hinter}{\seteq{\consta}{\constb}}$. Hence,
