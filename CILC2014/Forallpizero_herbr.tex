@@ -709,14 +709,6 @@ $\psi$.
 A sentence $\varphi$ is valid if and only if for each Skolemized 
 version $\neg \psi$ of $\neg \varphi$ there exists a Herbrand domain 
 $D$ of $\psi$ such that $\HExp(\psi, D)$ is a tautology. \qed
-%
-%there is some sentence
-%$\psi$ such that
-%\begin{itemize}
-% \item $\neg \psi$ is a Skolemized version of $\neg \varphi$, and
-% \item $\HExp(\psi, D)$ is a tautology
-%\end{itemize}
-%for some Herbrand domain $D$ of $\psi$. \qed
 \end{theorem}
 
 The decidability of the satisfiability problem for finite conjunctions
@@ -871,13 +863,6 @@ is decidable.
 \end{proof}
 
 \subsection{Disjunctive Datalog}
-% \begin{theorem}\label{HERSAT}
-% Let $\varphi$ be a finite conjunction of universally quantified prenex
-% sentences.  Then $\varphi$ is satisfiable if and only if it admits a
-% Herbrand model $\hinter$ whose universe coincides with the set
-% $\Consts(\hinter)$, if $\Consts(\hinter) \neq \emptyset$, otherwise
-% is any singleton.  \qed
-% \end{theorem}
 
 We close the section by briefly reviewing the \DisjDatalog first-order
 fragment of $\Lang$.  A \emph{\DisjDatalog-formula} is a finite
@@ -1264,39 +1249,6 @@ $\varphi^{\Realization_{\!\atset}} =
 In view of such considerations and of Definition \ref{SKREPR}, 
 Theorem 3 in \cite{CanLonNic2011} can then be restated as follows.
 
-%Plainly, if $\atset$ is a skeletal representation relative to a pair 
-%$(V,T)$ of finite, nonempty, and disjoint sets of constants $V$ and 
-%$T$, and if $T'$ is a set of constants extending $T$ (i.e., $T 
-%\subseteq T'$) and disjoint from $V$, then $\atset$ is also a 
-%skeletal representation relative to the pair $(V,T')$. In addition, 
-%it turns out that if $\Realization_{\!\atset}$ is the realization of 
-%$\atset$
-
-%Plainly, the \emph{names} of the constants in the set $T$ in 
-%Definition \ref{REALIZATIONDEF} do not affect the
-%realization of a skeletal representation relative to $(V,T)$.  In
-%other words, if $\atset$ is a skeletal representation relative to
-%$(V,T)$, $t$ is a constant in $T$, and $t'$ is another constant not
-%occurring in $V \cup T$, then the realization of $\atset$ relative to
-%$(V,T)$ and the realization of $\subst{\atset}{t}{t'}$ (i.e., the set
-%of atomic \Forallpizero-formulae obtained from $\atset$ by replacing
-%each occurrence of $t$ by $t'$) relative to $(V, T \setminus \{t\}
-%\cup \{t'\})$ coincide.
-%
-%In addition, if $V$, $T$ are two nonempty and disjoint set of 
-%constants, and $T'$ is a finite set of constants disjoint from $V$
-%and such that $T\subseteq T'$, then
-%\begin{itemize}
-% \item every skeletal representation $\atset$ relative to $(V,T)$ is
-% a skeletal representation relative to $(V,T')$ as well, and
-% \item the realization of $\atset$ relative to $(V,T)$ coincides
-% with the realization of $\atset$ relative to $(V,T')$.
-%\end{itemize}
-%
-%In view of the above considerations and of
-%Definition \ref{SKREPR}, Theorem 3 in
-%\cite{CanLonNic2011} can be restated as follows.
-
 \begin{theorem}\label{SAT}
 Let $\varphi$ be a \Forallpizero-sentence, let $V=\Consts(\varphi)$,
 and let $T$ be a set of constants disjoint from $V$ and such that
@@ -1306,7 +1258,12 @@ relative to $(V,T)$ such that the realization $\Realization_{\!\atset}$
 of $\atset$ relative to $(V,T)$ satisfies $\varphi$. \qed
 \end{theorem}
 %
-The decidability of the set-theoretic satisfiability problem for
+As as reported in the proof of Theorem 3 in \cite{CanLonNic2011},
+the condition $|T|=2\cdot|V|$ guarantees a sufficient amount of 
+\emph{auxiliary} constants to get a skeletal representation whose realization
+is a model for the formula $\varphi$ under consideration, provided that 
+$V=\Consts(\varphi)$.\marginpar{aggiunto} 
+In addition, the decidability of the set-theoretic satisfiability problem for
 \Forallpizero-sentences easily follows from Theorem \ref{SAT}, as the
 number of possible skeletal representations for any given
 \Forallpizero-sentence is finitely bounded, and it is effectively
