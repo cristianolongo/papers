@@ -969,8 +969,10 @@ $\LangPreds=\{ = ,\in \}$, $\LangFuncts=\{ [\cdot, \cdot],
 \nonpairs{\cdot} \}$,
 and $\LangConsts=\Consts$. However, \Forallpizero-sentences have some
 syntactic restrictions which do not apply to general first-order
-languages: for instance, \emph{nested terms} such as $[[a,b],c]$ are not
-allowed in them. Likewise, the semantics of the fragment 
+languages: for instance, \emph{nested terms} such as $[[a,b],c]$,
+as much as equalities between set and pair terms of the forms $a=[b,c]$
+and $[a,b]=c$,\marginpar{updated \#11} 
+are not allowed in them. Likewise, the semantics of the fragment 
 \Forallpizero is restricted only to \emph{set-theoretic} 
 interpretations $\inter=(D^{\inter}, \cdot^\inter)$, where 
 $D^{\inter}$ is the von Neumann hierarchy of pure sets $\VNU$ and 
@@ -996,6 +998,10 @@ acyclic, i.e.,
 \]
 \end{enumerate}
 where $(\in^{\inter})^{+}$ is the \emph{transitive closure} of $\in^{\inter}$.
+Notice that (C1) and (C2) are not in $\Forallpizero$\marginpar{added
+\#11}
+as, for example, \emph{full} universal quantification is not allowed in
+this language.
 %
 
 Concerning the interpretation of pair terms, $[\cdot,\cdot]^{\inter}$ 
