@@ -227,9 +227,12 @@ been studied in \cite{AlvianoFLM12,GottlobMMP12}.
 Also, optimization strategies have been provided for
 algorithms devised in this context, and a considerable amount of
 academic and commercial software implementing these algorithms is
-available (see for example \cite{AlvFabLeoPerPfeTer2011}).  Thus, the
-reduction we present in this paper allows one to reuse the machinery
-available for \DisjDatalog in the implementation of an optimized
+available. In particular, in this paper we consider a subset of the language
+accepted by the \emph{DLV System} (see \cite{AlvFabLeoPerPfeTer2011,LeoPfeFabEitGotPerSca2006}),\marginpar{added} 
+a widely used deductive database system.
+
+The reduction we present in this paper
+allows one to reuse the machinery available for \DisjDatalog in the implementation of an optimized
 reasoning engine for the language \ForallpizeroDisjDatalog and,
 consequently, for the description logic \dlForallpizero mentioned
 above, as all the constructs in \dlForallpizero are expressible in
@@ -866,10 +869,16 @@ is decidable.
 
 \subsection{Disjunctive Datalog}
 
-We close the section by briefly reviewing the \DisjDatalog first-order
-fragment of $\Lang$.  A \emph{\DisjDatalog-formula} is a finite
-conjunction of \emph{rules}, i.e., closed formulae of the following
-form
+We close the section by briefly reviewing the \DisjDatalog 
+fragment of a first-order $\Lang$. As mentioned in Section \ref{INTRO}, we are
+considering\marginpar{added} the \DisjDatalog syntax accepted by
+the DLV System\footnote{\url{http://www.dlvsystem.com/}} and reported
+in \cite{LeoPfeFabEitGotPerSca2006}, but omitting some language features (in
+particular \emph{negation as failure} and \emph{weak constraints}) unuseful for
+our purposes.
+
+A \emph{\DisjDatalog-formula} is a finite conjunction of \emph{rules}, i.e.,
+closed formulae of the following form
 \[
   (\forall x_1)\ldots(\forall x_n)(\varphi \rightarrow \psi)\,, \]
 %
@@ -1448,7 +1457,7 @@ the thesis follows. \qed
 \end{proof}
 
 
-\subsection{The Disjunctive Datalog fragment of \Forallpizero}
+\subsection{The Disjunctive Datalog fragment of \Forallpizero}\label{DISJFORALL}
 We close the section by defining the \emph{Disjunctive Datalog subset}
 $\ForallpizeroDisjDatalog$\emph{ of }\Forallpizero as the collection
 of the \Forallpizero-sentences whose conjuncts are
@@ -1470,7 +1479,47 @@ closed, each variable $x$ which may occur in the head of the rule
 $\psi$ must be bound, so that $x$ occurs in at least one atom of the
 rule body, as required for Disjunctive Datalog rules, when restricted
 quantifiers in (\ref{starr}) are expanded as indicated in
-(\ref{RESTR2}).
+(\ref{RESTR2}). A relevant amount of set-theoretic constructs can be
+expressed in this fragment. \marginpar{Issue 32 - In particular, the syntactic
+restrictions on formula (7) highlighted in Sect. 3.2 could be described more extensively, possibly providing some
+examples of the considered formulae.}
+Let use consider for example the set union.
+A set-theoretic formula of the form $a=b \cup c$ can be expressed by
+the following $\Forallpizero$-formula: 
+\[
+\begin{array}{l}
+\varphi_{\cup} = \left(\forall \nonpairin{x}{a}\right)\left(\nonpairin{x}{b}
+\vee \nonpairin{x}{c}\right) \; \wedge \\
+\phantom{\varphi_{\cup} = }\quad  \left(\forall
+\nonpairin{x}{b}\right)\left(\nonpairin{x}{a}\right) \wedge \left(\forall
+\nonpairin{x}{c}\right)\left(\nonpairin{x}{a}\right) \; \wedge\\
+\phantom{\varphi_{\cup} = } \quad\quad\left(\forall
+\pairin{x}{y}{a}\right)\left(\pairin{x}{y}{b} \vee \pairin{x}{y}{c}\right)
+\; \wedge \\
+\phantom{\varphi_{\cup} = }\quad\quad\quad  \left(\forall
+\pairin{x}{y}{b}\right)\left(\pairin{x}{y}{a}\right) \wedge \left(\forall
+\pairin{x}{y}{c}\right)\left(\pairin{x}{y}{a}\right) \; .
+\end{array}
+\]
+It can be easily verified that $\varphi_{\cup}$ is a
+$\ForallpizeroDisjDatalog$-formula, as it can be turned into an equivalent
+\DisjDatalog-formula as follows:
+\[
+\begin{array}{l}
+\left(\forall x\right)\left(\nonpairin{x}{a} \rightarrow \nonpairin{x}{b}
+\vee \nonpairin{x}{c}\right) \; \wedge \\
+\quad  \left(\forall x\right)\left(\nonpairin{x}{b}
+\rightarrow \nonpairin{x}{a}\right) \wedge \left(\forall x\right)
+\left(\nonpairin{x}{c} \rightarrow \nonpairin{x}{a}\right) \; \wedge\\
+\quad\quad\left(\forall x,y\right)\left(\pairin{x}{y}{a} \rightarrow
+\pairin{x}{y}{b} \vee \pairin{x}{y}{c}\right) \; \wedge \\
+\quad\quad\quad  \left(\forall
+\pair{x}{y}\right)\left(\pairin{x}{y}{b} \rightarrow \pairin{x}{y}{a}\right)
+\wedge \left(\forall
+\pair{x}{y}\right)\left(\pairin{x}{y}{c} \rightarrow \pairin{x}{y}{a}\right) \;
+.
+\end{array}
+\]
 
 %\centerline{\red{\textbf{Occorrerebbe dire qualcosa sul perch\'e 
 %stiamo definendo questo frammento}}}
