@@ -120,17 +120,25 @@ Set Theory}.
 In general, the semantics of set-theoretic languages
 differs from the canonical first-order semantics in that
 the interpretation domain of set-theoretic terms is
-fixed to a given universe of sets, as for instance
-the von Neumann standard cumulative hierarchy of
-sets, i.e., the class consisting of all the pure sets.
+fixed to a given universe of sets.
+%, as for instance
+%the von Neumann standard cumulative hierarchy of
+%sets, i.e., the class consisting of all the %pure sets.
 Because of this, theoretical results and various
-machinery developed in the context of first-order logic
-cannot be easily adapted to work also in the set-theoretic
+machinery developed in the context of first-order logic could
+%cannot 
+be not easily 
+%adapted to work 
+applicable 
+%also 
+in the set-theoretic
 realm.
 %
-Recently, quantified fragments of set theory
-which allow one to explicitly handle ordered pairs have been
-studied for decidability purposes, in view of applications in the 
+Recently, the decidability of quantified fragments of set theory
+which allow one to explicitly handle ordered pairs has been
+studied, 
+%for decidability purposes, 
+in view of applications in the 
 field of knowledge
 representation. Among other results, a \textsc{NexpTime}
 decision procedure for satisfiability of formulae
@@ -216,7 +224,7 @@ are going to discuss can be seen as a reduction from
 $\ForallpizeroDisjDatalog$
 consists of the formulae in \Forallpizero which satisfy
 the syntactic constraints required to be regarded also as 
-\DisjDatalog-formuale.
+\DisjDatalog-formulae.
 
 We recall that \DisjDatalog (read \emph{Disjunctive Datalog})
 extends Datalog by allowing disjunctions in the
@@ -230,9 +238,9 @@ academic and commercial software implementing these algorithms is
 available. In particular, in this paper we consider a subset of the language
 accepted by the \emph{DLV System} (see \cite{AlvFabLeoPerPfeTer2011,LeoPfeFabEitGotPerSca2006}),\marginpar{added} 
 a widely used deductive database system.
-
-The reduction we present in this paper
-allows one to reuse the machinery available for \DisjDatalog in the implementation of an optimized
+  
+The reduction we present in this paper allows one to reuse the machinery
+available for \DisjDatalog in the implementation of an optimized
 reasoning engine for the language \ForallpizeroDisjDatalog and,
 consequently, for the description logic \dlForallpizero mentioned
 above, as all the constructs in \dlForallpizero are expressible in
@@ -877,8 +885,9 @@ in \cite{LeoPfeFabEitGotPerSca2006}, but omitting some language features (in
 particular \emph{negation as failure} and \emph{weak constraints}) unuseful for
 our purposes.
 
-A \emph{\DisjDatalog-formula} is a finite conjunction of \emph{rules}, i.e.,
-closed formulae of the following form
+A \emph{\DisjDatalog-formula} is a finite
+conjunction of \emph{rules}, i.e., closed formulae of the following
+form
 \[
   (\forall x_1)\ldots(\forall x_n)(\varphi \rightarrow \psi)\,, \]
 %
@@ -1024,7 +1033,7 @@ acyclic, i.e.,
 \]
 \end{enumerate}
 where $(\in^{\inter})^{+}$ is the \emph{transitive closure} of $\in^{\inter}$.
-Notice that (C1) and (C2) are not in $\Forallpizero$\marginpar{added
+Notice that (C1) and (C2) are not expressible in $\Forallpizero$\marginpar{added
 \#11}
 as, for example, \emph{full} universal quantification is not allowed in
 this language.
@@ -1063,7 +1072,8 @@ v']^{\inter}\neq u)
 $
 \end{enumerate}
 which must hold for all $u,v \in \VNU$. Several pairing
-functions\marginpar{aggiunto} have been devised during the years.
+functions\marginpar{aggiunto} have been %devised during the years.
+introduced over time. 
 The most prominent one is due to Kuratowski and is defined by $\pi_{Kur}(u, v)
 \defAs \{\{u\}, \{u,v\}\}$.
 
@@ -1293,7 +1303,7 @@ relative to $(V,T)$ such that the realization $\Realization_{\!\atset}$
 of $\atset$ relative to $(V,T)$ satisfies $\varphi$. \qed
 \end{theorem}
 %
-As as reported in the proof of Theorem 3 in \cite{CanLonNic2011},
+As reported in the proof of Theorem 3 in \cite{CanLonNic2011},
 the condition $|T|=2\cdot|V|$ guarantees a sufficient amount of 
 \emph{auxiliary} constants to get a skeletal representation whose realization
 is a model for the formula $\varphi$ under consideration, provided that 
@@ -1479,7 +1489,7 @@ closed, each variable $x$ which may occur in the head of the rule
 $\psi$ must be bound, so that $x$ occurs in at least one atom of the
 rule body, as required for Disjunctive Datalog rules, when restricted
 quantifiers in (\ref{starr}) are expanded as indicated in
-(\ref{RESTR2}). A relevant amount of set-theoretic constructs can be
+(\ref{RESTR2}).  A relevant amount of set-theoretic constructs can be
 expressed in this fragment. \marginpar{Issue 32 - In particular, the syntactic
 restrictions on formula (7) highlighted in Sect. 3.2 could be described more extensively, possibly providing some
 examples of the considered formulae.}
@@ -1625,13 +1635,13 @@ write $\nu_1=\nu_2$, $\nu_1 \in \nonpairs{\nu_2}$, and $[\nu_1, \nu_2]
 \nu_2)$ and $\PpizeroS(\nu_1, \nu_2, \nu_3)$, respectively, for all
 $\nu_1,\nu_2,\nu_3 \in \Vars \cup \Consts$.  With such an
 understanding, \Forallpizero can be regarded as a sublanguage of
-$\Elpizero$, and skeletal representations as particular Herbrand 
+$\Elpizero$. Moreover, as suggested by Lemma~\ref{HERSAT} and Corollary~\ref{SATEXP}, skeletal representations can be seen as particular Herbrand 
 interpretations (over \Elpizero), subject to the conditions reported 
 in Definition~\ref{SKREPR}. For example, the skeletal
 representation\marginpar{aggiunto} 
 $\atset=\{ \nonpairin{\consta}{\constb} \}$ can be regarded as 
 a Herbrand interpretation such that $\fomodels{\atset}{\gamma} \iff
-\gamma=\nonpairin{\consta}{\constb}$. Conversely, let us consider
+\gamma=\nonpairin{\consta}{\constb}$.  Conversely, let us consider
 the two set of constants $V=\{\consta, \constb\}$ and $T=\{t\}$
 and let $\hinter=\{\nonpairin{\consta}{\constb}, \seteq{\consta}{t}\}$,
 $\hinter'=\hinter \cup \{\nonpairin{t}{\constb}\}$ be two
@@ -1645,13 +1655,13 @@ whereas $\hinter$ is not, as $\hinter$ does not comply with condition
 
 %Notice that Corollary~\ref{SATEXP} applies to \Forallpizero-sentences, when these are regarded as first-order formulae in \Elpizero.
 
-$\Forallpizero$-formulae have a set-theoretic semantics.  However, 
-Lemma~\ref{HERSAT} and Corollary~\ref{SATEXP} suggest how to 
-circumvent this issue by mapping skeletal representations into 
-Herbrand interpretations. Indeed, skeletal representations are 
-Herbrand interpretations of a very particular type, but, of course, 
-there are Herbrand interpretations which do not comply with the 
-conditions of Definition~\ref{SKREPR}.
+%$\Forallpizero$-formulae have a set-theoretic semantics.  However, 
+%Lemma~\ref{HERSAT} and Corollary~\ref{SATEXP} suggest how to 
+%circumvent this issue by mapping skeletal representations into 
+%Herbrand interpretations. Indeed, skeletal representations are 
+%Herbrand interpretations of a very particular type, but, of course, 
+%there are Herbrand interpretations which do not comply with the 
+%conditions of Definition~\ref{SKREPR}.
 
 Our reduction $\varphi \mapsto \Theta_{\varphi}$ from 
 \Forallpizero-sentences into \Elpizero-sentences will be defined in 
@@ -1676,7 +1686,6 @@ is defined as follows:
    \chi^{(V,T)} \equivAs\, \regf \wedge \exonef \wedge \extwof \wedge \eqf ,
 \]
 where
-%\newpage
 \begin{align*}
    \regf  \equivAs {} & (\forall x, y)(\nonpairin{x}{y} \rightarrow 
 \memhat{x}{y}) \wedge (\forall x, y, z)(\pairin{x}{y}{z} \rightarrow 
@@ -1730,48 +1739,6 @@ universe of $\chi^{(V,T)}$. Indeed, no constant occurs in
 $\regf$ and $\exonef$, whereas $\extwof$ and $\eqf$ involve
 all the constants in $V \cup T$ and no other.
 
-% Let us clarify our reduction by means of an example. Let us consider to this 
-% purpose the \ForallpizeroDisjDatalog-formula 
-% $\varphi=(\forall \nonpairin{x}{a})(\nonpairin{x}{b}) \wedge (\forall
-% \pairin{x}{y}{a})(\pairin{x}{y}{b})$, which models the set-theoretic expression
-% $a \subseteq b$.
-% The constants occurring in it are $V=\{a, b\}$. Now, let $T$ be a set of constants such that $|T|=2\cdot|V|$ and $T\cap V=\emptyset$, 
-% for example $T=\{t_1, t_2, t_3, t_4, t_5, t_6\}$. An equisatisfiable
-% $\ForallpizeroDisjDatalog$-formula $\Theta_{\cup}$ can be constructed as
-% follows:
-% \[
-% \Theta_{\cup} \defAs \chi^{(V,T)} \wedge \psi_{\cup} = \regf \wedge \exonef
-% \wedge \extwof \wedge \eqf \wedge \psi_{\cup}
-% \]
-% where $T$ is a set of constants such that $|T|=2\cdot|V|$ and $T\cap
-% V=\emptyset$, for example $T=\{t_1, t_2, t_3, t_4\}$, 
-% $\regf$ and $\exonef$ are those defined above, $\extwof$ and $\eqf$ are as
-% follows
-% \begin{align*}
-%    \extwof \equivAs {} & \neg(\seteq{a}{b}) \rightarrow 
-%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
-%    \distby{x}{y}{b} \vee \distby{y}{x}{b} 
-%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
-%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
-%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
-%    \vee \distPby{x}{y}{z}{v} \vee
-%    \distPby{y}{x}{z}{v} bigwedge\limits_{x,y \in V}
-%    \big( \neg(\seteq{x}{y}) \rightarrow \distS^{(V,T)}(x,y) \vee 
-% \distPS^{(V,T)}(x,y) \big)  \\
-%    & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
-% \nonpairin{z}{x}\big) \\
-%    & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
-% \neg(\nonpairin{z}{y})\big) \\
-%    & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
-%    \pairin{z}{v}{x}\big)\\
-%    & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
-%    \neg(\pairin{z}{v}{y})\big)\\
-%    &\\ \displaybreak[0]
-%    \eqf \equivAs {} & \bigwedge\limits_{x \in V \cup T, t \in T, x\neq 
-% t} \neg(\seteq{x}{t}),
-% \end{align*}
-% 
-% TODO
 %
 The formulae $\regf$, $\exonef$, $\extwof$, and $\eqf$ are intended 
 to formalize the conditions \ref{REGC}, \ref{EX1C}, \ref{EX2C}, and 
@@ -1808,8 +1775,8 @@ as $\hinter$ satisfies the conjunct $\regf$ of $\chi^{(V,T)}$.
 Hence, $\memclosure{\hinter}$ must be acyclic as well, as required by
 condition \ref{REGC}, since $\memclosure{\hinter} \subseteq
 \memhatP^{\hinter}$.\footnote{The relation $\memclosure{\hinter}$ does
-not necessarily coincide with $\memhatP_{\hinter}$, as the minimality
-of $\memhatP_{\hinter}$ is not enforced by $\regf$.}
+not necessarily coincide with $\memhatP^{\hinter}$, as the minimality
+of $\memhatP^{\hinter}$ is not enforced by $\regf$.}
 
 Concerning \ref{EQC}, let 
 $\fomodels{\hinter}{\seteq{\consta}{\constb}}$, where $a$ and $b$ are 
