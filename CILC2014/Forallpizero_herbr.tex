@@ -1699,13 +1699,17 @@ where
    & {~} \wedge (\forall x, y, z, v)(\pairin{x}{y}{z} \wedge 
 \seteq{z}{v} \rightarrow \pairin{x}{y}{v})\\
    &\\ \displaybreak[0]
-   \extwof \equivAs {} & \bigwedge\limits_{x,y \in V}
+   \extwof \equivAs {} & \bigwedge\limits_{x,y \in V, x \neq y}
    \big( \neg(\seteq{x}{y}) \rightarrow \distS^{(V,T)}(x,y) \vee 
 \distPS^{(V,T)}(x,y) \big)  \\
    & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
-\nonpairin{z}{x} \wedge \neg(\nonpairin{z}{y})\big) \\
+\nonpairin{z}{x}\big) \\
+   & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
+\neg(\nonpairin{z}{y})\big) \\
    & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
-   \pairin{z}{v}{x} \wedge \neg(\pairin{z}{v}{y})\big)\\
+   \pairin{z}{v}{x}\big)\\
+   & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
+   \neg(\pairin{z}{v}{y})\big)\\
    &\\ \displaybreak[0]
    \eqf \equivAs {} & \bigwedge\limits_{x \in V \cup T, t \in T, x\neq 
 t} \neg(\seteq{x}{t}),
@@ -1719,13 +1723,55 @@ T}\big(\distby{x}{y}{z} \vee \distby{y}{x}{z}\big) \\ \\
 \distPS^{(V,T)}(x,y) \equivAs {} & \bigvee\limits_{z,v \in V \cup 
 T}\big(\distPby{x}{y}{z}{v} \vee \distPby{y}{x}{z}{v}\big) .
 \end{align*}
-
+%
 It can be easily verified that $\chi^{(V,T)}$ is a
 $\DisjDatalog$-formula. In addition, $V \cup T$ is the Herbrand
 universe of $\chi^{(V,T)}$. Indeed, no constant occurs in
 $\regf$ and $\exonef$, whereas $\extwof$ and $\eqf$ involve
 all the constants in $V \cup T$ and no other.
 
+% Let us clarify our reduction by means of an example. Let us consider to this 
+% purpose the \ForallpizeroDisjDatalog-formula 
+% $\varphi=(\forall \nonpairin{x}{a})(\nonpairin{x}{b}) \wedge (\forall
+% \pairin{x}{y}{a})(\pairin{x}{y}{b})$, which models the set-theoretic expression
+% $a \subseteq b$.
+% The constants occurring in it are $V=\{a, b\}$. Now, let $T$ be a set of constants such that $|T|=2\cdot|V|$ and $T\cap V=\emptyset$, 
+% for example $T=\{t_1, t_2, t_3, t_4, t_5, t_6\}$. An equisatisfiable
+% $\ForallpizeroDisjDatalog$-formula $\Theta_{\cup}$ can be constructed as
+% follows:
+% \[
+% \Theta_{\cup} \defAs \chi^{(V,T)} \wedge \psi_{\cup} = \regf \wedge \exonef
+% \wedge \extwof \wedge \eqf \wedge \psi_{\cup}
+% \]
+% where $T$ is a set of constants such that $|T|=2\cdot|V|$ and $T\cap
+% V=\emptyset$, for example $T=\{t_1, t_2, t_3, t_4\}$, 
+% $\regf$ and $\exonef$ are those defined above, $\extwof$ and $\eqf$ are as
+% follows
+% \begin{align*}
+%    \extwof \equivAs {} & \neg(\seteq{a}{b}) \rightarrow 
+%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
+%    \distby{x}{y}{b} \vee \distby{y}{x}{b} 
+%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
+%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
+%    \distby{x}{y}{a} \vee \distby{y}{x}{a} 
+%    \vee \distPby{x}{y}{z}{v} \vee
+%    \distPby{y}{x}{z}{v} bigwedge\limits_{x,y \in V}
+%    \big( \neg(\seteq{x}{y}) \rightarrow \distS^{(V,T)}(x,y) \vee 
+% \distPS^{(V,T)}(x,y) \big)  \\
+%    & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
+% \nonpairin{z}{x}\big) \\
+%    & {~} \wedge (\forall x,y,z)\big(\distby{x}{y}{z} \rightarrow 
+% \neg(\nonpairin{z}{y})\big) \\
+%    & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
+%    \pairin{z}{v}{x}\big)\\
+%    & {~} \wedge (\forall x,y,z,v)\big(\distPby{x}{y}{z}{v} \rightarrow
+%    \neg(\pairin{z}{v}{y})\big)\\
+%    &\\ \displaybreak[0]
+%    \eqf \equivAs {} & \bigwedge\limits_{x \in V \cup T, t \in T, x\neq 
+% t} \neg(\seteq{x}{t}),
+% \end{align*}
+% 
+% TODO
 %
 The formulae $\regf$, $\exonef$, $\extwof$, and $\eqf$ are intended 
 to formalize the conditions \ref{REGC}, \ref{EX1C}, \ref{EX2C}, and 
