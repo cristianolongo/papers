@@ -179,13 +179,16 @@ Semantic Web OWL2\footnote{\url{http://www.w3.org/TR/owl2-primer/}}
 and whose decision problem is
 \textsc{N2ExpTime}-complete (see \cite{Kaz2008}).
 %
+Despite of these desirable properties of the language \Forallpizero,
+no decision procedure for it has been implemented yet.
 
 The semantics of set-theoretic languages (see
 \cite{Mos2005} for an introduction to set theory, and
 \cite{CanFerOmo89a,CanOmoPol01,SchCanOmo11} for an overview on 
 decidable fragments of set theory) differs from the \emph{canonical} 
-first-order logic semantics (see \cite{Fitting96}) in that, in 
-general, the interpretation domain of set-theoretic terms is based on 
+first-order logic semantics (see \cite{Fitting96}) in that
+%, in general, 
+the interpretation domain of set-theoretic terms is based on a universe of set. When the latter is 
 the \emph{von Neumann standard
 cumulative hierarchy of (pure) sets} $\VNU = \bigcup_{\gamma \in 
 \mathit{On}} \VNU_{\gamma}$, where
@@ -199,7 +202,9 @@ cumulative hierarchy of (pure) sets} $\VNU = \bigcup_{\gamma \in
 \end{array}
 \]
 (with $\mathcal{P}(\cdot)$ the powerset operator and $\mathit{On}$
-the class of all ordinals). Because of this, results
+the class of all ordinals),
+%. Because of this, 
+results
 and techniques developed in the context of first-order logic are not 
 easily reusable in a set-theoretic domain.
 
@@ -229,7 +234,7 @@ extends Datalog by allowing disjunctions in the
 head of rules. Such additional feature considerably increments the expressive power of the basic language and makes \DisjDatalog suitable to be used in several applications such as reasoning for ontologies of the semantic web \cite{hustadt2007reasoning} and planning problems \cite{Eiter:2004}. 
 \DisjDatalog has been introduced in \cite{EitGotMan1997}, where its formal semantics, its expressive power, and the complexity of its reasoning problems have been treated in depth. Decidability and complexity of Datalog
 extensions with various combinations of disjunction and negation have
-been studied in \cite{AlvianoFLM12,GottlobMMP12}.
+been studied in \cite{AlvFabLeoMan2012,GottlobMMP12}.
 Also, optimization strategies have been provided for
 algorithms devised in this context, and a considerable amount of
 academic and commercial software implementing these algorithms is
@@ -604,8 +609,12 @@ Then $\varphi$ is satisfiable if and only if it is Herbrand-satisfiable.
 \qed
 \end{theorem}
 %
-This result can be further refined for specific classes of formulae.
-We shall focus our attention on function-free
+This result can be 
+%further 
+refined for the class of formulae we consider in this paper, namely the
+%specific classes of formulae.
+%We shall focus our attention on 
+function-free
 universally quantified prenex formulae.
 
 We begin by recalling some useful
@@ -1491,7 +1500,7 @@ quantifiers in (\ref{starr}) are expanded as indicated in
 expressed in this fragment. \marginpar{Issue 32 - In particular, the syntactic
 restrictions on formula (7) highlighted in Sect. 3.2 could be described more extensively, possibly providing some
 examples of the considered formulae.}
-Let use consider for example the set union.
+Let us consider for example the set union.
 A set-theoretic formula of the form $a=b \cup c$ can be expressed by
 the following $\Forallpizero$-formula: 
 \[
@@ -1511,27 +1520,27 @@ the following $\Forallpizero$-formula:
 \]
 It can be easily verified that $\varphi_{\cup}$ is a
 $\ForallpizeroDisjDatalog$-formula, as it can be turned into an equivalent
-\DisjDatalog-formula as follows:
+\DisjDatalog-formula $\chi_{\cup}$ as follows:
 \[
 \begin{array}{l}
-\left(\forall x\right)\left(\nonpairin{x}{a} \rightarrow \nonpairin{x}{b}
+\chi_{\cup} = \left(\forall x\right)\left(\nonpairin{x}{a} \rightarrow \nonpairin{x}{b}
 \vee \nonpairin{x}{c}\right) \; \wedge \\
-\quad  \left(\forall x\right)\left(\nonpairin{x}{b}
+\phantom{\chi_{\cup} = }\quad  \left(\forall x\right)\left(\nonpairin{x}{b}
 \rightarrow \nonpairin{x}{a}\right) \wedge \left(\forall x\right)
 \left(\nonpairin{x}{c} \rightarrow \nonpairin{x}{a}\right) \; \wedge\\
-\quad\quad\left(\forall x,y\right)\left(\pairin{x}{y}{a} \rightarrow
+\phantom{\chi_{\cup} = }\quad\quad\left(\forall x,y\right)\left(\pairin{x}{y}{a} \rightarrow
 \pairin{x}{y}{b} \vee \pairin{x}{y}{c}\right) \; \wedge \\
-\quad\quad\quad  \left(\forall
-\pair{x}{y}\right)\left(\pairin{x}{y}{b} \rightarrow \pairin{x}{y}{a}\right)
+\phantom{\chi_{\cup} = }\quad\quad\quad  \left(\forall
+x,y\right)\left(\pairin{x}{y}{b} \rightarrow \pairin{x}{y}{a}\right)
 \wedge \left(\forall
-\pair{x}{y}\right)\left(\pairin{x}{y}{c} \rightarrow \pairin{x}{y}{a}\right) \;
+x,y\right)\left(\pairin{x}{y}{c} \rightarrow \pairin{x}{y}{a}\right) \;
 .
 \end{array}
 \]
-
+%
 %\centerline{\red{\textbf{Occorrerebbe dire qualcosa sul perch\'e 
 %stiamo definendo questo frammento}}}
-
+%
 In the next section we present a reduction of the set-theoretic
 satisfiability problem for \Forallpizero-sentences to the satisfiability
 problem of first-order formulae, and thus to Herbrand
