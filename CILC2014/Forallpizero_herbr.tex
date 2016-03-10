@@ -229,7 +229,7 @@ extends Datalog by allowing disjunctions in the
 head of rules. Such additional feature considerably increments the expressive power of the basic language and makes \DisjDatalog suitable to be used in several applications such as reasoning for ontologies of the semantic web \cite{hustadt2007reasoning} and planning problems \cite{Eiter:2004}. 
 \DisjDatalog has been introduced in \cite{EitGotMan1997}, where its formal semantics, its expressive power, and the complexity of its reasoning problems have been treated in depth. Decidability and complexity of Datalog
 extensions with various combinations of disjunction and negation have
-been studied in \cite{AlvianoFLM12,GottlobMMP12}.
+been studied in \cite{AlvFabLeoMan2012,GottlobMMP12}.
 Also, optimization strategies have been provided for
 algorithms devised in this context, and a considerable amount of
 academic and commercial software implementing these algorithms is
@@ -242,7 +242,14 @@ available for \DisjDatalog in the implementation of an optimized
 reasoning engine for the language \ForallpizeroDisjDatalog and,
 consequently, for the description logic \dlForallpizero mentioned
 above, as all the constructs in \dlForallpizero are expressible in
-\ForallpizeroDisjDatalog.
+\ForallpizeroDisjDatalog. In addition, in light of this
+reduction,\marginpar{ Issue 26 the reference to
+"applications of techniques and results devised in the context of logic
+programming" is too vague, and it should be further investigated or deleted.} some complexity 
+results about \emph{query answering}
+(a tecnique used by applications based on knowledge representation systems),
+can be transferred straightforwardly from \DisjDatalog to \ForallpizeroDisjDatalog 
+as we will see in Section \ref{TODO}.    
 
 The link between set-theoretic languages and logic programming
 we start to investigate here is of a certain interest to projects related
@@ -545,7 +552,15 @@ $\varphi^{\inter,A} = \psi^{\inter,A}$,
 % \varphi^{\inter,A} \iff \psi^{\inter,A}
 %\]
 for all interpretations $\inter$
-for $\Lang$ and assignments $A$ in $\inter$.
+for $\Lang$ and assignments $A$ in $\inter$. Also, we mention
+the\marginpar{Issue 26} \emph{entailment problem}, which is of particular
+interest for applications in the field of knowledge representation as we will
+see in Section \ref{TODO}. Let $\varphi$ and $\psi$ two formulae of a
+first order language $\Lang$. We say that $\varphi$ entail $\psi$, and
+write $\varphi \models \psi$ if and only if $\varphi \rightarrow \psi$ is valid.
+In other words, $\varphi$ entail $\psi$ if and only if $\psi$ is evaluated to
+$\true$ by every pair $(\inter, A)$ which evaluates to $\true$
+$\varphi$.
 
 We conclude this section by recalling the notion of \emph{restricted 
 universal quantifiers}. These are quantifiers of the form
