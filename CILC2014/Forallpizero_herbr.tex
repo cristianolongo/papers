@@ -1,5 +1,5 @@
 %\documentclass[runningheads,a4paper]{llncs}
-\documentclass[a4paper]{llncs}
+\documentclass[manyauthors]{fundam}
 \usepackage[utf8x]{inputenc}
 \usepackage{mls}
 \usepackage{dl}
@@ -10,6 +10,7 @@
 \usepackage{enumitem}
 \usepackage{color}
 \usepackage{setspace}
+\usepackage{url}
 
 %\newcommand{\Lang}{\ensuremath{\mathcal{L}\xspace}}
 \newcommand{\DisjDatalog}{\ensuremath{\mathsf{DATALOG}^{\vee,\neg}}\xspace}
@@ -100,12 +101,26 @@
 fragment\thanks{This work has been partly supported by the project
 PON04a2\_A ``PRISMA - Piat\-tafoRme cloud Interoperabili per 
 SMArt-government.''}}
-\author{Domenico Cantone \and Cristiano Longo \and Marianna Nicolosi Asmundo}
+\author{Domenico Cantone \\
+Dipartimento di Matematica e Informatica\\
+Universit\`a di  Catania, Italy\\
+cantone@dmi.unict.it
+\and Cristiano Longo \\
+Dipartimento di Matematica e Informatica\\
+Universit\`a di  Catania, Italy
+longo@dmi.unict.it\\
+\and Marianna Nicolosi Asmundo\\
+Dipartimento di Matematica e Informatica\\
+Universit\`a di  Catania, Italy\\
+nicolosi@dmi.unict.it
+}
 
-\institute{Dipartimento di Matematica e Informatica, Universit\`a di 
-Catania, Italy\\
-\email{\{cantone, longo, nicolosi\}@dmi.unict.it}}
 
+\address{Domenico Cantone, Cittadella Universitaria, Dipartimento di Matematica
+e Informatica, Viale Andrea Doria 57 95125 Catania Italy}
+
+\runninghead{D. Cantone, C. Longo, M. Nicolosi Asmundo}{Herbrand-satisfiability of a quantified set-theoretic 
+fragment}
 \begin{document}
 
 %\doublespace
@@ -606,7 +621,7 @@ Let $\Lang$ be a first-order
 language such that $\LangConsts=\Consts$, and let $\varphi$ be a sentence of
 $\Lang$.
 Then $\varphi$ is satisfiable if and only if it is Herbrand-satisfiable.
-\qed
+%\qed
 \end{theorem}
 %
 This result can be 
@@ -670,7 +685,7 @@ atomic)}  \\
 \ldots \vee \HExp(\subst{\varphi}{x}{t_n}, D),\\
   \end{array}
 \]
-where $\oplus \in \{\wedge, \vee\}$.\qed
+where $\oplus \in \{\wedge, \vee\}$.%\qed
 \end{definition}
 
 Herbrand expansions enjoy some interesting properties. Indeed, if $D$ 
@@ -694,7 +709,7 @@ is valid;
 
 \item\label{le:Expb} if all quantifiers in $\varphi$ are essentially 
 universal, then $\HExp(\varphi, D') \rightarrow \HExp(\varphi, D)$ is 
-valid.\qed
+valid.%\qed
 \end{enumerate}
 \end{lemma}
 
@@ -728,7 +743,7 @@ $\psi$.
 \begin{theorem}[Herbrand's Theorem]\label{HERVAL}
 A sentence $\varphi$ is valid if and only if for each Skolemized 
 version $\neg \psi$ of $\neg \varphi$ there exists a Herbrand domain 
-$D$ of $\psi$ such that $\HExp(\psi, D)$ is a tautology. \qed
+$D$ of $\psi$ such that $\HExp(\psi, D)$ is a tautology. %\qed
 \end{theorem}
 
 The decidability of the satisfiability problem for finite conjunctions
@@ -779,107 +794,7 @@ problem for function-free sentences of $\Lang$ involving no
 essentially existential quantifier can be effectively reduced to the 
 satisfiability problem for propositional formulae, and therefore it 
 is decidable.
-\qed
-%
-%
-%all the formulae $\psi$, $\neg \psi$ is \emph{not} a skolemized
-%  version of $\neg \neg \varphi$ or, if $\neg \psi$ is a skolemized
-%  version of $\neg \neg \varphi$, then, for every Herbrand domain 
-%$D$ of $\psi$,
-%  $\HExp(\psi, D)$ is not a tautology, i.e., $\neg \HExp(\psi, D)$ is
-%  satisfiable. But, $\neg \HExp(\psi, D)=\HExp(\neg \psi, D)$ (see 1 of
-%  Proposition 8.6.6 in \cite{Fitting96}), and thus
-%
-%Without loss of generality, we can assume that $\varphi$ is
-%a universally quantified prenex sentence, since any conjunction of 
-%universally quantified prenex sentences can be transformed into an 
-%equivalent universally quantified prenex sentence through variable 
-%renaming and repeated application of the rule
-%\[
-% (\forall x_1,\ldots,x_n)\psi_1 \wedge (\forall 
-%y_1,\ldots,y_n)\psi_2 \quad \equiv \quad (\forall 
-%x_1,\ldots,x_n,y_1,\ldots,y_n) (\psi_1 \wedge \psi_2),
-%\]
-%where no $x_i$ is a $y_j$ and $(\forall x_1,\ldots,x_n)\psi_1$ and 
-%$(\forall y_1,\ldots,y_n)\psi_2$ are sentences.
-%
-%%  In fact, an equivalent
-%%  universally quantified prenex sentence can be constructed in linear
-%%  time from every finite conjunction of universally quantified prenex
-%%  sentences, provided that no variable occurs twice different prefixes
-%%  of the formula.
-%
-%  Since $\varphi$ if satisfiable if and only if $\neg \varphi$ is not
-%  valid, then, by Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and
-%  only if
-%
-%  for all the formulae $\psi$, $\neg \psi$ is \emph{not} a skolemized
-%  version of $\neg \neg \varphi = \varphi$ or, if $\neg \psi$ is a skolemized
-%  version of $\varphi$, then, for every Herbrand domain $D$ of $\psi$,
-%  $\HExp(\psi, D)$ is not a tautology, i.e., $\neg \HExp(\psi, D)$ is
-%  satisfiable. But, $\neg \HExp(\psi, D)=\HExp(\neg \psi, D)$ (see 1 of
-%  Proposition 8.6.6 in \cite{Fitting96}), and thus
-%
-%  A formula $\varphi$ if satisfiable if and only if $\neg \varphi$ is not
-%  valid. Thus, from Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and
-%  only if for all the formulae $\psi$, $\neg \psi$ is \emph{not} a skolemized
-%  version of $\neg \neg \varphi = \varphi$ or, if $\neg \psi$ is a skolemized
-%  version of $\varphi$, then, for every Herbrand domain $D$ of $\psi$,
-%  $\HExp(\psi, D)$ is not a tautology, i.e., $\neg \HExp(\psi, D)$ is
-%  satisfiable. But, $\neg \HExp(\psi, D)=\HExp(\neg \psi, D)$ (see 1 of
-%  Proposition 8.6.6 in \cite{Fitting96}), and thus
-%  \begin{equation}
-%  \begin{array}{rcl}
-%  \varphi\mbox{ is satisfiable}&\iff&(\forall \psi)(\neg \psi \mbox{ 
-%is a skolemized version of } \varphi \rightarrow \\
-%  &&\quad\quad(\forall D\in\mathcal{D})(\HExp(\neg \psi, D)\mbox{ is 
-%satisfiable})
-%  \end{array}
-%  \end{equation}
-%  where $\mathcal{D}$ is the set consisting of all the Herbrand domains of
-%  $\psi$, i.e., the set of all the finite subsets of the Herbrand universe of $\psi$.
-%  Now, by replacement of $\neg \psi$ with a novel symbol $\bar{\psi}$, we obtain
-%  \begin{equation}\label{HERSAT2}
-%  \begin{array}{rcl}
-%  \varphi\mbox{ is satisfiable}&\iff&(\forall \bar{\psi})(\bar{\psi} 
-%\mbox{ is a skolemized version of } \varphi \rightarrow \\
-%  &&\quad\quad(\forall D\in\mathcal{D})(\HExp(\bar{\psi}, D)\mbox{ 
-%is satisfiable}) .
-%  \end{array}
-%  \end{equation}
-%  Skolemization has no effects when applied to universally quantified prenex
-%  formulae, so that, in the hypothesis of the corollary, the solely skolemized
-%  version of $\varphi$ is $\varphi$ it self. Thus, from (\ref{HERSAT2}) easily
-%  follows
-%  \begin{equation}\label{HERSAT3}
-%  \begin{array}{rcl}
-%  \varphi\mbox{ is satisfiable}&\iff&(\forall D \in 
-%\mathcal{D})(\HExp(\varphi, D)\mbox{ is satisfiable}) .
-%  \end{array}
-%  \end{equation}
-%  Now, as we are assuming that no function symbol occurs in $\varphi$,
-%  then $\Univ$ must be finite (it consists of exactly all the constant symbols
-%  occurring in $\varphi$, or of a single constant $c$ if not any constant
-%  symbol occurs in $\varphi$).Thus, $\mathcal{D}$ coincides with the 
-%powerset of $\Univ$,
-%  and thus
-%  \begin{equation}\label{HERSAT4}
-%  \begin{array}{rcl}
-%  \varphi\mbox{ is satisfiable}&\iff&(\forall 
-%D\subseteq\Univ)(\HExp(\varphi, D)\mbox{ is satisfiable}) .
-%  \end{array}
-%  \end{equation}
-%  We conclude our proof with observing that
-%  \[
-%  (\forall D\subseteq\Univ)(\HExp(\varphi, D)\mbox{ is satisfiable}) 
-%\iff \HExp(\varphi, \Univ) \mbox{ is satisfiable.}
-%  \]
-%  The if direction is trivial, whereas the converse one easily follows
-%  from the property of Herbrand expansion $\HExp(\varphi, \Univ) 
-%\rightarrow \HExp(\varphi, D)$,
-%  which holds for all $D \subseteq \Univ$ (see Proposition 8.6.6 and 
-%Exercise 8.6.4 in \cite{Fitting96}).
-%  \qed
+%\qed
 \end{proof}
 
 \subsection{Disjunctive Datalog}
@@ -1184,7 +1099,7 @@ $\fomodels{\atset}{\constc \in \nonpairs{\consta}}$
    iff $\notfomodels{\atset}{\constc \in \nonpairs{\constb}}$,
    or by some pair $[\constc, \constd]$, in the sense that 
 $\fomodels{\atset}{\pairin{\constc}{\constd}{\consta}}$
-   iff $\notfomodels{\atset}{\pairin{\constc}{\constd}{\constb}}$.  \qed
+   iff $\notfomodels{\atset}{\pairin{\constc}{\constd}{\constb}}$.  %\qed
 \end{enumerate}
 \end{definition}
 %
@@ -1242,7 +1157,7 @@ defined as follows:
 where $h = |V|+|T|$ and  $k=|V| \cdot (|V| + |T| + 3)$.\footnote{We 
 are assuming that
 integers are represented \emph{\`a la} von Neumann, namely $0 \defAs
-\emptyset$ and, recursively, $n+1 \defAs n \cup \{n\}$.} \qed
+\emptyset$ and, recursively, $n+1 \defAs n \cup \{n\}$.} %\qed
 \end{definition}
 %
 The following lemma is a direct consequence of Definition 
@@ -1280,7 +1195,7 @@ for all $\consta, \constb, \constc \in V \cup T$:
 \fomodels{\atset}{\pairin{\consta}{\constb}{\constc}} .
 \end{array}
 \]
-\qed
+%\qed
 \end{lemma}
 %
 
@@ -1307,7 +1222,7 @@ and let $T$ be a set of constants disjoint from $V$ and such that
 $|T|=2\cdot|V|$. Then $\varphi$ is (set-theoretically) satisfiable
 if and only if there exists a skeletal representation $\atset$
 relative to $(V,T)$ such that the realization $\Realization_{\!\atset}$
-of $\atset$ relative to $(V,T)$ satisfies $\varphi$. \qed
+of $\atset$ relative to $(V,T)$ satisfies $\varphi$. %\qed
 \end{theorem}
 %
 As reported in the proof of Theorem 3 in \cite{CanLonNic2011},
@@ -1446,7 +1361,7 @@ for all $b,c$ such that $\fomodels{\atset}{[\constb, \constc]
 (\subst{\subst{\psi}{x}{\constb}}{y}{\constc})^{\Realization_{\!\atset}}\\
 &= ((\forall [x,y] \in \consta)\psi)^{\Realization_{\!\atset}} ,
 \end{align*}
-concluding the proof of the lemma.\qed
+concluding the proof of the lemma.%\qed
 \end{proof}
 %
 Now, Theorem \ref{SAT} can be restated in a form which resembles more closely
@@ -1470,7 +1385,7 @@ Lemma \ref{SKREAL}, we have
 \[
   \varphi^{\Realization_{\!\atset}} = [\HExp(\varphi, V \cup T)]^{\atset},
 \]
-the thesis follows. \qed
+the thesis follows. %\qed
 \end{proof}
 
 
@@ -1848,7 +1763,7 @@ $\fomodels{\hinter}{\distPS^{(V,T)}(\consta,\constb)}$, then
 $\consta$ and $\constb$ are
 distinguished in $\hinter$ by some pair $\pair{\constc}{d}$, with 
 $\constc, d \in V \cup T$.
-Thus, $\hinter$ satisfies condition \ref{EX2C}. \qed
+Thus, $\hinter$ satisfies condition \ref{EX2C}. %\qed
 \end{proof}
 %
 In addition, every skeletal interpretation can be extended to
@@ -1985,7 +1900,7 @@ possibly be introduced into $\atset$ during the extension process
 indicated above.
 
 Hence, in conclusion, $\atset$ satisfies formula
-$\chi^{(V,T)}$ at whole.\qed
+$\chi^{(V,T)}$ at whole.%\qed
 \end{proof}
 %
 Finally, the next theorem states that the satisfiability of every
@@ -2024,7 +1939,7 @@ In addition, by Lemma \ref{HERTOSK},
 $\hinter$ is a skeletal representation relative to 
 $(V,T)$, so that we can conclude that $\varphi$ is set-theoretically 
 satisfiable, as consequence
-of Corollary \ref{SATEXP}. \qed
+of Corollary \ref{SATEXP}. %\qed
 \end{proof}
 
 %\begin{proof}
@@ -2056,7 +1971,7 @@ of Corollary \ref{SATEXP}. \qed
 %$(V,T)$, for Lemma \ref{HERTOSK},
 %so that we can conclude that $\varphi$ is set-theoretically 
 %satisfiable, as consequence
-%of Corollary \ref{SATEXP}. \qed
+%of Corollary \ref{SATEXP}. %\qed
 %\end{proof}
 %
 We conclude this section by observing that, if $\varphi$ is a
@@ -2072,7 +1987,7 @@ $V=\Consts(\varphi)$ and let $T$ be any set of constants disjoint from
 $V$ and such that $|T|=2\cdot|V|$.  Then $\varphi$ is
 set-theoretically satisfiable if and only if the corresponding
 \DisjDatalog-sentence $\chi^{(V,T)} \wedge \varphi$ is satisfiable, in
-the sense of Disjunctive Datalog.  \qed
+the sense of Disjunctive Datalog.  %\qed
 \end{corollary}
 
 \section{Conclusions and future work}\label{CONCLUSIONS}
@@ -2107,7 +2022,7 @@ problem for $\forall_{0,2}^{\pi}$ (see \cite{CanLonNic2010}).
 
 
 
-\bibliographystyle{plain}
+\bibliographystyle{fundam}
 \bibliography{biblio}
 
 \end{document}
