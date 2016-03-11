@@ -572,15 +572,22 @@ $\varphi^{\inter,A} = \psi^{\inter,A}$,
 % \varphi^{\inter,A} \iff \psi^{\inter,A}
 %\]
 for all interpretations $\inter$
-for $\Lang$ and assignments $A$ in $\inter$. Also, we mention
-the\marginpar{Issue 26} \emph{entailment problem}, which is of particular
-interest for applications in the field of knowledge representation as we will
-see in Section \ref{TODO}. Let $\varphi$ and $\psi$ two formulae of a
-first order language $\Lang$. We say that $\varphi$ entail $\psi$, and
+for $\Lang$ and assignments $A$ in $\inter$. Finally, we mention
+the\marginpar{Issue 26} \emph{entailment problem}.  Let $\varphi$ and
+$\psi$ two formulae of a first order language $\Lang$. We say that $\varphi$ entail $\psi$, and
 write $\varphi \models \psi$ if and only if $\varphi \rightarrow \psi$ is valid.
 In other words, $\varphi$ entail $\psi$ if and only if $\psi$ is evaluated to
 $\true$ by every pair $(\inter, A)$ which evaluates to $\true$
 $\varphi$.
+The entailment problem is of particular\marginpar{Issue 26, considera di
+spostare nell'intro} interest for applications in the field of knowledge
+representation.
+For example, the entailment problem is the decisional correspective of
+\emph{query answering}, used to extract \emph{implicit knowledge}
+(i.e. to obtain all the logical consequences) from a knowledge base.
+Plainly, in first-order logic the entailment problem can be reduced to the
+unsatisfiability problem, as $\varphi \models \psi$ if and only if $\varphi
+\wedge \neg \psi$ is unsatisfiable.
 
 We conclude this section by recalling the notion of \emph{restricted 
 universal quantifiers}. These are quantifiers of the form
@@ -843,7 +850,7 @@ are used to express facts about real world items, such as for example
 $\mathit{childOf}(\mathit{Alice}, \mathit{Bob})$, 
 $\mathit{isMale}(\mathit{Bob})$, etc.
 
-Finally, we observe that restricted universal quantifiers
+Restricted universal quantifiers
 can easily be embedded  in \DisjDatalog-rules and -formulae.
 Indeed, let us consider a sentence of the form
 \begin{equation}\label{RESTR1}
@@ -866,6 +873,32 @@ which, in its turn, is equivalent to the sentence
 \end{equation}
 Plainly, (\ref{RESTR2}) is a (standard) $\DisjDatalog$-rule, with body
 $P(y_1, \ldots, y_m) \wedge \varphi$.
+
+Finally, we recall the \emph{conjunctive query answering problem},
+used\marginpar{Issue 26} in knowledge representation applications to query
+knowledge bases.
+A \emph{conjunctive query} is a finite conjunction of atoms. Notice that
+ubounded variables may occurr in a conjunctive query. 
+The conjunctive query answering problem, relative to a $\DisjDatalog$-formula
+$\varphi$ and to a conjunctive conjunctive query $\mathcal{Q}$, 
+consists in determining all the substitutions $\sigma$ such that $\varphi
+\models \sigma \mathcal{Q}$. For example, let us consider the formula $\varphi$
+and the query $\mathcal{Q}$ listed below, with $parent, Male, Female \in
+\Preds$, $Alice, Bob, Jane \in \Consts$ and $x \in \Vars$:
+\[
+\begin{array}{l}
+\varphi = parent(Alice, Bob) \wedge parent(Alice, Jane) \wedge Male(Bob) \wedge
+Female(Jane) \\
+\mathcal{Q} = parent(Alice, x) \wedge Male(x) .
+\end{array}
+\]
+The solely \emph{answer} $\sigma$ for the query $\mathcal{Q}$ and the formula
+$\varphi$, i.e. the solely substitution such that $\varphi 
+\models \sigma \mathcal{Q}$, is $\{ x \rightarrow Bob \}$. Notice that the
+query answering problem can be reduced to the entailment problem as the
+search space for all the candidate answers can be restricted to 
+those substitutions involving only the variables occurring in the query 
+and the constants occurring in the formula. 
 % with $n,m \in \nat$, $1\leq m \leq n$, $P$ a predicate of arity $m$,
 % and $\varphi$, $\psi$ two quantifier-free formulae, is equivalent to
 % the formula
@@ -2004,6 +2037,8 @@ set-theoretically satisfiable if and only if the corresponding
 \DisjDatalog-sentence $\chi^{(V,T)} \wedge \varphi$ is satisfiable, in
 the sense of Disjunctive Datalog.  %\qed
 \end{corollary}
+
+Notice that one of the \marginpar{Issue 26}
 
 \section{Conclusions and future work}\label{CONCLUSIONS}
 
