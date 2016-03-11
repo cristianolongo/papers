@@ -119,6 +119,7 @@ nicolosi@dmi.unict.it
 \address{Domenico Cantone, Cittadella Universitaria, Dipartimento di Matematica
 e Informatica, Viale Andrea Doria 57 95125 Catania Italy}
 
+
 \runninghead{D. Cantone, C. Longo, M. Nicolosi Asmundo}{Herbrand-satisfiability of a quantified set-theoretic 
 fragment}
 \begin{document}
@@ -194,8 +195,8 @@ Semantic Web OWL2\footnote{\url{http://www.w3.org/TR/owl2-primer/}}
 and whose decision problem is
 \textsc{N2ExpTime}-complete (see \cite{Kaz2008}).
 %
-Despite of these desirable properties of the language \Forallpizero,
-no decision procedure for it has been implemented yet.
+%Despite of these desirable properties of the language \Forallpizero,
+%no decision procedure for it has been implemented yet.
 
 The semantics of set-theoretic languages (see
 \cite{Mos2005} for an introduction to set theory, and
@@ -770,10 +771,12 @@ existential quantifier is decidable.
 \begin{proof}
 Let $\varphi$ be a sentence of $\Lang$ as in the hypotheses. Plainly, 
 $\varphi$ if satisfiable if and only if $\neg \varphi$ is not valid. 
-Thus, from Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and only 
-if for every Skolemized version $\neg \psi$ of $\neg \neg \varphi$ 
-and every Herbrand domain $D$ of $\psi$, the sentence $\HExp(\psi, 
-D)$ is not a tautology. But $\HExp(\psi, D)$ is not a tautology if 
+Given a Skolemized version $\neg \psi$ of $\neg \neg \varphi$ and a Herbrand domain $D$ of $\psi$, by Theorem \ref{HERVAL} it holds that $\varphi$ is satisfiable if and only if the sentence $\HExp(\psi, D)$ is not a tautology.
+%Thus, from Theorem \ref{HERVAL}, $\varphi$ is satisfiable if and only 
+%if for every Skolemized version $\neg \psi$ of $\neg \neg \varphi$ 
+%and every Herbrand domain $D$ of $\psi$, the sentence $\HExp(\psi, 
+%D)$ is not a tautology. 
+But $\HExp(\psi, D)$ is not a tautology if 
 and only if $\neg \HExp(\psi, D)$ is satisfiable, hence if and only 
 if $\HExp(\neg \psi, D)$ is satisfiable. In addition, since, just 
 like $\varphi$, the sentence $\neg \neg \varphi$ involves no 
@@ -800,12 +803,12 @@ is decidable.
 \subsection{Disjunctive Datalog}
 
 We close the section by briefly reviewing the \DisjDatalog 
-fragment of a first-order $\Lang$. As mentioned in Section \ref{INTRO}, we are
-considering\marginpar{added} the \DisjDatalog syntax accepted by
+fragment of a first-order language $\Lang$. As mentioned in Section \ref{INTRO}, we
+consider\marginpar{added} the \DisjDatalog syntax accepted by
 the DLV System\footnote{\url{http://www.dlvsystem.com/}} and reported
-in \cite{LeoPfeFabEitGotPerSca2006}, but omitting some language features (in
-particular \emph{negation as failure} and \emph{weak constraints}) unuseful for
-our purposes.
+in \cite{LeoPfeFabEitGotPerSca2006}, and omit language features not useful for
+our purposes such as
+\emph{negation as failure} and \emph{weak constraints}.
 
 A \emph{\DisjDatalog-formula} is a finite
 conjunction of \emph{rules}, i.e., closed formulae of the following
