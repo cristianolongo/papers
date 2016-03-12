@@ -1059,7 +1059,12 @@ i.e., such that $\vmodels{(\inter,A)}{\varphi}$. In case $\varphi$ is a
 \Forallpizero-sentence, we can simply write $\vmodels{\inter}{\varphi}$ to indicate that $\inter$ evaluates $\varphi$ to $\true$, for a given  
 pair-aware set-theoretic interpretation $\inter$. A \Forallpizero-sentence $\varphi$ is said to be
 \emph{(set-theoretically) satisfiable} if and only if $\vmodels{\inter}{\varphi}$, for some 
-pair-aware set-theoretic interpretation $\inter$. 
+pair-aware set-theoretic interpretation $\inter$. Finally, given
+two\marginpar{Issue 26} $\Forallpizero$-sentences $\varphi$ and $\psi$ we say
+that $\varphi$ \emph{entails} $\psi$ (with respect to the set-theoretic
+semantics) and write $\vmodels{\varphi}{\psi}$ if and only if
+$\vmodels{\inter}{\psi}$ for every interpretation $\inter$ such that
+$\vmodels{\inter}{\psi}$.
 
 
 \subsection{A decision procedure for \Forallpizero-sentences}\label{DECPROC}
@@ -2029,7 +2034,7 @@ the satisfiability problem for \ForallpizeroDisjDatalog-sentences can
 be reduced in polynomial time to the Herbrand satisfiability problem
 for \DisjDatalog-sentences.
 
-\begin{corollary}
+\begin{corollary}\label{FINALCOR}
 Let $\varphi$ be a \ForallpizeroDisjDatalog-sentence.  Let
 $V=\Consts(\varphi)$ and let $T$ be any set of constants disjoint from
 $V$ and such that $|T|=2\cdot|V|$.  Then $\varphi$ is
@@ -2038,7 +2043,39 @@ set-theoretically satisfiable if and only if the corresponding
 the sense of Disjunctive Datalog.  %\qed
 \end{corollary}
 
-Notice that one of the \marginpar{Issue 26}
+Notice that Theorem \ref{FORALLPIZEROSAT} and Corollary 
+\ref{FINALCOR} concerns the satisfiability problem but have consequences
+to the other problems related to satisfiability, for example to query
+answering as shown by the following corollary.\marginpar{Issue 26}
+
+\begin{corollary}\label{QUERYANSWERING}
+Let $\varphi$ be a $\ForallpizeroDisjDatalog$-sentence,
+let $\mathcal{Q}=q_1 \wedge \ldots q_n$ be a
+conjunctive query, i.e.
+a finite conjunction of atoms $q_1 \wedge \ldots q_n$, let $V=\Consts(\varphi)
+\cup \Consts(\mathcal{Q})$, let $T$ be any set of constants disjoint from $V$ such that $|T|=2\cdot|V|$ and let $\sigma$
+be a substitution which associates a constant in $V$ to every variable of
+$\mathcal{Q}$. Then $\sigma$ is an answer for $\mathcal{Q}$ and $\varphi$
+with respect to the set-theoretic semantics, i.e.
+$\vmodels{\varphi}{\sigma\mathcal{Q}}$, if and only if $\sigma$ is an answer for
+$\mathcal{Q}$ and $\chi^{(V,T)}\wedge\varphi$ with respect to the Herbrand
+semantics, i.e. if $\fomodels{\chi^{(V,T)}\wedge\varphi}{\sigma\mathcal{Q}}$.
+\end{corollary}
+\begin{proof}
+In general, entailment can be reduced to
+(un)satisfiability. Indeed, $\vmodels{\varphi}{\sigma\mathcal{Q}}$ iff $\varphi
+\wedge \neg (\sigma\mathcal{Q})$ is unsatisfiable. But
+$\varphi \wedge \neg (\sigma\mathcal{Q})$ is equivalent with
+$\varphi \wedge (\neg \sigma q_1 \wedge \ldots \wedge \neg \sigma q_n)$, which
+is a formula in $\ForallpizeroDisjDatalog$ as  $\sigma q_1, \ldots,\sigma q_n$
+are ground in view of the properties of $\sigma$ to be an answer for
+$\mathcal{Q}$. But, for Corollary \ref{FINALCOR}, $\varphi \wedge
+(\neg \sigma q_1 \wedge \ldots \wedge \neg \sigma q_n)$ is unsatisfiable in the
+sense of set-theory iff so is $\chi^{(V,T)} \wedge \varphi \wedge (\neg \sigma
+q_1 \wedge \ldots \wedge \neg \sigma q_n)$ in the sense of Disjunctive Datalog.
+The thesis follows by observing that the latter $\DisjDatalog$-formula is
+unsatisfiable if and only if $\varphi \fomodels \sigma \mathcal{Q}$.
+\end{proof}
 
 \section{Conclusions and future work}\label{CONCLUSIONS}
 
