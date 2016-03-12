@@ -119,7 +119,6 @@ nicolosi@dmi.unict.it
 \address{Domenico Cantone, Cittadella Universitaria, Dipartimento di Matematica
 e Informatica, Viale Andrea Doria 57 95125 Catania Italy}
 
-
 \runninghead{D. Cantone, C. Longo, M. Nicolosi Asmundo}{Herbrand-satisfiability of a quantified set-theoretic 
 fragment}
 \begin{document}
@@ -263,7 +262,12 @@ available for \DisjDatalog in the implementation of an optimized
 reasoning engine for the language \ForallpizeroDisjDatalog and,
 consequently, for the description logic \dlForallpizero mentioned
 above, as all the constructs in \dlForallpizero are expressible in
-\ForallpizeroDisjDatalog.
+\ForallpizeroDisjDatalog. As an example of reasoning, we will focus 
+our attention on the \emph{query answering} problem, \marginpar{ Issue 26 the
+reference to "applications of techniques and results devised in the context of logic
+programming" is too vague, and it should be further investigated or deleted.} 
+a tecnique used by applications based on knowledge representation systems 
+to query a \emph{knowledge base} and estract the implicit knowledge in it.
 
 The link between set-theoretic languages and logic programming
 we start to investigate here is of a certain interest to projects related
@@ -312,18 +316,6 @@ symbols, respectively.
 In addition, a positive \emph{arity} $\ar(\nu) \in \nat^+$ is 
 associated to each
 function and predicate symbol $\nu \in \Functs \cup \Preds$.
-% In our context, variables
-% must be intended as \emph{quantified} variables, while
-% constants may be regarded as free variables of a formula.
-% Note that this do not cause any issue as we will deal just
-% with satisfiability problems.
-%
-%
-% Notice that \emph{function symbols} are not mentioned
-% here, as we are going to consider function-free languages
-% only. Analogously, first-order logic definitions
-% and results will be reported in the rest of the paper
-% by omitting any reference to functions.
 
 A \emph{first-order language} $\Lang$ is characterized by
 a triple $(\LangPreds, \LangFuncts, \LangConsts)$, where
@@ -338,30 +330,15 @@ defined as the smallest set of expressions such that:
 \item $f(t_1, \ldots, t_n) \in \LangTerms$, for all $f \in 
 \LangFuncts$ and $t_1, \ldots, t_n \in \LangTerms$ (where $n = \ar(f)$).
 \end{itemize}
-%\[
-%\begin{array}{ll}
-%x \in \LangTerms & \mbox{ for all }x \in \Vars\\
-%a \in \LangTerms & \mbox{ for all }a \in \LangConsts\\
-%f(t_1, \ldots, t_n) \in \LangTerms & \mbox{ for all }f \in 
-%\LangFuncts, n=\ar(f), \{t_1, \ldots, t_n\} \subseteq \LangTerms \, .
-%\end{array}
-%\]
 A term of $\Lang$ is \emph{closed} if it involves no variable. We 
 denote by $\LangClTerms$ the set of the closed terms of $\Lang$.
-
+%
 The collection $\LangForms$ of the \emph{formulae} of
 $\Lang$ is the smallest set of expressions of the following forms:
 \begin{itemize}
   \item \emph{atomic formulae}: $P(t_1, \ldots, t_n) \in \LangForms$, 
 for all $P \in \LangPreds$ and $t_1, \ldots, t_n \in \LangTerms$ 
 (where $n = \ar(P)$);
-%
-% Let $P \in \LangPreds$, with $\ar(P)=n$ for some $n \in \nat$,
-%  and let $\{\nu_1, \ldots, \nu_n\} \subseteq \LangTerms$.
-%  Then $P(\nu_1, \ldots, \nu_n)$ is a formula of $\Lang$.
-%  In particular, $P(\nu_1, \ldots, \nu_n)$ is said to be an
-%  \emph{atomic formula} of $\Lang$.
-
   \item \emph{universally and existentially quantified formulae}:
   $(\forall x)\varphi, (\exists x)\varphi \in \LangForms$, for every 
 $\varphi \in \LangForms$ (where $x \in \Vars$);
@@ -375,11 +352,6 @@ stand for $\neg \varphi \vee \psi$, whereas $\varphi \leftrightarrow
 \psi$ will stand for $(\varphi \wedge \psi) \vee (\neg \varphi \wedge 
 \neg\psi)$. Therefore we shall refer to $\neg$, $\wedge$, and $\vee$ 
 as \emph{primitive propositional connectives}.}
-%
-% All the combinations of formulae in $\Lang$ by means of
-%  the Boolean connectives of propositional logic
-%  $\wedge$, $\vee$, $\neg$, $\rightarrow$, $\leftrightarrow$ are
-%  formulae of $\Lang$ as well.
 \end{itemize}
 
 Next we recall some further definitions which are particularly useful 
@@ -442,9 +414,6 @@ Given a formula $\varphi$, we denote with $\Preds(\varphi)$,
 $\Functs(\varphi)$, $\Consts(\varphi)$, and $\Vars(\varphi)$ the sets of the
 predicate, function, constant, and variable symbols occurring in $\varphi$,
 respectively. Similar notations will also be used with sets of formulae.
-
-%Analogously,\marginpar{probabilmente si pu\`o omettere} for a set $\Sigma$ of formulae, we denote
-%with $\Preds(\Sigma)$, $\Functs(\Sigma)$, $\Consts(\Sigma)$, and $\Vars(\Sigma)$ the sets of all the predicate, function, constant, and variable symbols occurring in any formula $\varphi \in \Sigma$, respectively.
 
 First-order \emph{semantics} is given in terms of
 \emph{interpretations}. Let $\Lang=(\LangPreds,$ $\LangFuncts, \LangConsts)$ be
@@ -510,24 +479,6 @@ for every formula $\varphi$ of $\Lang$ and variable $x \in \Vars$;
 recursively evaluated according to the usual semantics of 
 propositional logic.
 \end{itemize}
-%\[
-% P(\nu_1, \ldots, \nu_n) \iff [\nu_1^{\inter,A}, \ldots, 
-%\nu_n^{\inter,A}] \in P^{\inter}
-%\]
-%for every atomic formula $P(\nu_1, \ldots, \nu_n)$ of $\Lang$; then,
-%\[
-%\begin{array}{rcll}
-% ((\forall x)\varphi)^{\inter,A} & \iff & \varphi^{\inter,A'} & 
-%\mbox{ for \emph{every} }x\mbox{-variant }A'\mbox{ of }A\\
-% ((\exists x)\varphi)^{\inter,A} & \iff & \varphi^{\inter,A'} & 
-%\mbox{ for \emph{some} }x\mbox{-variant }A'\mbox{ of }A\\
-%\end{array}
-%\]
-%for all $x \in \Vars$ and for every formula $\varphi$ of $\Lang$;
-%finally, evaluation of a propositional combination $\varphi$ of 
-%formulae of $\Lang$
-%proceeds as usual for formulae in propositional logic, but recursively
-%evaluating first quantified and atomic sub-formulae of $\varphi$.
 
 \corr{We shall use the notation $\fomodels{(\inter, A)}{\varphi}$ to indicate
 that the pair $(\inter, A)$ evaluates the formula $\varphi$ to $\true$,
@@ -543,15 +494,7 @@ and $\fomodels{\inter}{\varphi}$ in place of $\varphi^{\inter, A}$
 and $\fomodels{(\inter, A)}{\varphi}$, respectively, for any 
 assignment $A$.
 
-%becomes ininfluent
-%for the evaluation. In other words, $\varphi^{\inter, A}$ is
-%evaluated to $\true$ if and only if $\varphi^{\inter, B}$
-%is true for all the assignments $B$ in $\inter$, provided that $\varphi$
-%is closed. Thus, in such cases one can omit to indicate the
-%assignment. In such a case, we shall simply write $\varphi^{\inter}$
-
 A formula $\varphi$ of $\Lang$ is said to be \emph{satisfiable}
-%(write $\fosat{\varphi}$)
 if and only if $\fomodels{(\inter,A)}{\varphi}$ for \emph{some} interpretation
 $\inter$ for $\Lang$ and assignment $A$ in $\inter$.
 In addition, $\varphi$ is said to be \emph{valid} 
@@ -562,11 +505,24 @@ for $\Lang$ and assignments $A$ in $\inter$.
 Two formulae $\varphi$ and $\psi$ of $\Lang$ are said to be
 \emph{equivalent} (and we write $\varphi \equiv \psi$) iff 
 $\varphi^{\inter,A} = \psi^{\inter,A}$,
-%\[
-% \varphi^{\inter,A} \iff \psi^{\inter,A}
-%\]
 for all interpretations $\inter$
-for $\Lang$ and assignments $A$ in $\inter$.
+for $\Lang$ and assignments $A$ in $\inter$. Finally, we mention
+the\marginpar{Issue 26} \emph{entailment problem}.  Let $\varphi$ and
+$\psi$ two formulae of a first order language $\Lang$. We say that $\varphi$ entail $\psi$, and
+write $\fomodels{\varphi}{\psi}$, if and only if $\varphi \rightarrow \psi$ is
+valid.
+In other words, $\varphi$ entail $\psi$ if and only if $\psi$ is evaluated to
+$\true$ by every pair $(\inter, A)$ which evaluates to $\true$
+$\varphi$ as well.
+The entailment problem is of particular\marginpar{Issue 26, considera di
+spostare nell'intro} interest for applications in the field of knowledge
+representation.
+For example, the entailment problem is the decisional correspective of
+\emph{query answering}, which is used to extract \emph{implicit knowledge}
+(i.e. to obtain all the logical consequences) from a knowledge base.
+Plainly, in first-order logic the entailment problem can be reduced to the
+unsatisfiability problem, as $\fomodels{\varphi}{\psi}$ if and only if $\varphi
+\wedge \neg \psi$ is unsatisfiable.
 
 We conclude this section by recalling the notion of \emph{restricted 
 universal quantifiers}. These are quantifiers of the form
@@ -831,7 +787,7 @@ are used to express facts about real world items, such as for example
 $\mathit{childOf}(\mathit{Alice}, \mathit{Bob})$, 
 $\mathit{isMale}(\mathit{Bob})$, etc.
 
-Finally, we observe that restricted universal quantifiers
+Restricted universal quantifiers
 can easily be embedded  in \DisjDatalog-rules and -formulae.
 Indeed, let us consider a sentence of the form
 \begin{equation}\label{RESTR1}
@@ -854,6 +810,32 @@ which, in its turn, is equivalent to the sentence
 \end{equation}
 Plainly, (\ref{RESTR2}) is a (standard) $\DisjDatalog$-rule, with body
 $P(y_1, \ldots, y_m) \wedge \varphi$.
+
+Finally, we recall the \emph{conjunctive query answering problem},
+used\marginpar{Issue 26} in knowledge representation applications to query
+knowledge bases.
+A \emph{conjunctive query} is a finite conjunction of atoms. Notice that
+ubounded variables may occurr in a conjunctive query. 
+The conjunctive query answering problem, relative to a $\DisjDatalog$-formula
+$\varphi$ and to a conjunctive query $\mathbf{Q}$, 
+consists in determining all the substitutions $\sigma$ such that $\varphi
+\models \sigma \mathbf{Q}$. For example, let us consider the formula $\varphi$
+and the query $\mathbf{Q}$ listed below, with $parent, Male, Female \in
+\Preds$, $Alice, Bob, Jane \in \Consts$ and $x \in \Vars$:
+\[
+\begin{array}{l}
+\varphi = parent(Alice, Bob) \wedge parent(Alice, Jane) \wedge Male(Bob) \wedge
+Female(Jane) \\
+\mathbf{Q} = parent(Alice, x) \wedge Male(x) .
+\end{array}
+\]
+The solely \emph{answer} $\sigma$ for the query $\mathbf{Q}$ and the formula
+$\varphi$, i.e. the solely substitution such that $\varphi 
+\models \sigma \mathbf{Q}$, is $\{ x \rightarrow Bob \}$. Notice that the
+query answering problem can be reduced to the entailment problem as the
+search space for all the candidate answers can be restricted to 
+those substitutions involving only the variables occurring in the query 
+and the constants occurring in the formula. 
 % with $n,m \in \nat$, $1\leq m \leq n$, $P$ a predicate of arity $m$,
 % and $\varphi$, $\psi$ two quantifier-free formulae, is equivalent to
 % the formula
@@ -1014,7 +996,12 @@ i.e., such that $\vmodels{(\inter,A)}{\varphi}$. In case $\varphi$ is a
 \Forallpizero-sentence, we can simply write $\vmodels{\inter}{\varphi}$ to indicate that $\inter$ evaluates $\varphi$ to $\true$, for a given  
 pair-aware set-theoretic interpretation $\inter$. A \Forallpizero-sentence $\varphi$ is said to be
 \emph{(set-theoretically) satisfiable} if and only if $\vmodels{\inter}{\varphi}$, for some 
-pair-aware set-theoretic interpretation $\inter$. 
+pair-aware set-theoretic interpretation $\inter$. Finally, given
+two\marginpar{Issue 26} $\Forallpizero$-sentences $\varphi$ and $\psi$ we say
+that $\varphi$ \emph{entails} $\psi$ (with respect to the set-theoretic
+semantics) and write $\vmodels{\varphi}{\psi}$ if and only if
+$\vmodels{\inter}{\psi}$ for every interpretation $\inter$ such that
+$\vmodels{\inter}{\psi}$.
 
 
 \subsection{A decision procedure for \Forallpizero-sentences}\label{DECPROC}
@@ -1984,7 +1971,7 @@ the satisfiability problem for \ForallpizeroDisjDatalog-sentences can
 be reduced in polynomial time to the Herbrand satisfiability problem
 for \DisjDatalog-sentences.
 
-\begin{corollary}
+\begin{corollary}\label{FINALCOR}
 Let $\varphi$ be a \ForallpizeroDisjDatalog-sentence.  Let
 $V=\Consts(\varphi)$ and let $T$ be any set of constants disjoint from
 $V$ and such that $|T|=2\cdot|V|$.  Then $\varphi$ is
@@ -1992,6 +1979,40 @@ set-theoretically satisfiable if and only if the corresponding
 \DisjDatalog-sentence $\chi^{(V,T)} \wedge \varphi$ is satisfiable, in
 the sense of Disjunctive Datalog.  %\qed
 \end{corollary}
+
+Notice that Theorem \ref{FORALLPIZEROSAT} and Corollary 
+\ref{FINALCOR} concerns the satisfiability problem but have consequences
+to the other problems related to satisfiability, for example to query
+answering as shown by the following corollary.\marginpar{Issue 26}
+
+\begin{corollary}\label{QUERYANSWERING}
+Let $\varphi$ be a $\ForallpizeroDisjDatalog$-sentence,
+let $\mathbf{Q}=q_1 \wedge \ldots q_n$ be a
+conjunctive query, i.e.
+a finite conjunction of atoms $q_1 \wedge \ldots q_n$, let $V=\Consts(\varphi)
+\cup \Consts(\mathbf{Q})$, let $T$ be any set of constants disjoint from $V$ such that $|T|=2\cdot|V|$ and let $\sigma$
+be a substitution which associates a constant in $V$ to every variable of
+$\mathbf{Q}$. Then $\sigma$ is an answer for $\mathbf{Q}$ and $\varphi$
+with respect to the set-theoretic semantics, i.e.
+$\vmodels{\varphi}{\sigma\mathbf{Q}}$, if and only if $\sigma$ is an answer for
+$\mathbf{Q}$ and $\chi^{(V,T)}\wedge\varphi$ with respect to the Herbrand
+semantics, i.e. if $\fomodels{\chi^{(V,T)}\wedge\varphi}{\sigma\mathbf{Q}}$.
+\end{corollary}
+\begin{proof}
+In general, entailment can be reduced to
+(un)satisfiability. Indeed, $\vmodels{\varphi}{\sigma\mathbf{Q}}$ iff $\varphi
+\wedge \neg (\sigma\mathbf{Q})$ is unsatisfiable. But
+$\varphi \wedge \neg (\sigma\mathbf{Q})$ is equivalent with
+$\varphi \wedge (\neg \sigma q_1 \wedge \ldots \wedge \neg \sigma q_n)$, which
+is a formula in $\ForallpizeroDisjDatalog$ as  $\sigma q_1, \ldots,\sigma q_n$
+are ground in view of the properties of $\sigma$ to be an answer for
+$\mathbf{Q}$. But, for Corollary \ref{FINALCOR}, $\varphi \wedge
+(\neg \sigma q_1 \wedge \ldots \wedge \neg \sigma q_n)$ is unsatisfiable in the
+sense of set-theory iff so is $\chi^{(V,T)} \wedge \varphi \wedge (\neg \sigma
+q_1 \wedge \ldots \wedge \neg \sigma q_n)$ in the sense of Disjunctive Datalog.
+The thesis follows by observing that the latter $\DisjDatalog$-formula is
+unsatisfiable if and only if $\varphi \fomodels \sigma \mathbf{Q}$.
+\end{proof}
 
 \section{Conclusions and future work}\label{CONCLUSIONS}
 
