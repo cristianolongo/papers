@@ -1000,8 +1000,8 @@ pair-aware set-theoretic interpretation $\inter$. Finally, given
 two\marginpar{Issue 26} $\Forallpizero$-sentences $\varphi$ and $\psi$ we say
 that $\varphi$ \emph{entails} $\psi$ (with respect to the set-theoretic
 semantics) and write $\vmodels{\varphi}{\psi}$ if and only if
-$\vmodels{\inter}{\psi}$ for every interpretation $\inter$ such that
-$\vmodels{\inter}{\psi}$.
+$\vmodels{\inter}{\psi}$ for every pair-aware set-theoretic interpretation
+$\inter$ such that $\vmodels{\inter}{\psi}$.
 
 
 \subsection{A decision procedure for \Forallpizero-sentences}\label{DECPROC}
@@ -1011,13 +1011,6 @@ The satisfiability test for \Forallpizero-sentences reported in
 bounded size, called \emph{skeletal representations}, which witness
 the existence of certain particular interpretations, called \emph{realizations}
 (see Definitions \ref{SKREPR} and \ref{REALIZATIONDEF} below).
-
-% More specifically, \cite[Theorem 3]{CanLonNic2011}
-% states that a  \Forallpizero-sentence $\varphi$ is satisfiable
-% if and only if there exists a skeletal representation $\atset$ for
-% $\varphi$ such that its realization 
-%$\Realization_{\varphi}^{\atset}$ relative to $\varphi$
-% is a model for $\varphi$.
 
 Skeletal representations are finite collections of ground atomic
 $\Forallpizero$-formulae of the form (\ref{ATFORM}), subject to 
@@ -1159,12 +1152,6 @@ Let $V$, $T$ be two finite, nonempty, and disjoint sets of constants,
 $\atset$ a
 skeletal representation relative to $(V,T)$, and $\Realization_{\!\atset}$
 the realization of $\atset$ relative to $(V,T)$. Then, for all $\consta \in V$,
-%\red{\[
-% \consta^{\Realization} \subseteq \left\{ \constb^{\Realization} 
-%\,|\, (\constb \in \nonpairs{\consta})^{\atset} \right\} \cup
-% \left\{ [\constb, \constc]^{\Realization} \,|\, ([\constb, \constc] 
-%\in \consta)^{\atset} \right\} .
-%\]}
 \[
 \consta^{\Realization_{\!\atset}} \subseteq \left\{ 
 \constb^{\Realization_{\!\atset}} \,|\, \constb \in V \cup T \right\} 
@@ -1442,10 +1429,6 @@ x,y\right)\left(\pairin{x}{y}{c} \rightarrow \pairin{x}{y}{a}\right) \;
 .
 \end{array}
 \]
-%
-%\centerline{\red{\textbf{Occorrerebbe dire qualcosa sul perch\'e 
-%stiamo definendo questo frammento}}}
-%
 In the next section we present a reduction of the set-theoretic
 satisfiability problem for \Forallpizero-sentences to the satisfiability
 problem of first-order formulae, and thus to Herbrand
@@ -1508,12 +1491,6 @@ predicate symbols:
 \end{tabular}
 \end{center}
 
-% \begin{itemize}
-% \item $\memhatP$, $\EqPpizeroS$,$\CPpizeroS$, $\distS$, $\distPS$ (binary),
-% \item $\PpizeroS$, $\distbyS$ (ternary), and
-% \item $\distPbyS$ (4-ary).
-% \end{itemize}
-
 We shall provide a polynomial-time reduction $\varphi \mapsto
 \Theta_{\varphi}$ from \Forallpizero-sentences into \Elpizero-sentences
 such that the \Forallpizero-sentence $\varphi$ is set-theoretically
@@ -1554,8 +1531,8 @@ representation\marginpar{aggiunto}
 $\atset=\{ \nonpairin{\consta}{\constb} \}$ can be regarded as 
 a Herbrand interpretation such that $\fomodels{\atset}{\gamma} \iff
 \gamma=\nonpairin{\consta}{\constb}$.  Conversely, let us consider
-the two set of constants $V=\{\consta, \constb\}$ and $T=\{t\}$
-and let $\hinter=\{\nonpairin{\consta}{\constb}, \seteq{\consta}{t}\}$,
+the two sets of constants $V=\{\consta, \constb\}$ and $T=\{t\}$
+and let $\hinter=\{\nonpairin{t}{\consta}, \seteq{\consta}{\constb}\}$,
 $\hinter'=\hinter \cup \{\nonpairin{t}{\constb}\}$ be two
 Herbrand interpretations.\footnote{With a slight abuse of notation and in
 analogy with skeletal representations, here we are representing Herbrand interpretations
@@ -1563,7 +1540,7 @@ as sets with posing $\gamma \in \hinter \iff \fomodels{\hinter}{\gamma}$,
 for every Herbrand interpretation $\hinter$ and for every ground atomic formula
 $\gamma$.} Then $\hinter'$ is a skeletal representation relative to $(V,T)$
 whereas $\hinter$ is not, as $\hinter$ does not comply with condition
-\ref{EQC}.
+\ref{EX1C}.
 
 %Notice that Corollary~\ref{SATEXP} applies to \Forallpizero-sentences, when these are regarded as first-order formulae in \Elpizero.
 
