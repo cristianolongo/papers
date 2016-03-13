@@ -1542,16 +1542,6 @@ $\gamma$.} Then $\hinter'$ is a skeletal representation relative to $(V,T)$
 whereas $\hinter$ is not, as $\hinter$ does not comply with condition
 \ref{EX1C}.
 
-%Notice that Corollary~\ref{SATEXP} applies to \Forallpizero-sentences, when these are regarded as first-order formulae in \Elpizero.
-
-%$\Forallpizero$-formulae have a set-theoretic semantics.  However, 
-%Lemma~\ref{HERSAT} and Corollary~\ref{SATEXP} suggest how to 
-%circumvent this issue by mapping skeletal representations into 
-%Herbrand interpretations. Indeed, skeletal representations are 
-%Herbrand interpretations of a very particular type, but, of course, 
-%there are Herbrand interpretations which do not comply with the 
-%conditions of Definition~\ref{SKREPR}.
-
 Our reduction $\varphi \mapsto \Theta_{\varphi}$ from 
 \Forallpizero-sentences into \Elpizero-sentences will be defined in 
 terms of an \Elpizero-formula $\chi^{(V,T)}$, depending on two 
@@ -1578,7 +1568,8 @@ where
 \begin{align*}
    \regf  \equivAs {} & (\forall x, y)(\nonpairin{x}{y} \rightarrow 
 \memhat{x}{y}) \wedge (\forall x, y, z)(\pairin{x}{y}{z} \rightarrow 
-\memhat{x}{z} \wedge \memhat{y}{z})\\
+\memhat{x}{z}) \wedge (\forall x, y, z)(\pairin{x}{y}{z} \rightarrow 
+\memhat{y}{z})\\
    & {~} \wedge
 (\forall x, y, z)(\memhat{x}{y} \wedge \memhat{y}{z} \rightarrow \memhat{x}{z})
    \wedge (\forall x)\neg(\memhat{x}{x})\\ \displaybreak[0]
@@ -1976,8 +1967,8 @@ $\mathbf{Q}$ and $\chi^{(V,T)}\wedge\varphi$ with respect to the Herbrand
 semantics, i.e. if $\fomodels{\chi^{(V,T)}\wedge\varphi}{\sigma\mathbf{Q}}$.
 \end{corollary}
 \begin{proof}
-In general, entailment can be reduced to
-(un)satisfiability. Indeed, $\vmodels{\varphi}{\sigma\mathbf{Q}}$ iff $\varphi
+Indeed, entailment can be reduced to
+(un)satisfiability as $\vmodels{\varphi}{\sigma\mathbf{Q}}$ iff $\varphi
 \wedge \neg (\sigma\mathbf{Q})$ is unsatisfiable. But
 $\varphi \wedge \neg (\sigma\mathbf{Q})$ is equivalent with
 $\varphi \wedge (\neg \sigma q_1 \wedge \ldots \wedge \neg \sigma q_n)$, which
