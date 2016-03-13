@@ -272,7 +272,7 @@ to query a \emph{knowledge base} and estract the implicit knowledge in it.
 The link between set-theoretic languages and logic programming
 we start to investigate here is of a certain interest to projects related
 with the production and usage of \emph{open data} such as PRISMA$^{*}$:
-on one hand, it provides a way to implement with small efforts a solid
+on the one hand, it provides a way to implement with small efforts a solid
 and efficient reasoning and query engine for
 the very expressive representation language \dlForallpizero; on the
 other hand, it allows one to implement typical logic-programming tasks
@@ -508,17 +508,17 @@ $\varphi^{\inter,A} = \psi^{\inter,A}$,
 for all interpretations $\inter$
 for $\Lang$ and assignments $A$ in $\inter$. Finally, we mention
 the\marginpar{Issue 26} \emph{entailment problem}.  Let $\varphi$ and
-$\psi$ two formulae of a first order language $\Lang$. We say that $\varphi$ entail $\psi$, and
+$\psi$ two formulae of a first order language $\Lang$. We say that $\varphi$ entails $\psi$, and
 write $\fomodels{\varphi}{\psi}$, if and only if $\varphi \rightarrow \psi$ is
 valid.
-In other words, $\varphi$ entail $\psi$ if and only if $\psi$ is evaluated to
-$\true$ by every pair $(\inter, A)$ which evaluates to $\true$
-$\varphi$ as well.
+In other words, $\varphi$ entails $\psi$ if and only if $\psi$ is evaluated to
+$\true$ by every pair $(\inter, A)$ evaluating $\varphi$ to $\true$
+ as well.
 The entailment problem is of particular\marginpar{Issue 26, considera di
 spostare nell'intro} interest for applications in the field of knowledge
 representation.
 For example, the entailment problem is the decisional correspective of
-\emph{query answering}, which is used to extract \emph{implicit knowledge}
+\emph{query answering}, which is used to extract the \emph{implicit knowledge}
 (i.e. to obtain all the logical consequences) from a knowledge base.
 Plainly, in first-order logic the entailment problem can be reduced to the
 unsatisfiability problem, as $\fomodels{\varphi}{\psi}$ if and only if $\varphi
@@ -814,10 +814,10 @@ $P(y_1, \ldots, y_m) \wedge \varphi$.
 Finally, we recall the \emph{conjunctive query answering problem},
 used\marginpar{Issue 26} in knowledge representation applications to query
 knowledge bases.
-A \emph{conjunctive query} is a finite conjunction of atoms. Notice that
-ubounded variables may occurr in a conjunctive query. 
-The conjunctive query answering problem, relative to a $\DisjDatalog$-formula
-$\varphi$ and to a conjunctive query $\mathbf{Q}$, 
+A \emph{conjunctive query} is a finite conjunction of atoms. Notice that a conjunctive query is allowed to contain
+free variables. 
+The conjunctive query answering problem relative to a $\DisjDatalog$-formula
+$\varphi$ and to a conjunctive query $\mathbf{Q}$
 consists in determining all the substitutions $\sigma$ such that $\varphi
 \models \sigma \mathbf{Q}$. For example, let us consider the formula $\varphi$
 and the query $\mathbf{Q}$ listed below, with $parent, Male, Female \in
@@ -829,13 +829,13 @@ Female(Jane) \\
 \mathbf{Q} = parent(Alice, x) \wedge Male(x) .
 \end{array}
 \]
-The solely \emph{answer} $\sigma$ for the query $\mathbf{Q}$ and the formula
-$\varphi$, i.e. the solely substitution such that $\varphi 
+The only \emph{answer} $\sigma$ for the query $\mathbf{Q}$ and the formula
+$\varphi$, i.e. the only substitution such that $\varphi 
 \models \sigma \mathbf{Q}$, is $\{ x \rightarrow Bob \}$. Notice that the
 query answering problem can be reduced to the entailment problem as the
 search space for all the candidate answers can be restricted to 
-those substitutions involving only the variables occurring in the query 
-and the constants occurring in the formula. 
+those substitutions involving only variables occurring in the query 
+and constants occurring in the formula. 
 % with $n,m \in \nat$, $1\leq m \leq n$, $P$ a predicate of arity $m$,
 % and $\varphi$, $\psi$ two quantifier-free formulae, is equivalent to
 % the formula
@@ -997,7 +997,7 @@ i.e., such that $\vmodels{(\inter,A)}{\varphi}$. In case $\varphi$ is a
 pair-aware set-theoretic interpretation $\inter$. A \Forallpizero-sentence $\varphi$ is said to be
 \emph{(set-theoretically) satisfiable} if and only if $\vmodels{\inter}{\varphi}$, for some 
 pair-aware set-theoretic interpretation $\inter$. Finally, given
-two\marginpar{Issue 26} $\Forallpizero$-sentences $\varphi$ and $\psi$ we say
+two\marginpar{Issue 26} $\Forallpizero$-sentences $\varphi$ and $\psi$, we say
 that $\varphi$ \emph{entails} $\psi$ (with respect to the set-theoretic
 semantics) and write $\vmodels{\varphi}{\psi}$ if and only if
 $\vmodels{\inter}{\psi}$ for every pair-aware set-theoretic interpretation
@@ -1948,29 +1948,28 @@ set-theoretically satisfiable if and only if the corresponding
 the sense of Disjunctive Datalog.  %\qed
 \end{corollary}
 
-Notice that Theorem \ref{FORALLPIZEROSAT} and Corollary 
-\ref{FINALCOR} concerns the satisfiability problem but have consequences
-to the other problems related to satisfiability, for example to query
-answering as shown by the following corollary.\marginpar{Issue 26}
+Theorem \ref{FORALLPIZEROSAT} and Corollary \ref{FINALCOR} concern the satisfiability problem and have consequences
+on other problems related to satisfiability such as, for example, the query
+answering problem. This is shown by the following corollary.\marginpar{Issue 26}
 
 \begin{corollary}\label{QUERYANSWERING}
 Let $\varphi$ be a $\ForallpizeroDisjDatalog$-sentence,
 let $\mathbf{Q}=q_1 \wedge \ldots q_n$ be a
 conjunctive query, i.e.
 a finite conjunction of atoms $q_1 \wedge \ldots q_n$, let $V=\Consts(\varphi)
-\cup \Consts(\mathbf{Q})$, let $T$ be any set of constants disjoint from $V$ such that $|T|=2\cdot|V|$ and let $\sigma$
+\cup \Consts(\mathbf{Q})$, let $T$ be any set of constants disjoint from $V$ such that $|T|=2\cdot|V|$, and let $\sigma$
 be a substitution which associates a constant in $V$ to every variable of
 $\mathbf{Q}$. Then $\sigma$ is an answer for $\mathbf{Q}$ and $\varphi$
 with respect to the set-theoretic semantics, i.e.
 $\vmodels{\varphi}{\sigma\mathbf{Q}}$, if and only if $\sigma$ is an answer for
 $\mathbf{Q}$ and $\chi^{(V,T)}\wedge\varphi$ with respect to the Herbrand
-semantics, i.e. if $\fomodels{\chi^{(V,T)}\wedge\varphi}{\sigma\mathbf{Q}}$.
+semantics, i.e. if and only if $\fomodels{\chi^{(V,T)}\wedge\varphi}{\sigma\mathbf{Q}}$.
 \end{corollary}
 \begin{proof}
-Indeed, entailment can be reduced to
-(un)satisfiability as $\vmodels{\varphi}{\sigma\mathbf{Q}}$ iff $\varphi
+Entailment can be reduced to
+(un)satisfiability and thus $\vmodels{\varphi}{\sigma\mathbf{Q}}$ iff $\varphi
 \wedge \neg (\sigma\mathbf{Q})$ is unsatisfiable. But
-$\varphi \wedge \neg (\sigma\mathbf{Q})$ is equivalent with
+$\varphi \wedge \neg (\sigma\mathbf{Q})$ is equivalent to
 $\varphi \wedge (\neg \sigma q_1 \wedge \ldots \wedge \neg \sigma q_n)$, which
 is a formula in $\ForallpizeroDisjDatalog$ as  $\sigma q_1, \ldots,\sigma q_n$
 are ground in view of the properties of $\sigma$ to be an answer for
