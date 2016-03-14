@@ -158,8 +158,7 @@ field of knowledge
 representation. Among other results, a \textsc{NexpTime}
 decision procedure for satisfiability of formulae
 in one of these fragments, $\Forallpizero$, has been
-devised.\marginpar{modificato Review1-a decision procedure has been provided but
-not implemented \#28}
+devised.
 %
 In this paper we exploit the main features of such a decision
 procedure to reduce the satisfiability problem for the fragment
@@ -254,7 +253,7 @@ Also, optimization strategies have been provided for
 algorithms devised in this context, and a considerable amount of
 academic and commercial software implementing these algorithms is
 available. In particular, in this paper we consider a subset of the language
-accepted by the \emph{DLV System} (see \cite{AlvFabLeoPerPfeTer2011,LeoPfeFabEitGotPerSca2006}),\marginpar{added} 
+accepted by the \emph{DLV System} (see \cite{AlvFabLeoPerPfeTer2011,LeoPfeFabEitGotPerSca2006}),
 a widely used deductive database system.
   
 The reduction we present in this paper allows one to reuse the machinery
@@ -263,9 +262,7 @@ reasoning engine for the language \ForallpizeroDisjDatalog and,
 consequently, for the description logic \dlForallpizero mentioned
 above, as all the constructs in \dlForallpizero are expressible in
 \ForallpizeroDisjDatalog. As an example of reasoning, we will focus 
-our attention on the \emph{query answering} problem, \marginpar{ Issue 26 the
-reference to "applications of techniques and results devised in the context of logic
-programming" is too vague, and it should be further investigated or deleted.} 
+our attention on the \emph{query answering} problem,
 a tecnique used by applications based on knowledge representation systems 
 to query a \emph{knowledge base} and estract the implicit knowledge in it.
 
@@ -507,15 +504,14 @@ Two formulae $\varphi$ and $\psi$ of $\Lang$ are said to be
 $\varphi^{\inter,A} = \psi^{\inter,A}$,
 for all interpretations $\inter$
 for $\Lang$ and assignments $A$ in $\inter$. Finally, we mention
-the\marginpar{Issue 26} \emph{entailment problem}.  Let $\varphi$ and
+the \emph{entailment problem}.  Let $\varphi$ and
 $\psi$ two formulae of a first order language $\Lang$. We say that $\varphi$ entails $\psi$, and
 write $\fomodels{\varphi}{\psi}$, if and only if $\varphi \rightarrow \psi$ is
 valid.
 In other words, $\varphi$ entails $\psi$ if and only if $\psi$ is evaluated to
 $\true$ by every pair $(\inter, A)$ evaluating $\varphi$ to $\true$
  as well.
-The entailment problem is of particular\marginpar{Issue 26, considera di
-spostare nell'intro} interest for applications in the field of knowledge
+The entailment problem is of particular interest for applications in the field of knowledge
 representation.
 For example, the entailment problem is the decisional correspective of
 \emph{query answering}, which is used to extract the \emph{implicit knowledge}
@@ -760,7 +756,7 @@ is decidable.
 
 We close the section by briefly reviewing the \DisjDatalog 
 fragment of a first-order language $\Lang$. As mentioned in Section \ref{INTRO}, we
-consider\marginpar{added} the \DisjDatalog syntax accepted by
+consider the \DisjDatalog syntax accepted by
 the DLV System\footnote{\url{http://www.dlvsystem.com/}} and reported
 in \cite{LeoPfeFabEitGotPerSca2006}, and omit language features not useful for
 our purposes such as
@@ -812,7 +808,7 @@ Plainly, (\ref{RESTR2}) is a (standard) $\DisjDatalog$-rule, with body
 $P(y_1, \ldots, y_m) \wedge \varphi$.
 
 Finally, we recall the \emph{conjunctive query answering problem},
-used\marginpar{Issue 26} in knowledge representation applications to query
+used in knowledge representation applications to query
 knowledge bases.
 A \emph{conjunctive query} is a finite conjunction of atoms. Notice that a conjunctive query is allowed to contain
 free variables. 
@@ -882,8 +878,7 @@ are the \emph{domain constants} of (\ref{eq:simplePrenex}).
 Finally, $\Forallpizero$\emph{-formulae} are finite
 conjunctions of simple-prenex \Forallpizero-formulae.
 Notice that in the original definition of
-\Forallpizero,\marginpar{Review2-Section 3 (Forallpizero) - Which is the
-difference between variables and constants? \#6}
+\Forallpizero,
 provided in \cite{CanLonNic2011}, constants are not mentioned.
 Indeed, \cite{CanLonNic2011} is focused on the satisfiability
 problem but specifically in the set-theoretic realm, so that
@@ -909,7 +904,7 @@ and $\LangConsts=\Consts$. However, \Forallpizero-sentences have some
 syntactic restrictions which do not apply to general first-order
 languages: for instance, \emph{nested terms} such as $[[a,b],c]$,
 as much as equalities between set and pair terms of the forms $a=[b,c]$
-and $[a,b]=c$,\marginpar{updated \#11} 
+and $[a,b]=c$, 
 are not allowed in them. Likewise, the semantics of the fragment 
 \Forallpizero is restricted only to \emph{set-theoretic} 
 interpretations $\inter=(D^{\inter}, \cdot^\inter)$, where 
@@ -920,7 +915,7 @@ the Zermelo-Fraenkel axioms of set theory, as reported for instance
 in \cite{Mos2005} (we will see below  that  also the interpretations 
 $[\cdot,\cdot]^\inter$ and $\nonpairssym^{\inter}$ are restricted).
 Here we list only the \emph{extensionality} and
-\emph{regularity}\marginpar{updated \#8} axioms:\footnote{In 
+\emph{regularity} axioms:\footnote{In 
 (C2) we report a trivial consequence of the Principle of Fundation 
 as it is reported in 11.29 of \cite{Mos2005}.}
 %  and a
@@ -940,8 +935,7 @@ acyclic, i.e.,
 \]
 \end{enumerate}
 where $(\in^{\inter})^{+}$ is the \emph{transitive closure} of $\in^{\inter}$.
-Notice that (C1) and (C2) are not expressible in $\Forallpizero$\marginpar{added
-\#11}
+Notice that (C1) and (C2) are not expressible in $\Forallpizero$
 as, for example, \emph{full} universal quantification is not allowed in
 this language.
 %
@@ -979,7 +973,7 @@ v']^{\inter}\neq u)
 $
 \end{enumerate}
 which must hold for all $u,v \in \VNU$. Several pairing
-functions\marginpar{aggiunto} have been %devised during the years.
+functions have been %devised during the years.
 introduced over time. 
 The most prominent one is due to Kuratowski and is defined by $\pi_{Kur}(u, v)
 \defAs \{\{u\}, \{u,v\}\}$.
@@ -997,7 +991,7 @@ i.e., such that $\vmodels{(\inter,A)}{\varphi}$. In case $\varphi$ is a
 pair-aware set-theoretic interpretation $\inter$. A \Forallpizero-sentence $\varphi$ is said to be
 \emph{(set-theoretically) satisfiable} if and only if $\vmodels{\inter}{\varphi}$, for some 
 pair-aware set-theoretic interpretation $\inter$. Finally, given
-two\marginpar{Issue 26} $\Forallpizero$-sentences $\varphi$ and $\psi$, we say
+two $\Forallpizero$-sentences $\varphi$ and $\psi$, we say
 that $\varphi$ \emph{entails} $\psi$ (with respect to the set-theoretic
 semantics) and write $\vmodels{\varphi}{\psi}$ if and only if
 $\vmodels{\inter}{\psi}$ for every pair-aware set-theoretic interpretation
@@ -1206,7 +1200,7 @@ As reported in the proof of Theorem 3 in \cite{CanLonNic2011},
 the condition $|T|=2\cdot|V|$ guarantees a sufficient amount of 
 \emph{auxiliary} constants to get a skeletal representation whose realization
 is a model for the formula $\varphi$ under consideration, provided that 
-$V=\Consts(\varphi)$.\marginpar{aggiunto} 
+$V=\Consts(\varphi)$.
 In addition, the decidability of the set-theoretic satisfiability problem for
 \Forallpizero-sentences easily follows from Theorem \ref{SAT}, as the
 number of possible skeletal representations for any given
@@ -1389,9 +1383,7 @@ $\psi$ must be bound, so that $x$ occurs in at least one atom of the
 rule body, as required for Disjunctive Datalog rules, when restricted
 quantifiers in (\ref{starr}) are expanded as indicated in
 (\ref{RESTR2}).  A relevant amount of set-theoretic constructs can be
-expressed in this fragment. \marginpar{Issue 32 - In particular, the syntactic
-restrictions on formula (7) highlighted in Sect. 3.2 could be described more extensively, possibly providing some
-examples of the considered formulae.}
+expressed in this fragment. 
 Let us consider for example the set union.
 A set-theoretic formula of the form $a=b \cup c$ can be expressed by
 the following $\Forallpizero$-formula: 
@@ -1527,7 +1519,7 @@ understanding, \Forallpizero can be regarded as a sublanguage of
 $\Elpizero$. Moreover, as suggested by Lemma~\ref{HERSAT} and Corollary~\ref{SATEXP}, skeletal representations can be seen as particular Herbrand 
 interpretations (over \Elpizero), subject to the conditions reported 
 in Definition~\ref{SKREPR}. For example, the skeletal
-representation\marginpar{aggiunto} 
+representation 
 $\atset=\{ \nonpairin{\consta}{\constb} \}$ can be regarded as 
 a Herbrand interpretation such that $\fomodels{\atset}{\gamma} \iff
 \gamma=\nonpairin{\consta}{\constb}$.  Conversely, let us consider
@@ -1642,7 +1634,6 @@ We must prove that $\hinter$ satisfies all the conditions
 reported in Definition \ref{SKREPR}.
 In view of Lemma
 \ref{HERSAT},
-%\marginpar{Il corollario non dice proprio questo.}
 $\hinter$ satisfies $\chi^{(V,T)}$, as we are assuming that
 $\hinter$ satisfies $\HExp(\chi^{(V,T)}, V \cup T)$ and $V \cup T$ is
 the Herbrand universe of $\chi^{(V,T)}$.
@@ -1675,7 +1666,7 @@ same argument as before shows that we have also
 $\consta \in V$, proving \ref{EQC}.
 
 Next, let $\fomodels{\hinter}{\seteq{\consta}{\constb}}$, for some
-constants\marginpar{modificato}
+constants
 $\consta, \constb \in V \cup T$, and let $\gamma$ be a ground
 atomic \Forallpizero-formula such that $\fomodels{\hinter}{\gamma}$. We have to prove
 that $\fomodels{\hinter}{\subst{\gamma}{\consta}{\constb}}$ and
@@ -1950,7 +1941,7 @@ the sense of Disjunctive Datalog.  %\qed
 
 Theorem \ref{FORALLPIZEROSAT} and Corollary \ref{FINALCOR} concern the satisfiability problem and have consequences
 on other problems related to satisfiability such as, for example, the query
-answering problem. This is shown by the following corollary.\marginpar{Issue 26}
+answering problem. This is shown by the following corollary.
 
 \begin{corollary}\label{QUERYANSWERING}
 Let $\varphi$ be a $\ForallpizeroDisjDatalog$-sentence,
