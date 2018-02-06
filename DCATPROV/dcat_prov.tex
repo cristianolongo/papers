@@ -1,0 +1,48 @@
+\documentclass{article}
+\begin{document}
+\section{Managing errors in datasets}
+
+Sometimes government open data are generated through error-prone processes such as, for example, 
+manual data entry, so that these data may be not actually reusable because of errors and noise. In such cases 
+several check and refinement tasks are necessary to get a trustworthy dataset. Moreover, these tasks
+may be performed manually as well. 
+
+Here we describe our experience in reusing open data about schools provieded by the Italian Education Ministery 
+\emph{Ministero dell'Istruzione dell'Universit\`a e della Ricerca}, in short \emph{MIUR}.\footnote{\texttt{http://dati.istruzione.it/opendata/opendata/}}
+Our aim was to have a list of notice board web pages of all the schools in the municipality of Catania and
+their corresponding RSS feed, where present. 
+
+We started with downloading the dataset of Italian public schools.
+This dataset is provided in different formats: CSV, JSon, RDF, XML. However the RDF version of this dataset is just 
+trasposition of the CSV one, so that we decided to use the CSV which, for sake of brevity, we will call \texttt{schools.csv}.
+Each row of this dataset contains data of a specific school: geographic information, name, mail and certified mail addresses and, if available, the school 
+web site. Schools are characterized by a \emph{school code} reported in the field \texttt{CODICESCUOLA}.
+In addition, a hierarchical organization of schools emerges: for each school a \emph{reference institute} is
+indicated by the field \texttt{CODICEISTITUTORIFERIMENTO}. Reference institutes can be identified by checking
+if \texttt{CODICEISTITUTORIFERIMENTO} and \texttt{CODICESCUOLA} have the same value. 
+One may desume that this dataset has been populated via manual data entry, presumably performed by schools' employee, 
+just with observing the web sites reported: some sites starts with the schema specification \texttt{http://} whereas for someone 
+else just the domain name is indicated, site URLs are reported both in uppercase and lowercase, typo errors 
+are present, and so one.
+
+The dataset is quite huge, so at first we create a restricted version of it limited to the schools in the municipality 
+of Catania by selecting rows with code \texttt{C351} (representing the municipality of Catania) in the field 
+\texttt{CODICECOMUNESCUOLA}. We name the resulting dataset as \texttt{schools-catania.csv}. 
+
+As reported before, the web site field in this dataset contain several errors. For this reason we generate from 
+\texttt{schools-catania.csv} two different datasets:
+\begin{itemize}
+	\item an OWL ontology \texttt{schools-catania-nosites.owl} with all the schools data except websites,
+	\item a CSV file reporting just school code and website (field \texttt{SITOWEBSCUOLA}).
+\end{itemize}
+
+As our primary interest is on web sites, we decided to keep them separated from the rest of the school's data.
+The script \texttt{generateSchoolsOntology.php} generates an OWL ontology from \texttt{AS1718SCUANAGRAFESTAT20170731.csv} 
+or from CSV file with a similar fields structure. In the generated ontology schools are represented by the Organization Ontology,
+which allows, among its representational features, to describe complex organizational structures via the \texttt{org:subOrganizationOf}
+property.    
+ 
+
+
+
+\end{document}
